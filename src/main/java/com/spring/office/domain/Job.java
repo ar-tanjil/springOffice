@@ -17,7 +17,6 @@ public class Job extends BaseModel{
     private Integer maxSalary;
 
     @OneToMany(mappedBy = "job",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            cascade = CascadeType.ALL)
     private Set<Employee> employees;
 }

@@ -7,9 +7,11 @@ import com.spring.office.domain.Job;
 import com.spring.office.dto.DepartmentDto;
 import com.spring.office.dto.EmployeeDto;
 import com.spring.office.dto.JobDto;
+import com.spring.office.service.DepartmentService;
+import com.spring.office.service.EmployeeService;
+import com.spring.office.service.JobService;
 
 public class DtoUtil {
-
 
     public static Employee dtoToEmp(EmployeeDto dto) {
         Employee emp = new Employee();
@@ -17,14 +19,20 @@ public class DtoUtil {
         if (dto.getId() != null) {
             emp.setId(dto.getId());
         }
-
         emp.setFirstName(dto.getFirstName());
         emp.setLastName(dto.getLastName());
         emp.setEmail(dto.getEmail());
         emp.setPhoneNumber(dto.getPhoneNumber());
+        emp.setHireDate(dto.getHireDate());
         emp.setAddress(dto.getAddress());
-        emp.setJob(dtoToJob(dto.getJob()));
-        emp.setDepartment(dtoToDep(dto.getDepartment()));
+        if(dto.getJob() != null){
+            emp.setJob(dtoToJob(dto.getJob()));
+        }
+
+        if(dto.getDepartment() != null){
+            emp.setDepartment(dtoToDep(dto.getDepartment()));
+        }
+
 
         return emp;
     }
@@ -64,8 +72,14 @@ public class DtoUtil {
         dto.setEmail(emp.getEmail());
         dto.setPhoneNumber(emp.getPhoneNumber());
         dto.setHireDate(emp.getHireDate());
-        dto.setJob(jobToDto(emp.getJob()));
-        dto.setDepartment(depToDto(emp.getDepartment()));
+        dto.setAddress(emp.getAddress());
+        if(emp.getJob() != null){
+            dto.setJob(jobToDto(emp.getJob()));
+        }
+       if(emp.getDepartment() != null){
+           dto.setDepartment(depToDto(emp.getDepartment()));
+       }
+
 
         return dto;
     }

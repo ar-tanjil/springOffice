@@ -17,7 +17,6 @@ public class Department extends BaseModel {
     private String departmentDesc;
 
     @OneToMany(mappedBy = "department",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            cascade = CascadeType.ALL)
     private Set<Employee> employees;
 }
