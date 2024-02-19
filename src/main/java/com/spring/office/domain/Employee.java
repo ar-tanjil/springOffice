@@ -17,12 +17,12 @@ public class Employee extends BaseModel {
     private LocalDate hireDate;
 
     @ManyToOne
-    @Cascade(CascadeType.SAVE_UPDATE)
+    @Cascade(CascadeType.ALL)
     @JoinColumn(name = "job_id")
     private Job job;
 
     @ManyToOne
-    @Cascade(CascadeType.SAVE_UPDATE)
+    @Cascade(CascadeType.ALL)
     @JoinColumn(name= "department_id")
     private Department department;
     private String address;

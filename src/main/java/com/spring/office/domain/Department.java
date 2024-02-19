@@ -1,5 +1,6 @@
 package com.spring.office.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -17,7 +18,7 @@ public class Department extends BaseModel {
     private String departmentDesc;
 
     @OneToMany(mappedBy = "department",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Employee> employees;
 }

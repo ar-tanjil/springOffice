@@ -2,6 +2,8 @@ package com.spring.office.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -19,29 +21,19 @@ public abstract class BaseModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Boolean active;
+    private Boolean active = true;
 
-    @Column(name = "isDeleted")
-    private Boolean delete;
-    @CreatedDate
+
+    private Boolean deleted = false;
+
+    @CreationTimestamp
     private LocalDateTime createdAt;
     private Long createdBy;
 
-    @LastModifiedDate
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
     private Long updatedBy;
 
-    @PrePersist
-    public void prePersist(){
-        this.active = true;
-        this.delete = false;
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void preUpdate(){
-        this.updatedAt = LocalDateTime.now();
-    }
 
 
 }

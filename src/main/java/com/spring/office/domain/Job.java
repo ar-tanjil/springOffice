@@ -1,5 +1,6 @@
 package com.spring.office.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -17,7 +18,7 @@ public class Job extends BaseModel{
     private Integer maxSalary;
 
     @OneToMany(mappedBy = "job",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Employee> employees;
 }

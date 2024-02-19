@@ -1,10 +1,12 @@
 package com.spring.office.controller;
 
 import com.spring.office.dto.EmployeeDto;
+import com.spring.office.dto.Message;
 import com.spring.office.service.EmployeeService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +23,33 @@ public class EmployeeController {
     @GetMapping
     public List<EmployeeDto> getAll() {
         return empService.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public EmployeeDto getById(@PathVariable("id") Long id){
+        return empService.getById(id);
+    }
+
+    @PostMapping
+    public EmployeeDto saveEmployee(@RequestBody EmployeeDto dto){
+        return empService.save(dto);
+    }
+
+    @PutMapping("/{id}")
+    public EmployeeDto updateEmployee(@PathVariable("id") Long id,
+                                      @RequestBody EmployeeDto dto){
+        return empService.update(dto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Message> deleteById(@PathVariable("id") Long id){
+        boolean success = empService.delete(id);
+        Message msg = new Message();
+        if (success){
+            msg.setMessage("Success");
+            return new ResponseEntity<>(msg,HttpStatus.ACCEPTED);
+        }
+        msg.setMessage("No employee for this id");
+        return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
     }
 }
