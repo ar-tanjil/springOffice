@@ -1,5 +1,6 @@
 package com.spring.office.controller;
 
+import com.spring.office.dto.EmpResDto;
 import com.spring.office.dto.EmployeeDto;
 import com.spring.office.dto.Message;
 import com.spring.office.service.EmployeeService;
@@ -12,16 +13,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/employees")
+@CrossOrigin(origins = "http://localhost:4200")
 public class EmployeeController {
 
-    private EmployeeService empService;
+    private final EmployeeService empService;
 
     private EmployeeController(EmployeeService employeeService) {
         this.empService = employeeService;
     }
 
     @GetMapping
-    public List<EmployeeDto> getAll() {
+    public List<EmpResDto> getAll() {
         return empService.getAll();
     }
 

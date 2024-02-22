@@ -39,6 +39,4 @@ public abstract class BaseModel {
     private LocalDateTime updatedAt;
     private Long updatedBy;
 
-
-
 }

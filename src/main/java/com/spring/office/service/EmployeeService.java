@@ -1,7 +1,11 @@
 package com.spring.office.service;
 
 import com.spring.office.domain.Employee;
+import com.spring.office.domain.Job;
+import com.spring.office.dto.DepartmentDto;
+import com.spring.office.dto.EmpResDto;
 import com.spring.office.dto.EmployeeDto;
+import com.spring.office.dto.JobDto;
 import com.spring.office.repo.EmployeeRepo;
 import com.spring.office.service.mapper.EmployeeMapper;
 import org.springframework.stereotype.Service;
@@ -14,19 +18,26 @@ import java.util.Optional;
 public class EmployeeService {
     private final EmployeeRepo empRepo;
     private final EmployeeMapper empMapper;
+    private final DepartmentService depService;
+    private final JobService jobService;
+
 
 
     public EmployeeService(
             EmployeeRepo employeeRepo,
-            EmployeeMapper mapper) {
+            EmployeeMapper mapper,
+            DepartmentService depService,
+            JobService jobService) {
         this.empRepo = employeeRepo;
         this.empMapper = mapper;
+        this.depService = depService;
+        this.jobService = jobService;
     }
 
-    public List<EmployeeDto> getAll() {
+    public List<EmpResDto> getAll() {
         Iterable<Employee> employees = this.empRepo.findAllCustom();
-        List<EmployeeDto> employeeList = new ArrayList<>();
-        employees.forEach(emp -> employeeList.add(empMapper.employeeToDto(emp)));
+        List<EmpResDto> employeeList = new ArrayList<>();
+        employees.forEach(emp -> employeeList.add(empMapper.empToEmpResDto(emp)));
         return employeeList;
     }
 
@@ -62,6 +73,14 @@ public class EmployeeService {
             return true;
         }
         return false;
+    }
+
+    private JobDto getJob(long id){
+        return jobService.getById(id);
+    }
+
+    private DepartmentDto getDep(long id){
+        return depService.getById(id);
     }
 
 

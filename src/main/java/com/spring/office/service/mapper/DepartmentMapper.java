@@ -15,7 +15,7 @@ public class DepartmentMapper {
 
         dep.setDepartmentName(dto.getDepartmentName());
         dep.setDepartmentDesc(dto.getDepartmentDesc());
-        dep.setManagerId(dto.getManagerId());
+//        dep.setManagerId(dto.getManagerId());
         return dep;
     }
 
@@ -26,7 +26,7 @@ public class DepartmentMapper {
         }
         dto.setDepartmentName(dep.getDepartmentName());
         dto.setDepartmentDesc(dep.getDepartmentDesc());
-        dto.setManagerId(dep.getManagerId());
+//        dto.setManagerId(dep.getManagerId());
         return dto;
     }
 }
