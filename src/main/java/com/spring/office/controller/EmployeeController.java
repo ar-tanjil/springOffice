@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/employees")
 public class EmployeeController {
 
     private EmployeeService empService;
@@ -44,12 +44,11 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Message> deleteById(@PathVariable("id") Long id){
         boolean success = empService.delete(id);
-        Message msg = new Message();
         if (success){
-            msg.setMessage("Success");
-            return new ResponseEntity<>(msg,HttpStatus.ACCEPTED);
+            Message successMsg = new Message("Success");
+            return new ResponseEntity<>(successMsg,HttpStatus.ACCEPTED);
         }
-        msg.setMessage("No employee for this id");
-        return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
+        Message failedMsg = new Message("Not Found");
+        return new ResponseEntity<>(failedMsg, HttpStatus.NOT_FOUND);
     }
 }
