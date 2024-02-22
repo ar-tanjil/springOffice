@@ -1,9 +1,9 @@
 package com.spring.office.service;
 
-import com.spring.office.customUtil.DtoUtil;
 import com.spring.office.domain.Job;
 import com.spring.office.dto.JobDto;
 import com.spring.office.repo.JobRepo;
+import com.spring.office.service.mapper.JobMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,37 +13,39 @@ import java.util.Optional;
 @Service
 public class JobService {
 
-    private JobRepo jobRepo;
+    private final JobRepo jobRepo;
+    private final JobMapper jobMapper;
 
-    private JobService(JobRepo jobRepo){
+    private JobService(
+            JobRepo jobRepo,
+            JobMapper jobMapper
+    ){
         this.jobRepo = jobRepo;
+        this.jobMapper = jobMapper;
     }
 
     public Iterable<JobDto> getAll(){
         Iterable<Job> allJob = jobRepo.findAll();
         List<JobDto> dtoJob = new ArrayList<>();
-        allJob.forEach((job) -> dtoJob.add(DtoUtil.jobToDto(job)));
+        allJob.forEach((job) -> dtoJob.add(jobMapper.jobToDto(job)));
         return dtoJob;
     }
 
     public JobDto getById(Long id){
         Optional<Job> job = jobRepo.findById(id);
-        if (job.isPresent()){
-            return DtoUtil.jobToDto(job.get());
-        }
-        return null;
+        return job.map(jobMapper::jobToDto).orElse(null);
     }
 
     public JobDto save(JobDto dto){
-        Job job = DtoUtil.dtoToJob(dto);
+        Job job = jobMapper.dtoToJob(dto);
         Job saveJob = jobRepo.save(job);
-        return DtoUtil.jobToDto(saveJob);
+        return jobMapper.jobToDto(saveJob);
     }
 
     public JobDto update(JobDto dto){
-        Job job = DtoUtil.dtoToJob(dto);
+        Job job = jobMapper.dtoToJob(dto);
         Job saveJob = jobRepo.save(job);
-        return DtoUtil.jobToDto(saveJob);
+        return jobMapper.jobToDto(saveJob);
     }
 
     public boolean delete(Long id){

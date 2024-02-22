@@ -5,11 +5,19 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 @Entity
 public class Department extends BaseModel {
 
@@ -17,8 +25,8 @@ public class Department extends BaseModel {
     private Long managerId;
     private String departmentDesc;
 
-    @OneToMany(mappedBy = "department",
-            cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "department")
     @JsonIgnore
     private Set<Employee> employees;
+
 }
