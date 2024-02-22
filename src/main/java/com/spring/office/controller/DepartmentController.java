@@ -1,14 +1,11 @@
 package com.spring.office.controller;
 
 import com.spring.office.dto.DepartmentDto;
-import com.spring.office.dto.EmployeeDto;
 import com.spring.office.dto.Message;
 import com.spring.office.service.DepartmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/departments")

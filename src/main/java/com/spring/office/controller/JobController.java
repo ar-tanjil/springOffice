@@ -9,7 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/jobs")
+@RequestMapping("/designations")
+@CrossOrigin(origins = "http://localhost:4200")
 public class JobController {
 
     private final JobService service;

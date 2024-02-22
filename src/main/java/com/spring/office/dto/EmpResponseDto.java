@@ -1,19 +1,15 @@
 package com.spring.office.dto;
 
-
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeDto {
+@Builder
+@Getter
+@Setter
+public class EmpResponseDto {
 
     private Long id;
     private String firstName;
@@ -21,9 +17,7 @@ public class EmployeeDto {
     private String email;
     private String phoneNumber;
     private LocalDate hireDate;
-    private Long job;
-    private Long department;
     private String address;
-
-
+    private String jobTitle;
+    private String departmentName;
 }

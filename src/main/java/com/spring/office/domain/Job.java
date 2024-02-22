@@ -24,10 +24,14 @@ public class Job extends BaseModel{
     private String jobTitle;
     private Integer minSalary;
     private Integer maxSalary;
+    private Integer totalPost;
 
     @OneToMany(mappedBy = "job")
     @JsonIgnore
     private Set<Employee> employees;
 
+    @OneToMany(mappedBy = "job")
+    @JsonIgnore
+    private Set<Application> applications;
 
 }

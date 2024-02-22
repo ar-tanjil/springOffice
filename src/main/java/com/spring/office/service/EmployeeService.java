@@ -1,10 +1,9 @@
 package com.spring.office.service;
 
 import com.spring.office.domain.Employee;
-import com.spring.office.domain.Job;
 import com.spring.office.dto.DepartmentDto;
-import com.spring.office.dto.EmpResDto;
-import com.spring.office.dto.EmployeeDto;
+import com.spring.office.dto.EmpResponseDto;
+import com.spring.office.dto.EmpReceiveDto;
 import com.spring.office.dto.JobDto;
 import com.spring.office.repo.EmployeeRepo;
 import com.spring.office.service.mapper.EmployeeMapper;
@@ -34,14 +33,14 @@ public class EmployeeService {
         this.jobService = jobService;
     }
 
-    public List<EmpResDto> getAll() {
+    public List<EmpResponseDto> getAll() {
         Iterable<Employee> employees = this.empRepo.findAllCustom();
-        List<EmpResDto> employeeList = new ArrayList<>();
+        List<EmpResponseDto> employeeList = new ArrayList<>();
         employees.forEach(emp -> employeeList.add(empMapper.empToEmpResDto(emp)));
         return employeeList;
     }
 
-    public EmployeeDto getById(Long id) {
+    public EmpReceiveDto getById(Long id) {
         Optional<Employee> optEmp = empRepo.findByCustomId(id);
 
         return optEmp.map(empMapper::employeeToDto).orElse(null);
@@ -49,14 +48,14 @@ public class EmployeeService {
     }
 
 
-    public EmployeeDto save(EmployeeDto dto) {
+    public EmpReceiveDto save(EmpReceiveDto dto) {
 
         Employee emp = empMapper.dtoToEmployee(dto);
         Employee saveEmp = empRepo.save(emp);
         return empMapper.employeeToDto(saveEmp);
     }
 
-    public EmployeeDto update(EmployeeDto dto) {
+    public EmpReceiveDto update(EmpReceiveDto dto) {
 
         Employee emp = empMapper.dtoToEmployee(dto);
         Employee updateEmp = empRepo.save(emp);

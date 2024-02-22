@@ -1,37 +1,68 @@
 package com.spring.office.service.mapper;
 
-import com.spring.office.domain.Department;
-import com.spring.office.domain.Employee;
-import com.spring.office.domain.Job;
-import com.spring.office.dto.DepartmentDto;
-import com.spring.office.dto.EmpResDto;
-import com.spring.office.dto.EmployeeDto;
-import com.spring.office.dto.JobDto;
-import com.spring.office.service.DepartmentService;
+import com.spring.office.domain.*;
+import com.spring.office.domain.embaded.Address;
+import com.spring.office.domain.embaded.Qualification;
+import com.spring.office.dto.EmpResponseDto;
+import com.spring.office.dto.EmpReceiveDto;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.List;
 
 @Service
 public class EmployeeMapper {
 
-    public Employee dtoToEmployee(EmployeeDto dto) {
-        Employee emp = new Employee();
+    public Employee dtoToEmployee(EmpReceiveDto dto) {
 
-        if (dto.getId() != null) {
+        Address address = new Address(
+                dto.getRoadNo(),
+                dto.getZipCode(),
+                dto.getCity(),
+                dto.getCountry()
+        );
+
+        Qualification qualification = new Qualification(
+                dto.getSsc(),
+                dto.getSscPassingYear(),
+                dto.getHsc(),
+                dto.getHscPassingYear(),
+                dto.getUndergraduate(),
+                dto.getUndergraduatePassingYear(),
+                dto.getPostgraduate(),
+                dto.getPostgraduatePassingYear()
+        );
+
+
+
+        Employee emp = new Employee();
+        if (dto.getId() != null){
             emp.setId(dto.getId());
         }
         emp.setFirstName(dto.getFirstName());
         emp.setLastName(dto.getLastName());
+        emp.setDob(dto.getDob());
         emp.setEmail(dto.getEmail());
         emp.setPhoneNumber(dto.getPhoneNumber());
+        emp.setQualification(qualification);
+        emp.setAddress(address);
         emp.setHireDate(dto.getHireDate());
-        emp.setAddress(dto.getAddress());
-        if (dto.getJob() != null) {
+        emp.setSeparationDate(dto.getSeparationDate());
+
+        if (dto.getApplication() != null){
+            Application app = new Application();
+            app.setId(dto.getApplication());
+            emp.setApplication(app);
+        }
+
+
+        if(dto.getJob() != null){
             Job job = new Job();
             job.setId(dto.getJob());
             emp.setJob(job);
         }
 
-        if (dto.getDepartment() != null) {
+        if (dto.getDepartment() != null){
             Department dep = new Department();
             dep.setId(dto.getDepartment());
             emp.setDepartment(dep);
@@ -40,8 +71,8 @@ public class EmployeeMapper {
         return emp;
     }
 
-    public EmployeeDto employeeToDto(Employee emp) {
-        EmployeeDto dto = new EmployeeDto();
+    public EmpReceiveDto employeeToDto(Employee emp) {
+        EmpReceiveDto dto = new EmpReceiveDto();
         if (emp.getId() != null) {
             dto.setId(emp.getId());
         }
@@ -51,7 +82,6 @@ public class EmployeeMapper {
         dto.setEmail(emp.getEmail());
         dto.setPhoneNumber(emp.getPhoneNumber());
         dto.setHireDate(emp.getHireDate());
-        dto.setAddress(emp.getAddress());
         if (emp.getJob() != null) {
             dto.setJob(emp.getJob().getId());
         }
@@ -62,15 +92,14 @@ public class EmployeeMapper {
         return dto;
     }
 
-    public EmpResDto empToEmpResDto(Employee employee) {
-        EmpResDto resEmp = new EmpResDto();
+    public EmpResponseDto empToEmpResDto(Employee employee) {
+        EmpResponseDto resEmp = new EmpResponseDto();
 
         resEmp.setId(employee.getId());
         resEmp.setFirstName(employee.getFirstName());
         resEmp.setLastName(employee.getLastName());
         resEmp.setEmail(employee.getEmail());
         resEmp.setPhoneNumber(employee.getPhoneNumber());
-        resEmp.setAddress(employee.getAddress());
 
         if (employee.getJob() != null) {
             System.out.println(employee.getJob());
