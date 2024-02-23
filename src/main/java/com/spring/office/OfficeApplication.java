@@ -1,9 +1,8 @@
 package com.spring.office;
 
 
-import com.spring.office.domain.Job;
 import com.spring.office.dto.ApplicationDto;
-import com.spring.office.dto.DepartmentDto;
+import com.spring.office.dto.DepartReceiveDto;
 import com.spring.office.dto.JobDto;
 import com.spring.office.service.ApplicationService;
 import com.spring.office.service.DepartmentService;
@@ -42,7 +41,7 @@ public class OfficeApplication {
 			job.setJobTitle("Manager");
 			jobService.save(job);
 
-			DepartmentDto dep = new DepartmentDto();
+			DepartReceiveDto dep = new DepartReceiveDto();
 			dep.setDepartmentName("Admin");
 			departmentService.save(dep);
 

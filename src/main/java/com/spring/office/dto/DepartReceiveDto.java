@@ -7,12 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class JobDto {
+@AllArgsConstructor
+public class DepartReceiveDto {
     private Long id;
-    private String jobTitle;
-    private Integer minSalary;
-    private Integer maxSalary;
-    private String totalPost;
+    private String departmentName;
+    private Long managerId;
+    private String departmentDesc;
+    private Long employees;
+    private Long job;
 }

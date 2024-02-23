@@ -1,9 +1,9 @@
 package com.spring.office.service;
 
 import com.spring.office.domain.Employee;
-import com.spring.office.dto.DepartmentDto;
-import com.spring.office.dto.EmpResponseDto;
-import com.spring.office.dto.EmpReceiveDto;
+import com.spring.office.dto.DepartReceiveDto;
+import com.spring.office.dto.EmpTableDto;
+import com.spring.office.dto.EmpDetailsDto;
 import com.spring.office.dto.JobDto;
 import com.spring.office.repo.EmployeeRepo;
 import com.spring.office.service.mapper.EmployeeMapper;
@@ -33,14 +33,14 @@ public class EmployeeService {
         this.jobService = jobService;
     }
 
-    public List<EmpResponseDto> getAll() {
-        Iterable<Employee> employees = this.empRepo.findAllCustom();
-        List<EmpResponseDto> employeeList = new ArrayList<>();
+    public List<EmpTableDto> getAll() {
+        Iterable<Employee> employees = this.empRepo.findAllByDeletedFalse();
+        List<EmpTableDto> employeeList = new ArrayList<>();
         employees.forEach(emp -> employeeList.add(empMapper.empToEmpResDto(emp)));
         return employeeList;
     }
 
-    public EmpReceiveDto getById(Long id) {
+    public EmpDetailsDto getById(Long id) {
         Optional<Employee> optEmp = empRepo.findByCustomId(id);
 
         return optEmp.map(empMapper::employeeToDto).orElse(null);
@@ -48,14 +48,14 @@ public class EmployeeService {
     }
 
 
-    public EmpReceiveDto save(EmpReceiveDto dto) {
+    public EmpDetailsDto save(EmpDetailsDto dto) {
 
         Employee emp = empMapper.dtoToEmployee(dto);
         Employee saveEmp = empRepo.save(emp);
         return empMapper.employeeToDto(saveEmp);
     }
 
-    public EmpReceiveDto update(EmpReceiveDto dto) {
+    public EmpDetailsDto update(EmpDetailsDto dto) {
 
         Employee emp = empMapper.dtoToEmployee(dto);
         Employee updateEmp = empRepo.save(emp);
@@ -78,7 +78,7 @@ public class EmployeeService {
         return jobService.getById(id);
     }
 
-    private DepartmentDto getDep(long id){
+    private DepartReceiveDto getDep(long id){
         return depService.getById(id);
     }
 

@@ -1,7 +1,7 @@
 package com.spring.office.controller;
 
-import com.spring.office.dto.EmpResponseDto;
-import com.spring.office.dto.EmpReceiveDto;
+import com.spring.office.dto.EmpTableDto;
+import com.spring.office.dto.EmpDetailsDto;
 import com.spring.office.dto.Message;
 import com.spring.office.service.EmployeeService;
 import org.springframework.http.HttpStatus;
@@ -22,23 +22,23 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<EmpResponseDto> getAll() {
+    public List<EmpTableDto> getAll() {
         return empService.getAll();
     }
 
     @GetMapping("/{id}")
-    public EmpReceiveDto getById(@PathVariable("id") Long id){
+    public EmpDetailsDto getById(@PathVariable("id") Long id){
         return empService.getById(id);
     }
 
     @PostMapping
-    public EmpReceiveDto saveEmployee(@RequestBody EmpReceiveDto dto){
+    public EmpDetailsDto saveEmployee(@RequestBody EmpDetailsDto dto){
         return empService.save(dto);
     }
 
     @PutMapping("/{id}")
-    public EmpReceiveDto updateEmployee(@PathVariable("id") Long id,
-                                        @RequestBody EmpReceiveDto dto){
+    public EmpDetailsDto updateEmployee(@PathVariable("id") Long id,
+                                        @RequestBody EmpDetailsDto dto){
         return empService.update(dto);
     }
 

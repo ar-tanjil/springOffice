@@ -1,14 +1,13 @@
 package com.spring.office.service;
 
 import com.spring.office.domain.Department;
-import com.spring.office.dto.DepartmentDto;
+import com.spring.office.domain.Job;
+import com.spring.office.dto.DepartReceiveDto;
 import com.spring.office.repo.DepartmentRepo;
 import com.spring.office.service.mapper.DepartmentMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DepartmentService {
@@ -24,30 +23,53 @@ public class DepartmentService {
         this.departmentMapper = departmentMapper;
     }
 
-    public List<DepartmentDto> getAll(){
+    public List<DepartReceiveDto> getAll(){
         Iterable<Department> allDep = departmentRepo.findAll();
-        List<DepartmentDto> listDep = new ArrayList<>();
+        List<DepartReceiveDto> listDep = new ArrayList<>();
         allDep.forEach(department -> {
             listDep.add(departmentMapper.departmentToDto(department));
         });
         return listDep;
     }
 
-    public DepartmentDto getById(Long id){
+    public DepartReceiveDto getById(Long id){
         Optional<Department> optDep = departmentRepo.findById(id);
         return optDep.map(departmentMapper::departmentToDto).orElse(null);
     }
 
-    public DepartmentDto save(DepartmentDto dto){
+    public DepartReceiveDto save(DepartReceiveDto dto){
        Department dep = departmentMapper.dtoToDepartment(dto);
        Department saveDep = departmentRepo.save(dep);
        return departmentMapper.departmentToDto(saveDep);
     }
 
-    public DepartmentDto update(DepartmentDto dto){
+    public DepartReceiveDto update(Long id, DepartReceiveDto dto){
+        Department newDep = departmentMapper.dtoToDepartment(dto);
+        Optional<Department> optDep = departmentRepo.findById(id);
+        if (optDep.isPresent()){
+            Department oldDep = optDep.get();
+
+            if (newDep.getDepartmentName() != null){
+                oldDep.setDepartmentName(newDep.getDepartmentName());
+            }
+            if (newDep.getDepartmentDesc() != null){
+                oldDep.setDepartmentDesc(newDep.getDepartmentDesc());
+            }
+            if (newDep.getJob() != null){
+                Set<Job> job = new HashSet<>();
+                if (oldDep.getJob() != null){
+                    job = oldDep.getJob();
+                }
+                job.addAll(newDep.getJob());
+            }
+
+          var saveDep = departmentRepo.save(oldDep);
+            return departmentMapper.departmentToDto(saveDep);
+        }
+
         Department dep = departmentMapper.dtoToDepartment(dto);
-        Department saveDep = departmentRepo.save(dep);
-        return departmentMapper.departmentToDto(saveDep);
+        Department saveDep2 = departmentRepo.save(dep);
+        return departmentMapper.departmentToDto(saveDep2);
     }
 
     public boolean delete(Long id){

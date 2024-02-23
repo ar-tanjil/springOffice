@@ -3,17 +3,14 @@ package com.spring.office.service.mapper;
 import com.spring.office.domain.*;
 import com.spring.office.domain.embaded.Address;
 import com.spring.office.domain.embaded.Qualification;
-import com.spring.office.dto.EmpResponseDto;
-import com.spring.office.dto.EmpReceiveDto;
+import com.spring.office.dto.EmpTableDto;
+import com.spring.office.dto.EmpDetailsDto;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.List;
 
 @Service
 public class EmployeeMapper {
 
-    public Employee dtoToEmployee(EmpReceiveDto dto) {
+    public Employee dtoToEmployee(EmpDetailsDto dto) {
 
         Address address = new Address(
                 dto.getRoadNo(),
@@ -71,29 +68,51 @@ public class EmployeeMapper {
         return emp;
     }
 
-    public EmpReceiveDto employeeToDto(Employee emp) {
-        EmpReceiveDto dto = new EmpReceiveDto();
-        if (emp.getId() != null) {
-            dto.setId(emp.getId());
+    public EmpDetailsDto employeeToDto(Employee emp) {
+        EmpDetailsDto dto = new EmpDetailsDto();
+        Address address = emp.getAddress();
+        if (address == null) {
+            address = new Address();
         }
 
+        Qualification qualification = emp.getQualification();
+        if (qualification == null) {
+            qualification = new Qualification();
+        }
+
+        if(emp.getId() != null){
+            dto.setId(emp.getId());
+        }
         dto.setFirstName(emp.getFirstName());
         dto.setLastName(emp.getLastName());
+        dto.setDob(emp.getDob());
         dto.setEmail(emp.getEmail());
         dto.setPhoneNumber(emp.getPhoneNumber());
-        dto.setHireDate(emp.getHireDate());
-        if (emp.getJob() != null) {
+        dto.setSsc(qualification.getSsc());
+        dto.setHsc(qualification.getHsc());
+        dto.setPostgraduate(qualification.getPostgraduate());
+        dto.setUndergraduate(qualification.getUndergraduate());
+        dto.setSscPassingYear(qualification.getSscPassingYear());
+        dto.setHscPassingYear(qualification.getHscPassingYear());
+        dto.setUndergraduatePassingYear(qualification.getUndergraduatePassingYear());
+        dto.setPostgraduatePassingYear(qualification.getPostgraduatePassingYear());
+        dto.setZipCode(address.getZipCode());
+        dto.setRoadNo(address.getRoadNo());
+        dto.setCity(address.getCity());
+        dto.setCountry(address.getCountry());
+        if(emp.getJob() != null){
             dto.setJob(emp.getJob().getId());
         }
-        if (emp.getDepartment() != null) {
-            dto.setDepartment(emp.getDepartment().getId());
+        if(emp.getApplication() != null){
+            dto.setApplication(emp.getApplication().getId());
         }
 
         return dto;
+
     }
 
-    public EmpResponseDto empToEmpResDto(Employee employee) {
-        EmpResponseDto resEmp = new EmpResponseDto();
+    public EmpTableDto empToEmpResDto(Employee employee) {
+        EmpTableDto resEmp = new EmpTableDto();
 
         resEmp.setId(employee.getId());
         resEmp.setFirstName(employee.getFirstName());
@@ -102,7 +121,6 @@ public class EmployeeMapper {
         resEmp.setPhoneNumber(employee.getPhoneNumber());
 
         if (employee.getJob() != null) {
-            System.out.println(employee.getJob());
             resEmp.setJobTitle(employee.getJob().getJobTitle());
         }
         if (employee.getDepartment() != null) {

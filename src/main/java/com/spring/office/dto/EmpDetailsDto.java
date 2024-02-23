@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmpReceiveDto {
+public class EmpDetailsDto {
 
     private Long id;
     private String firstName;

@@ -13,6 +13,8 @@ public class ApplicationMapper {
 
     public Application dtoToApplication(ApplicationDto dto) {
 
+
+        Application app = new Application();
         Address address = new Address(
                 dto.getRoadNo(),
                 dto.getZipCode(),
@@ -33,7 +35,6 @@ public class ApplicationMapper {
 
 
 
-        Application app = new Application();
         if (dto.getId() != null){
             app.setId(dto.getId());
         }

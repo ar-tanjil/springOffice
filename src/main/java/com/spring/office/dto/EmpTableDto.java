@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Builder
 @Getter
 @Setter
-public class EmpResponseDto {
+public class EmpTableDto {
 
     private Long id;
     private String firstName;

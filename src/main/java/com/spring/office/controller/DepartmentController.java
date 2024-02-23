@@ -1,6 +1,6 @@
 package com.spring.office.controller;
 
-import com.spring.office.dto.DepartmentDto;
+import com.spring.office.dto.DepartReceiveDto;
 import com.spring.office.dto.Message;
 import com.spring.office.service.DepartmentService;
 import org.springframework.http.HttpStatus;
@@ -19,24 +19,24 @@ public class DepartmentController {
     }
 
     @GetMapping
-    public Iterable<DepartmentDto> getAll() {
+    public Iterable<DepartReceiveDto> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/{id}")
-    public DepartmentDto getById(@PathVariable("id") Long id){
+    public DepartReceiveDto getById(@PathVariable("id") Long id){
         return service.getById(id);
     }
 
     @PostMapping
-    public DepartmentDto saveEmployee(@RequestBody DepartmentDto dto){
+    public DepartReceiveDto saveEmployee(@RequestBody DepartReceiveDto dto){
         return service.save(dto);
     }
 
     @PutMapping("/{id}")
-    public DepartmentDto updateEmployee(@PathVariable("id") Long id,
-                                      @RequestBody DepartmentDto dto){
-        return service.update(dto);
+    public DepartReceiveDto updateEmployee(@PathVariable("id") Long id,
+                                           @RequestBody DepartReceiveDto dto){
+        return service.update(id,dto);
     }
 
     @DeleteMapping("/{id}")

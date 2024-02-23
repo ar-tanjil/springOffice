@@ -1,16 +1,25 @@
 package com.spring.office.service.mapper;
 
 import com.spring.office.domain.Department;
-import com.spring.office.dto.DepartmentDto;
+import com.spring.office.domain.Job;
+import com.spring.office.dto.DepartReceiveDto;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class DepartmentMapper {
 
-    public Department dtoToDepartment(DepartmentDto dto){
+    public Department dtoToDepartment(DepartReceiveDto dto){
         Department dep = new Department();
         if (dto.getId() != null) {
             dep.setId(dto.getId());
+        }
+        if (dto.getJob() != null){
+            Job job = new Job();
+            job.setId(dto.getJob());
+            dep.setJob(Set.of(job));
         }
 
         dep.setDepartmentName(dto.getDepartmentName());
@@ -19,8 +28,8 @@ public class DepartmentMapper {
         return dep;
     }
 
-    public DepartmentDto departmentToDto(Department dep){
-        DepartmentDto dto = new DepartmentDto();
+    public DepartReceiveDto departmentToDto(Department dep){
+        DepartReceiveDto dto = new DepartReceiveDto();
         if (dep.getId() != null) {
             dto.setId(dep.getId());
         }

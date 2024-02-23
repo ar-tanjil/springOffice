@@ -1,6 +1,5 @@
 package com.spring.office.controller;
 
-import com.spring.office.dto.DepartmentDto;
 import com.spring.office.dto.JobDto;
 import com.spring.office.dto.Message;
 import com.spring.office.service.JobService;

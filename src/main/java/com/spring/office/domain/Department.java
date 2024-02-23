@@ -1,16 +1,14 @@
 package com.spring.office.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -28,5 +26,20 @@ public class Department extends BaseModel {
     @OneToMany(mappedBy = "department")
     @JsonIgnore
     private Set<Employee> employees;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name ="dep_job",
+            joinColumns = {
+                    @JoinColumn(name = "department_id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "job_id")
+            }
+    )
+    private Set<Job> job;
+
+
 
 }
