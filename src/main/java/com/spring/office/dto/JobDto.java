@@ -12,7 +12,10 @@ import lombok.NoArgsConstructor;
 public class JobDto {
     private Long id;
     private String jobTitle;
-    private Integer minSalary;
-    private Integer maxSalary;
-    private String totalPost;
+    private  int minSalary;
+    private  int maxSalary;
+    private  int totalPost;
+    private  int vacancy;
+    private Long departmentId;
+    private String departmentName;
 }

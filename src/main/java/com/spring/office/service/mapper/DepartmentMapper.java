@@ -16,11 +16,6 @@ public class DepartmentMapper {
         if (dto.getId() != null) {
             dep.setId(dto.getId());
         }
-        if (dto.getJob() != null){
-            Job job = new Job();
-            job.setId(dto.getJob());
-            dep.setJob(Set.of(job));
-        }
 
         dep.setDepartmentName(dto.getDepartmentName());
         dep.setDepartmentDesc(dto.getDepartmentDesc());

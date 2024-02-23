@@ -2,6 +2,7 @@ package com.spring.office.dto;
 
 
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,8 +24,9 @@ public class EmpDetailsDto {
     private LocalDate hireDate;
     private LocalDate separationDate;
     private LocalDate dob;
-    private Long job;
-    private Long department;
+    @NotNull
+    private Long jobId;
+    private Long departmentId;
     private String zipCode;
     private String roadNo;
     private String city;
@@ -37,7 +39,7 @@ public class EmpDetailsDto {
     private LocalDate undergraduatePassingYear;
     private String postgraduate;
     private LocalDate postgraduatePassingYear;
-    private Long application;
-
-
+    private Long applicationId;
+    private String jobTitle;
+    private String departmentName;
 }

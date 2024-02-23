@@ -1,6 +1,8 @@
 package com.spring.office.controller;
 
+import com.spring.office.dto.ApplicantTableDto;
 import com.spring.office.dto.ApplicationDto;
+import com.spring.office.dto.EmpDetailsDto;
 import com.spring.office.service.ApplicationService;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +25,7 @@ public class ApplicationController {
     }
 
     @GetMapping
-    public Iterable<ApplicationDto> getAll(){
+    public Iterable<ApplicantTableDto> getAll(){
         return service.getAll();
     }
 
@@ -34,6 +36,11 @@ public class ApplicationController {
         return service.getById(id);
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable("id") Long id){
+        service.delete(id);
+    }
+
     @PutMapping("/{id}")
     public ApplicationDto update(
             @PathVariable("id") Long id,
@@ -41,4 +48,11 @@ public class ApplicationController {
     ) {
         return service.update(id, dto);
     }
+
+    @GetMapping("/recruit/{id}")
+    public EmpDetailsDto recruitApplicant(
+            @PathVariable("id") Long id
+    ){
+        return service.recruitApplicant(id);
+  }
 }

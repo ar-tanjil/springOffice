@@ -1,5 +1,6 @@
 package com.spring.office.controller;
 
+import com.spring.office.domain.embaded.Qualification;
 import com.spring.office.dto.JobDto;
 import com.spring.office.dto.Message;
 import com.spring.office.service.JobService;
@@ -26,6 +27,40 @@ public class JobController {
         return service.getAll();
     }
 
+    @GetMapping("/departments/{id}")
+    public Iterable<JobDto> getAllByDepartment(@PathVariable("id") Long id){
+        return service.getAllByDepartment(id);
+    }
+
+    @PutMapping("/vacancy/{job_id}/{recruit}")
+    public void updateVacancy(
+            @PathVariable("job_id") Long jobId,
+            @PathVariable("recruit") int recruit
+    ){
+        service.updateVacancy(recruit, jobId);
+    }
+
+    @GetMapping("check_vacancy/{id}")
+    public boolean checkVacancy(
+            @PathVariable("id") Long id
+    ){
+        return service.checkVacancy(id);
+    }
+
+    @PutMapping("total_post/{job_id}/{dep_id}/{add}")
+    public void updateTotalPos(
+            @PathVariable("job_id") Long jobId,
+            @PathVariable("dep_id") Long depId,
+            @PathVariable("add") int add
+    ){
+        service.updateTotalPost(add,jobId,depId);
+    }
+
+    @GetMapping("/departments/vacancy/{id}")
+    public Iterable<JobDto> getAllVacancyByDepartment(@PathVariable("id") Long id){
+        return service.getAllVacancyByDepartment(id);
+    }
+
     @GetMapping("/{id}")
     public JobDto getById(@PathVariable("id") Long id) {
         return service.getById(id);
@@ -33,13 +68,13 @@ public class JobController {
 
     @PostMapping
     public JobDto saveEmployee(@RequestBody JobDto dto) {
-        return service.save(dto);
+        return service.saveJob(dto);
     }
 
     @PutMapping("/{id}")
     public JobDto updateEmployee(@PathVariable("id") Long id,
                                  @RequestBody JobDto dto) {
-        return service.update(dto);
+        return service.update(id,dto);
     }
 
     @DeleteMapping("/{id}")
@@ -53,5 +88,9 @@ public class JobController {
         return new ResponseEntity<>(failedMsg, HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/vacancy")
+    public Iterable<JobDto> getAllByVacancy(){
+        return service.getAllVacancy();
+    }
 
 }

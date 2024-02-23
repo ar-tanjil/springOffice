@@ -1,10 +1,11 @@
 package com.spring.office.service;
 
 import com.spring.office.domain.Application;
+import com.spring.office.dto.ApplicantTableDto;
 import com.spring.office.dto.ApplicationDto;
+import com.spring.office.dto.EmpDetailsDto;
 import com.spring.office.repo.ApplicationRepo;
 import com.spring.office.service.mapper.ApplicationMapper;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,13 +15,16 @@ import java.util.Optional;
 @Service
 public class ApplicationService {
     private final ApplicationRepo repo;
+    private final EmployeeService empService;
     private final ApplicationMapper mapper;
 
     public ApplicationService(
             ApplicationRepo repo,
+            EmployeeService empService,
             ApplicationMapper mapper
     ) {
         this.repo = repo;
+        this.empService = empService;
         this.mapper = mapper;
     }
 
@@ -32,10 +36,10 @@ public class ApplicationService {
 
     }
 
-    public List<ApplicationDto> getAll() {
+    public List<ApplicantTableDto> getAll() {
         List<Application> allApp = repo.findAllByDeletedFalse();
-        List<ApplicationDto> allDto = new ArrayList<>();
-        allApp.forEach(app -> allDto.add(mapper.applicationToDto(app)));
+        List<ApplicantTableDto> allDto = new ArrayList<>();
+        allApp.forEach(app -> allDto.add(mapper.applicationToTable(app)));
         return allDto;
     }
 
@@ -131,4 +135,13 @@ public class ApplicationService {
         return oldApp;
     }
 
+
+    public EmpDetailsDto recruitApplicant(Long id){
+        Optional<Application> optApp = repo.findByIdAndDeletedFalse(id);
+        if (optApp.isPresent()){
+            var empDto = mapper.applicationToEmployee(optApp.get());
+            return empService.save(empDto);
+        }
+        return null;
+    }
 }

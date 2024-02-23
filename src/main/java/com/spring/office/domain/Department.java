@@ -28,18 +28,7 @@ public class Department extends BaseModel {
     private Set<Employee> employees;
 
     @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name ="dep_job",
-            joinColumns = {
-                    @JoinColumn(name = "department_id")
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "job_id")
-            }
-    )
+    @OneToMany(mappedBy = "department")
     private Set<Job> job;
-
-
 
 }

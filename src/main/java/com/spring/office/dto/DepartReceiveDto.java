@@ -14,6 +14,4 @@ public class DepartReceiveDto {
     private String departmentName;
     private Long managerId;
     private String departmentDesc;
-    private Long employees;
-    private Long job;
 }

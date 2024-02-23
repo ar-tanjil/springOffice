@@ -11,4 +11,7 @@ import java.util.List;
 @Repository
 public interface DepartmentRepo extends JpaRepository<Department, Long> {
 
+    List<Department>  findAllByDeletedFalse();
+
+
 }

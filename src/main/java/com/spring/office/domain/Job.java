@@ -20,9 +20,10 @@ import java.util.Set;
 public class Job extends BaseModel{
 
     private String jobTitle;
-    private Integer minSalary;
-    private Integer maxSalary;
-    private Integer totalPost;
+    private int minSalary;
+    private int maxSalary;
+    private int totalPost;
+    private int vacancy;
 
     @OneToMany(mappedBy = "job")
     @JsonIgnore
@@ -32,8 +33,8 @@ public class Job extends BaseModel{
     @JsonIgnore
     private Set<Application> applications;
 
-    @ManyToMany(mappedBy = "job")
-    @JsonIgnore
-    private Set<Department> departments;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
 }

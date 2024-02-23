@@ -24,7 +24,7 @@ public class DepartmentService {
     }
 
     public List<DepartReceiveDto> getAll(){
-        Iterable<Department> allDep = departmentRepo.findAll();
+        Iterable<Department> allDep = departmentRepo.findAllByDeletedFalse();
         List<DepartReceiveDto> listDep = new ArrayList<>();
         allDep.forEach(department -> {
             listDep.add(departmentMapper.departmentToDto(department));

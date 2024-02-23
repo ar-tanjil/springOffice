@@ -4,6 +4,7 @@ import com.spring.office.dto.EmpTableDto;
 import com.spring.office.dto.EmpDetailsDto;
 import com.spring.office.dto.Message;
 import com.spring.office.service.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,14 +33,15 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public EmpDetailsDto saveEmployee(@RequestBody EmpDetailsDto dto){
+    public EmpDetailsDto saveEmployee(
+           @Valid @RequestBody EmpDetailsDto dto){
         return empService.save(dto);
     }
 
     @PutMapping("/{id}")
     public EmpDetailsDto updateEmployee(@PathVariable("id") Long id,
                                         @RequestBody EmpDetailsDto dto){
-        return empService.update(dto);
+        return empService.update(id,dto);
     }
 
     @DeleteMapping("/{id}")

@@ -1,5 +1,7 @@
 package com.spring.office.service;
 
+import com.spring.office.domain.Department;
+import com.spring.office.domain.Employee;
 import com.spring.office.domain.Job;
 import com.spring.office.dto.JobDto;
 import com.spring.office.repo.JobRepo;
@@ -25,7 +27,34 @@ public class JobService {
     }
 
     public Iterable<JobDto> getAll(){
-        Iterable<Job> allJob = jobRepo.findAll();
+        Iterable<Job> allJob = jobRepo.findAllByDeletedFalse();
+        List<JobDto> dtoJob = new ArrayList<>();
+        allJob.forEach((job) -> dtoJob.add(jobMapper.jobToDto(job)));
+        return dtoJob;
+    }
+
+    public List<JobDto> getAllByDepartment(Long id){
+        Department dep = new Department();
+        dep.setId(id);
+        List<Job> allJob = jobRepo.findAllByDepartment(dep);
+        List<JobDto> dtoJob = new ArrayList<>();
+        allJob.forEach((job) -> dtoJob.add(jobMapper.jobToDto(job)));
+        return dtoJob;
+    }
+
+    public List<JobDto> getAllVacancyByDepartment(Long id){
+        Department dep = new Department();
+        Integer vac = 0;
+        dep.setId(id);
+        List<Job> allJob = jobRepo.findAllByDepartmentAndVacancyIsGreaterThan(dep, vac);
+        List<JobDto> dtoJob = new ArrayList<>();
+        allJob.forEach((job) -> dtoJob.add(jobMapper.jobToDto(job)));
+        return dtoJob;
+    }
+
+    public List<JobDto> getAllVacancy(){
+        Integer vac = 0;
+        List<Job> allJob = jobRepo.findAllByVacancyIsGreaterThan(vac);
         List<JobDto> dtoJob = new ArrayList<>();
         allJob.forEach((job) -> dtoJob.add(jobMapper.jobToDto(job)));
         return dtoJob;
@@ -36,16 +65,47 @@ public class JobService {
         return job.map(jobMapper::jobToDto).orElse(null);
     }
 
-    public JobDto save(JobDto dto){
+
+    public JobDto saveJob(JobDto dto){
+        dto.setVacancy(dto.getTotalPost());
         Job job = jobMapper.dtoToJob(dto);
         Job saveJob = jobRepo.save(job);
         return jobMapper.jobToDto(saveJob);
     }
 
-    public JobDto update(JobDto dto){
+    public JobDto update(Long id, JobDto dto){
+
+        Optional<Job> optJob = jobRepo.findById(id);
+
+        if (optJob.isPresent()){
+            Job oldJob = optJob.get();
+            Job mapJob = updateMapper(jobMapper.dtoToJob(dto),oldJob);
+            Job saveJob = jobRepo.save(mapJob);
+            return jobMapper.jobToDto(saveJob);
+        }
+
         Job job = jobMapper.dtoToJob(dto);
         Job saveJob = jobRepo.save(job);
         return jobMapper.jobToDto(saveJob);
+    }
+
+    public void updateVacancy(Integer req, Long id){
+        jobRepo.reduceVacancy(req,id);
+    }
+
+    public Boolean checkVacancy(Long id){
+        int vacancy = 0;
+        Optional<Job> optJob = jobRepo.findByIdAndVacancyIsGreaterThan(
+                id, vacancy);
+        return optJob.isPresent();
+    }
+
+    public void updateTotalPost(int add, long jobId, long depId){
+
+        Department dep = new Department();
+        dep.setId(depId);
+
+        jobRepo.addTotalPost(add,jobId,dep);
     }
 
     public boolean delete(Long id){
@@ -55,6 +115,32 @@ public class JobService {
             return true;
         }
         return false;
+    }
+
+    private Job updateMapper(Job newJob, Job oldJob){
+        if (newJob.getId() != null){
+            oldJob.setId(newJob.getId());
+        }
+        if (newJob.getJobTitle() != null){
+            oldJob.setJobTitle(newJob.getJobTitle());
+        }
+        if (newJob.getDepartment() != null){
+            oldJob.setDepartment(newJob.getDepartment());
+        }
+        if (newJob.getMaxSalary() != oldJob.getMaxSalary()){
+            oldJob.setMaxSalary(newJob.getMaxSalary());
+        }
+        if (newJob.getMinSalary() != oldJob.getMinSalary()){
+            oldJob.setMinSalary(newJob.getMinSalary());
+        }
+
+        int totalPost = oldJob.getTotalPost() + newJob.getTotalPost();
+        int vacancy = oldJob.getVacancy() + newJob.getTotalPost();
+        if (newJob.getTotalPost() > 0){
+            oldJob.setTotalPost(totalPost);
+            oldJob.setVacancy(vacancy);
+        }
+        return oldJob;
     }
 
 }

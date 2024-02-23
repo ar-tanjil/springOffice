@@ -46,22 +46,22 @@ public class EmployeeMapper {
         emp.setHireDate(dto.getHireDate());
         emp.setSeparationDate(dto.getSeparationDate());
 
-        if (dto.getApplication() != null){
+        if (dto.getApplicationId() != null){
             Application app = new Application();
-            app.setId(dto.getApplication());
+            app.setId(dto.getApplicationId());
             emp.setApplication(app);
         }
 
 
-        if(dto.getJob() != null){
+        if(dto.getJobId() != null){
             Job job = new Job();
-            job.setId(dto.getJob());
+            job.setId(dto.getJobId());
             emp.setJob(job);
         }
 
-        if (dto.getDepartment() != null){
+        if (dto.getDepartmentId() != null){
             Department dep = new Department();
-            dep.setId(dto.getDepartment());
+            dep.setId(dto.getDepartmentId());
             emp.setDepartment(dep);
         }
 
@@ -83,11 +83,24 @@ public class EmployeeMapper {
         if(emp.getId() != null){
             dto.setId(emp.getId());
         }
+
+        if(emp.getJob() != null){
+            dto.setJobTitle(emp.getJob().getJobTitle());
+        }
+
+        if(emp.getDepartment() != null){
+            dto.setDepartmentName(emp.getDepartment().getDepartmentName());
+        }
+
         dto.setFirstName(emp.getFirstName());
         dto.setLastName(emp.getLastName());
         dto.setDob(emp.getDob());
         dto.setEmail(emp.getEmail());
         dto.setPhoneNumber(emp.getPhoneNumber());
+        dto.setSeparationDate(emp.getSeparationDate());
+        dto.setHireDate(emp.getHireDate());
+
+
         dto.setSsc(qualification.getSsc());
         dto.setHsc(qualification.getHsc());
         dto.setPostgraduate(qualification.getPostgraduate());
@@ -101,10 +114,10 @@ public class EmployeeMapper {
         dto.setCity(address.getCity());
         dto.setCountry(address.getCountry());
         if(emp.getJob() != null){
-            dto.setJob(emp.getJob().getId());
+            dto.setJobId(emp.getJob().getId());
         }
         if(emp.getApplication() != null){
-            dto.setApplication(emp.getApplication().getId());
+            dto.setApplicationId(emp.getApplication().getId());
         }
 
         return dto;
@@ -119,7 +132,8 @@ public class EmployeeMapper {
         resEmp.setLastName(employee.getLastName());
         resEmp.setEmail(employee.getEmail());
         resEmp.setPhoneNumber(employee.getPhoneNumber());
-
+        resEmp.setHireDate(employee.getHireDate());
+        resEmp.setAddress(employee.getAddress().getCity());
         if (employee.getJob() != null) {
             resEmp.setJobTitle(employee.getJob().getJobTitle());
         }

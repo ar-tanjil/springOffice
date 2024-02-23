@@ -34,16 +34,19 @@ public class OfficeApplication {
 	}
 
 
-	@Bean
+//	@Bean
 	public CommandLineRunner dataLoad(){
 		return (a) -> {
-			JobDto job = new JobDto();
-			job.setJobTitle("Manager");
-			jobService.save(job);
 
 			DepartReceiveDto dep = new DepartReceiveDto();
 			dep.setDepartmentName("Admin");
 			departmentService.save(dep);
+
+			JobDto job = new JobDto();
+			job.setJobTitle("Manager");
+			job.setVacancy(5);
+			jobService.saveJob(job);
+
 
 			ApplicationDto appDto = new ApplicationDto();
 			appDto.setFirstName("Ashiq");
