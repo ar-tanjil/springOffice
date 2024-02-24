@@ -28,5 +28,7 @@ public class ApplicationDto {
     private String country;
     private Long jobId;
     private String reference;
+    private String jobTitle;
+    private String departmentName;
 
 }

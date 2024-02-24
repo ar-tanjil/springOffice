@@ -133,7 +133,15 @@ public class ApplicationMapper {
         System.out.println(app.getJob());
         if (app.getJob() != null) {
             dto.setJobId(app.getJob().getId());
+            dto.setJobTitle(app.getJob().getJobTitle());
+            if (app.getJob().getDepartment() != null){
+                dto.setDepartmentName(app.getJob().getDepartment().getDepartmentName());
+            }
+
         }
+
+
+
         dto.setReference(app.getReference());
 
         return dto;
@@ -147,6 +155,7 @@ public class ApplicationMapper {
         String dep = "";
         if (app.getJob() != null) {
             job = app.getJob().getJobTitle();
+            System.out.println(app.getJob());
             if (app.getJob().getDepartment() != null) {
                 dep = app.getJob().getDepartment().getDepartmentName();
             }

@@ -131,9 +131,6 @@ public class EmployeeMapper {
         resEmp.setFirstName(employee.getFirstName());
         resEmp.setLastName(employee.getLastName());
         resEmp.setEmail(employee.getEmail());
-        resEmp.setPhoneNumber(employee.getPhoneNumber());
-        resEmp.setHireDate(employee.getHireDate());
-        resEmp.setAddress(employee.getAddress().getCity());
         if (employee.getJob() != null) {
             resEmp.setJobTitle(employee.getJob().getJobTitle());
         }

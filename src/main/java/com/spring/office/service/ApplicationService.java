@@ -6,12 +6,14 @@ import com.spring.office.dto.ApplicationDto;
 import com.spring.office.dto.EmpDetailsDto;
 import com.spring.office.repo.ApplicationRepo;
 import com.spring.office.service.mapper.ApplicationMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class ApplicationService {
     private final ApplicationRepo repo;
@@ -33,7 +35,6 @@ public class ApplicationService {
         var app = mapper.dtoToApplication(dto);
         var saveApp = repo.save(app);
         return mapper.applicationToDto(saveApp);
-
     }
 
     public List<ApplicantTableDto> getAll() {
@@ -139,6 +140,7 @@ public class ApplicationService {
     public EmpDetailsDto recruitApplicant(Long id){
         Optional<Application> optApp = repo.findByIdAndDeletedFalse(id);
         if (optApp.isPresent()){
+            this.delete(optApp.get().getId());
             var empDto = mapper.applicationToEmployee(optApp.get());
             return empService.save(empDto);
         }

@@ -15,9 +15,6 @@ public class EmpTableDto {
     private String firstName;
     private String lastName;
     private String email;
-    private String phoneNumber;
-    private LocalDate hireDate;
-    private String address;
     private String jobTitle;
     private String departmentName;
 }
