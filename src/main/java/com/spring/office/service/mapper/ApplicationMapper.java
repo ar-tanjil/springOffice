@@ -93,6 +93,9 @@ public class ApplicationMapper {
         System.out.println(app.getJob());
         if (app.getJob() != null) {
             dto.setJobId(app.getJob().getId());
+            if (app.getJob().getDepartment() != null){
+                dto.setDepartmentId(app.getJob().getDepartment().getId());
+            }
         }
 
         return dto;

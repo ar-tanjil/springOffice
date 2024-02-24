@@ -17,44 +17,48 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class OfficeApplication {
 
-	@Autowired
-	private EmployeeService employeeService;
+    @Autowired
+    private EmployeeService employeeService;
 
-	@Autowired
-	private JobService jobService;
+    @Autowired
+    private JobService jobService;
 
-	@Autowired
-	private DepartmentService departmentService;
+    @Autowired
+    private DepartmentService departmentService;
 
-	@Autowired
-	private ApplicationService applicationService;
+    @Autowired
+    private ApplicationService applicationService;
 
-	public static void main(String[] args) {
-		SpringApplication.run(OfficeApplication.class, args);
-	}
-
-
-//	@Bean
-	public CommandLineRunner dataLoad(){
-		return (a) -> {
-
-			DepartReceiveDto dep = new DepartReceiveDto();
-			dep.setDepartmentName("Admin");
-			departmentService.save(dep);
-
-			JobDto job = new JobDto();
-			job.setJobTitle("Manager");
-			job.setVacancy(5);
-			jobService.saveJob(job);
+    public static void main(String[] args) {
+        SpringApplication.run(OfficeApplication.class, args);
+    }
 
 
-			ApplicationDto appDto = new ApplicationDto();
-			appDto.setFirstName("Ashiq");
-			var saveApp = applicationService.save(appDto);
-			System.out.println(saveApp);
-			applicationService.delete(saveApp.getId());
+    	@Bean
+    public CommandLineRunner dataLoad() {
+        return (a) -> {
 
-		};
-	}
+            DepartReceiveDto dep = new DepartReceiveDto();
+            dep.setDepartmentName("Administration");
+            dep.setDepartmentDesc("Administration Department");
+            var saveDep = departmentService.save(dep);
+
+            JobDto job = new JobDto();
+            job.setJobTitle("Manager");
+            job.setTotalPost(10);
+            job.setMaxSalary(20000);
+            job.setMinSalary(10000);
+            job.setDepartmentId(saveDep.getId());
+            var saveJob = jobService.saveJob(job);
+
+
+            ApplicationDto appDto = new ApplicationDto();
+            appDto.setFirstName("Ashiq");
+            appDto.setJobId(saveJob.getId());
+            var saveApp = applicationService.save(appDto);
+
+
+        };
+    }
 
 }

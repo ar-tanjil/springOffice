@@ -19,15 +19,18 @@ public class ApplicationService {
     private final ApplicationRepo repo;
     private final EmployeeService empService;
     private final ApplicationMapper mapper;
+    private final JobService jobService;
 
     public ApplicationService(
             ApplicationRepo repo,
             EmployeeService empService,
-            ApplicationMapper mapper
+            ApplicationMapper mapper,
+            JobService jobService
     ) {
         this.repo = repo;
         this.empService = empService;
         this.mapper = mapper;
+        this.jobService = jobService;
     }
 
 
@@ -140,6 +143,7 @@ public class ApplicationService {
     public EmpDetailsDto recruitApplicant(Long id){
         Optional<Application> optApp = repo.findByIdAndDeletedFalse(id);
         if (optApp.isPresent()){
+            jobService.updateVacancy(1,optApp.get().getJob().getId());
             this.delete(optApp.get().getId());
             var empDto = mapper.applicationToEmployee(optApp.get());
             return empService.save(empDto);
