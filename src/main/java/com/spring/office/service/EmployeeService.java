@@ -13,9 +13,15 @@ import java.util.Optional;
 
 @Service
 public class EmployeeService {
+//    Employee Repository
     private final EmployeeRepo empRepo;
+//    Employee Class mapper
     private final EmployeeMapper empMapper;
+
+//    Department Service Class
     private final DepartmentService depService;
+
+//    Job Service Class
     private final JobService jobService;
 
 
@@ -31,23 +37,25 @@ public class EmployeeService {
         this.jobService = jobService;
     }
 
-    public List<EmpTableDto> getAll() {
+//    Get All Employee if Deleted is False. Return EmployeeTable
+    public List<EmployeeTable> getAllEmployee() {
         Iterable<Employee> employees = this.empRepo.findAllByDeletedFalse();
-        List<EmpTableDto> employeeList = new ArrayList<>();
-        employees.forEach(emp -> employeeList.add(empMapper.empToEmpResDto(emp)));
+        List<EmployeeTable> employeeList = new ArrayList<>();
+        employees.forEach(emp -> employeeList.add(empMapper.employeeToTable(emp)));
         return employeeList;
     }
 
-    public EmpDetailsDto getById(Long id) {
+//    Get Employee by id. Return EmployeeDto
+    public EmployeeDto getEmployeeById(Long id) {
         Optional<Employee> optEmp = empRepo.findByCustomId(id);
 
         return optEmp.map(empMapper::employeeToDto).orElse(null);
 
     }
 
-
-    public EmpDetailsDto save(EmpDetailsDto dto) {
-            boolean vacancy = jobService.checkVacancy(dto.getJobId());
+// Save Employee, Accept EmployeeDto, Return EmployeeDto
+    public EmployeeDto saveEmployee(EmployeeDto dto) {
+            boolean vacancy = jobService.checkVacancyByJobId(dto.getJobId());
             if (vacancy){
 
                 dto.setHireDate(LocalDate.now());
@@ -61,15 +69,20 @@ public class EmployeeService {
 
     }
 
-    public EmpDetailsDto update(Long id, EmpDetailsDto newDto) {
+
+//    Update Employee , it's a patch update.
+//    And if employee does not exist it save the employee
+//    Needs refining, wants to use one method for save and update
+//    Accept EmployeeDto, Return EmployeeDto.
+    public EmployeeDto updateEmployee(Long id, EmployeeDto newDto) {
 
         Optional<Employee> optEmp = empRepo.findByCustomId(id);
 
         if (optEmp.isPresent()){
-            EmpDetailsDto oldDto = empMapper.employeeToDto(optEmp.get());
-            EmpDetailsDto patchDto = updateDto(newDto, oldDto);
-            Employee emp = empMapper.dtoToEmployee(patchDto);
-            Employee updateEmp = empRepo.save(emp);
+            Employee oldEmp = optEmp.get();
+            Employee newEmp = empMapper.dtoToEmployee(newDto);
+            Employee patchEmp = empMapper.updateMapper(newEmp, oldEmp);
+            Employee updateEmp = empRepo.save(patchEmp);
             return empMapper.employeeToDto(updateEmp);
         }
 
@@ -78,7 +91,9 @@ public class EmployeeService {
         return empMapper.employeeToDto(updateEmp);
     }
 
-    public Boolean delete(Long id) {
+//    Delete By id if it exists. otherwise return false.
+//    it's a soft delete, So u can call it terminate employee contract method.
+    public Boolean deleteEmployeeById(Long id) {
         Optional<Employee> optEmp = empRepo.findByCustomId(id);
         if (optEmp.isPresent()) {
             Employee emp = optEmp.get();
@@ -89,75 +104,6 @@ public class EmployeeService {
             return true;
         }
         return false;
-    }
-
-    private JobDto getJob(long id){
-        return jobService.getById(id);
-    }
-
-    private DepartReceiveDto getDep(long id){
-        return depService.getById(id);
-    }
-
-    private EmpDetailsDto updateDto(EmpDetailsDto newApp, EmpDetailsDto oldApp){
-
-        if (newApp.getFirstName() != null) {
-            oldApp.setFirstName(newApp.getFirstName());
-        }
-        if (newApp.getLastName() != null) {
-            oldApp.setLastName(newApp.getLastName());
-        }
-        if (newApp.getEmail() != null) {
-            oldApp.setEmail(newApp.getEmail());
-        }
-        if (newApp.getPhoneNumber() != null) {
-            oldApp.setPhoneNumber(newApp.getPhoneNumber());
-        }
-        if (newApp.getDepartmentId() != null) {
-            oldApp.setDepartmentId(newApp.getDepartmentId());
-        }
-        if (newApp.getDob() != null) {
-            oldApp.setDob(newApp.getDob());
-        }
-        if (newApp.getSsc() != null) {
-            oldApp.setSsc(newApp.getSsc());
-        }
-        if (newApp.getHsc() != null) {
-            oldApp.setHsc(newApp.getHsc());
-        }
-        if (newApp.getUndergraduate() != null) {
-            oldApp.setUndergraduate(newApp.getUndergraduate());
-        }
-        if (newApp.getPostgraduate() != null) {
-            oldApp.setPostgraduate(newApp.getPostgraduate());
-        }
-        if (newApp.getSscPassingYear() != null) {
-            oldApp.setSscPassingYear(newApp.getSscPassingYear());
-        }
-        if (newApp.getHscPassingYear() != null) {
-            oldApp.setHscPassingYear(newApp.getHscPassingYear());
-        }
-        if (newApp.getUndergraduatePassingYear() != null) {
-            oldApp.setUndergraduatePassingYear(newApp.getUndergraduatePassingYear());
-        }
-        if (newApp.getPostgraduatePassingYear() != null) {
-            oldApp.setPostgraduatePassingYear(newApp.getPostgraduatePassingYear());
-        }
-        if (newApp.getZipCode() != null) {
-            oldApp.setZipCode(newApp.getZipCode());
-        }
-        if (newApp.getRoadNo() != null) {
-            oldApp.setRoadNo(newApp.getRoadNo());
-        }
-
-        if (newApp.getCity() != null) {
-            oldApp.setCity(newApp.getCity());
-        }
-        if (newApp.getCountry() != null) {
-            oldApp.setCountry(newApp.getCountry());
-        }
-        return oldApp;
-
     }
 
 }

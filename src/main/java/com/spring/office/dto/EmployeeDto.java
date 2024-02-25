@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmpDetailsDto {
+public class EmployeeDto {
 
     private Long id;
     private String firstName;

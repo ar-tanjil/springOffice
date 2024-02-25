@@ -3,14 +3,17 @@ package com.spring.office.service.mapper;
 import com.spring.office.domain.*;
 import com.spring.office.domain.embaded.Address;
 import com.spring.office.domain.embaded.Qualification;
-import com.spring.office.dto.EmpTableDto;
-import com.spring.office.dto.EmpDetailsDto;
+import com.spring.office.dto.EmployeeTable;
+import com.spring.office.dto.EmployeeDto;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class EmployeeMapper {
 
-    public Employee dtoToEmployee(EmpDetailsDto dto) {
+// A mapper. Accept EmployeeDto return Employee.
+    public Employee dtoToEmployee(EmployeeDto dto) {
 
         Address address = new Address(
                 dto.getRoadNo(),
@@ -68,8 +71,9 @@ public class EmployeeMapper {
         return emp;
     }
 
-    public EmpDetailsDto employeeToDto(Employee emp) {
-        EmpDetailsDto dto = new EmpDetailsDto();
+//    A mapper, Accept Employee return EmployeeDto.
+    public EmployeeDto employeeToDto(Employee emp) {
+        EmployeeDto dto = new EmployeeDto();
         Address address = emp.getAddress();
         if (address == null) {
             address = new Address();
@@ -124,8 +128,9 @@ public class EmployeeMapper {
 
     }
 
-    public EmpTableDto empToEmpResDto(Employee employee) {
-        EmpTableDto resEmp = new EmpTableDto();
+//    Accept an Employee and return an EmployeeTable.
+    public EmployeeTable employeeToTable(Employee employee) {
+        EmployeeTable resEmp = new EmployeeTable();
 
         resEmp.setId(employee.getId());
         resEmp.setFirstName(employee.getFirstName());
@@ -140,6 +145,45 @@ public class EmployeeMapper {
 
         return resEmp;
 
+    }
+
+//    Accept tow employee, map it's value
+
+    public Employee updateMapper(Employee newEmp, Employee oldEmp){
+
+        if (newEmp.getFirstName() != null){
+            oldEmp.setFirstName(newEmp.getFirstName());
+        }
+
+        if (newEmp.getLastName() != null){
+            oldEmp.setLastName(newEmp.getLastName());
+        }
+
+        if (newEmp.getDob() != null){
+            oldEmp.setDob(newEmp.getDob());
+        }
+
+        if(newEmp.getPhoneNumber() != null){
+            oldEmp.setPhoneNumber(newEmp.getPhoneNumber());
+        }
+
+        if (newEmp.getEmail() != null){
+            oldEmp.setEmail(newEmp.getEmail());
+        }
+
+        if (newEmp.getJob() != null){
+            oldEmp.setJob(newEmp.getJob());
+        }
+
+        if (newEmp.getDepartment() != null){
+            oldEmp.setDepartment(newEmp.getDepartment());
+        }
+
+        if (newEmp.getQualification() != null){
+            oldEmp.setQualification(newEmp.getQualification());
+        }
+
+        return oldEmp;
     }
 
 }

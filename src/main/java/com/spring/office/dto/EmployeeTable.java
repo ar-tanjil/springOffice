@@ -2,14 +2,12 @@ package com.spring.office.dto;
 
 import lombok.*;
 
-import java.time.LocalDate;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
-public class EmpTableDto {
+public class EmployeeTable {
 
     private Long id;
     private String firstName;

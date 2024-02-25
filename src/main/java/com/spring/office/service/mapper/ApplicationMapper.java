@@ -6,7 +6,7 @@ import com.spring.office.domain.embaded.Address;
 import com.spring.office.domain.embaded.Qualification;
 import com.spring.office.dto.ApplicantTableDto;
 import com.spring.office.dto.ApplicationDto;
-import com.spring.office.dto.EmpDetailsDto;
+import com.spring.office.dto.EmployeeDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -58,7 +58,7 @@ public class ApplicationMapper {
     }
 
 
-    public EmpDetailsDto applicationToEmployee(Application app){
+    public EmployeeDto applicationToEmployee(Application app){
 
         Address address = app.getAddress();
         if (address == null) {
@@ -69,7 +69,7 @@ public class ApplicationMapper {
         if (qualification == null) {
             qualification = new Qualification();
         }
-        EmpDetailsDto dto = new EmpDetailsDto();
+        EmployeeDto dto = new EmployeeDto();
         if (app.getId() != null) {
             dto.setApplicationId(app.getId());
         }
@@ -167,6 +167,98 @@ public class ApplicationMapper {
         return new ApplicantTableDto(
                id, name, job, dep
         );
+
+    }
+
+
+    public Application updateMapper(Application newApp, Application oldApp) {
+
+        Qualification patchQual = qualificationSwapMapper(newApp.getQualifications(), oldApp.getQualifications());
+        Address patchAddress = addressSwapMapper(newApp.getAddress(),oldApp.getAddress());
+
+        oldApp.setAddress(patchAddress);
+        oldApp.setQualifications(patchQual);
+
+
+        if (newApp.getFirstName() != null) {
+            oldApp.setFirstName(newApp.getFirstName());
+        }
+        if (newApp.getLastName() != null) {
+            oldApp.setLastName(newApp.getLastName());
+        }
+        if (newApp.getEmail() != null) {
+            oldApp.setEmail(newApp.getEmail());
+        }
+        if (newApp.getPhoneNumber() != null) {
+            oldApp.setPhoneNumber(newApp.getPhoneNumber());
+        }
+        if (newApp.getReference() != null) {
+            oldApp.setReference(newApp.getReference());
+        }
+        if (newApp.getDob() != null) {
+            oldApp.setDob(newApp.getDob());
+        }
+
+        if (newApp.getJob() != null){
+            oldApp.setJob(newApp.getJob());
+        }
+
+        return oldApp;
+    }
+
+
+    public Address addressSwapMapper(Address newAdd, Address oldAdd){
+        if (newAdd.getZipCode() != null){
+            oldAdd.setZipCode(newAdd.getZipCode());
+        }
+
+        if (newAdd.getRoadNo() != null){
+            oldAdd.setRoadNo(newAdd.getRoadNo());
+        }
+
+        if (newAdd.getCity() != null){
+            oldAdd.setCity(newAdd.getCity());
+        }
+
+        if (newAdd.getCountry() != null){
+            oldAdd.setCountry(newAdd.getCountry());
+        }
+
+        return oldAdd;
+    }
+
+    public Qualification qualificationSwapMapper(Qualification newQual, Qualification oldQual) {
+        if (newQual.getSsc() != null) {
+            oldQual.setSsc(newQual.getSsc());
+        }
+        if (newQual.getSscPassingYear() != null) {
+            oldQual.setSscPassingYear(newQual.getSscPassingYear());
+        }
+
+        if (newQual.getHsc() != null) {
+            oldQual.setHsc(newQual.getHsc());
+        }
+
+        if (newQual.getHscPassingYear() != null) {
+            oldQual.setHscPassingYear(newQual.getHscPassingYear());
+        }
+
+        if (newQual.getUndergraduate() != null) {
+            oldQual.setUndergraduate(newQual.getUndergraduate());
+        }
+
+        if (newQual.getUndergraduatePassingYear() != null) {
+            oldQual.setUndergraduatePassingYear(newQual.getUndergraduatePassingYear());
+        }
+
+        if (newQual.getPostgraduate() != null) {
+            oldQual.setPostgraduate(newQual.getPostgraduate());
+        }
+
+        if (newQual.getPostgraduatePassingYear() != null){
+            oldQual.setUndergraduatePassingYear(newQual.getUndergraduatePassingYear());
+        }
+        return oldQual;
 
     }
 

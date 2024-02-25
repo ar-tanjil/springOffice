@@ -1,6 +1,5 @@
 package com.spring.office.controller;
 
-import com.spring.office.domain.embaded.Qualification;
 import com.spring.office.dto.JobDto;
 import com.spring.office.dto.Message;
 import com.spring.office.service.JobService;
@@ -24,12 +23,12 @@ public class JobController {
 
     @GetMapping
     public Iterable<JobDto> getAll() {
-        return service.getAll();
+        return service.getAllJobs();
     }
 
     @GetMapping("/departments/{id}")
     public Iterable<JobDto> getAllByDepartment(@PathVariable("id") Long id){
-        return service.getAllByDepartment(id);
+        return service.getAllJobsByDepartment(id);
     }
 
     @PutMapping("/vacancy/{job_id}/{recruit}")
@@ -44,7 +43,7 @@ public class JobController {
     public boolean checkVacancy(
             @PathVariable("id") Long id
     ){
-        return service.checkVacancy(id);
+        return service.checkVacancyByJobId(id);
     }
 
     @PutMapping("total_post/{job_id}/{dep_id}/{add}")
@@ -53,7 +52,7 @@ public class JobController {
             @PathVariable("dep_id") Long depId,
             @PathVariable("add") int add
     ){
-        service.updateTotalPost(add,jobId,depId);
+        service.addTotalPost(add,jobId,depId);
     }
 
     @GetMapping("/departments/vacancy/{id}")
@@ -63,7 +62,7 @@ public class JobController {
 
     @GetMapping("/{id}")
     public JobDto getById(@PathVariable("id") Long id) {
-        return service.getById(id);
+        return service.getJobById(id);
     }
 
     @PostMapping
@@ -74,12 +73,12 @@ public class JobController {
     @PutMapping("/{id}")
     public JobDto updateEmployee(@PathVariable("id") Long id,
                                  @RequestBody JobDto dto) {
-        return service.update(id,dto);
+        return service.updateJob(id,dto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Message> deleteById(@PathVariable("id") Long id) {
-        boolean success = service.delete(id);
+        boolean success = service.deleteJobById(id);
         if (success) {
             Message successMsg = new Message("Success");
             return new ResponseEntity<>(successMsg, HttpStatus.ACCEPTED);

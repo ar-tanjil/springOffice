@@ -3,7 +3,7 @@ package com.spring.office.service;
 import com.spring.office.domain.Application;
 import com.spring.office.dto.ApplicantTableDto;
 import com.spring.office.dto.ApplicationDto;
-import com.spring.office.dto.EmpDetailsDto;
+import com.spring.office.dto.EmployeeDto;
 import com.spring.office.repo.ApplicationRepo;
 import com.spring.office.service.mapper.ApplicationMapper;
 import jakarta.transaction.Transactional;
@@ -67,10 +67,12 @@ public class ApplicationService {
     public ApplicationDto update(Long id, ApplicationDto dto) {
         Optional<Application> optApp = repo.findById(id);
         if (optApp.isPresent()) {
-            ApplicationDto oldDto = mapper.applicationToDto(optApp.get());
-            ApplicationDto updatedDto = updateMapper(oldDto, dto);
-            Application updatedApp = mapper.dtoToApplication(updatedDto);
-            Application savedApp = repo.save(updatedApp);
+
+            Application newApp = mapper.dtoToApplication(dto);
+            Application oldApp = optApp.get();
+            Application patchApp = mapper.updateMapper(newApp, oldApp);
+
+            Application savedApp = repo.save(patchApp);
             return mapper.applicationToDto(savedApp);
         }
 
@@ -80,72 +82,15 @@ public class ApplicationService {
     }
 
 
-    private ApplicationDto updateMapper(ApplicationDto oldApp, ApplicationDto newApp) {
-        if (newApp.getFirstName() != null) {
-            oldApp.setFirstName(newApp.getFirstName());
-        }
-        if (newApp.getLastName() != null) {
-            oldApp.setLastName(newApp.getLastName());
-        }
-        if (newApp.getEmail() != null) {
-            oldApp.setEmail(newApp.getEmail());
-        }
-        if (newApp.getPhoneNumber() != null) {
-            oldApp.setPhoneNumber(newApp.getPhoneNumber());
-        }
-        if (newApp.getReference() != null) {
-            oldApp.setReference(newApp.getReference());
-        }
-        if (newApp.getDob() != null) {
-            oldApp.setDob(newApp.getDob());
-        }
-        if (newApp.getSsc() != null) {
-            oldApp.setSsc(newApp.getSsc());
-        }
-        if (newApp.getHsc() != null) {
-            oldApp.setHsc(newApp.getHsc());
-        }
-        if (newApp.getUndergraduate() != null) {
-            oldApp.setUndergraduate(newApp.getUndergraduate());
-        }
-        if (newApp.getPostgraduate() != null) {
-            oldApp.setPostgraduate(newApp.getPostgraduate());
-        }
-        if (newApp.getSscPassingYear() != null) {
-            oldApp.setSscPassingYear(newApp.getSscPassingYear());
-        }
-        if (newApp.getHscPassingYear() != null) {
-            oldApp.setHscPassingYear(newApp.getHscPassingYear());
-        }
-        if (newApp.getUndergraduatePassingYear() != null) {
-            oldApp.setUndergraduatePassingYear(newApp.getUndergraduatePassingYear());
-        }
-        if (newApp.getPostgraduatePassingYear() != null) {
-            oldApp.setPostgraduatePassingYear(newApp.getPostgraduatePassingYear());
-        }
-        if (newApp.getZipCode() != null) {
-            oldApp.setZipCode(newApp.getZipCode());
-        }
-        if (newApp.getRoadNo() != null) {
-            oldApp.setRoadNo(newApp.getRoadNo());
-        }
-
-        if (newApp.getCity() != null) {
-            oldApp.setCity(newApp.getCity());
-        }
-        if (newApp.getCountry() != null) {
-            oldApp.setCountry(newApp.getCountry());
-        }
-        return oldApp;
-    }
 
 
-    public EmpDetailsDto recruitApplicant(Long id){
+
+    public EmployeeDto recruitApplicant(Long id){
         Optional<Application> optApp = repo.findByIdAndDeletedFalse(id);
         if (optApp.isPresent()){
             this.delete(optApp.get().getId());
             var empDto = mapper.applicationToEmployee(optApp.get());
-            return empService.save(empDto);
+            return empService.saveEmployee(empDto);
         }
         return null;
     }

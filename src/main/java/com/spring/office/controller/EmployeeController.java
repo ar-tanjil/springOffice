@@ -1,7 +1,7 @@
 package com.spring.office.controller;
 
-import com.spring.office.dto.EmpTableDto;
-import com.spring.office.dto.EmpDetailsDto;
+import com.spring.office.dto.EmployeeTable;
+import com.spring.office.dto.EmployeeDto;
 import com.spring.office.dto.Message;
 import com.spring.office.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -23,30 +23,30 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<EmpTableDto> getAll() {
-        return empService.getAll();
+    public List<EmployeeTable> getAll() {
+        return empService.getAllEmployee();
     }
 
     @GetMapping("/{id}")
-    public EmpDetailsDto getById(@PathVariable("id") Long id){
-        return empService.getById(id);
+    public EmployeeDto getById(@PathVariable("id") Long id){
+        return empService.getEmployeeById(id);
     }
 
     @PostMapping
-    public EmpDetailsDto saveEmployee(
-           @Valid @RequestBody EmpDetailsDto dto){
-        return empService.save(dto);
+    public EmployeeDto saveEmployee(
+           @Valid @RequestBody EmployeeDto dto){
+        return empService.saveEmployee(dto);
     }
 
     @PutMapping("/{id}")
-    public EmpDetailsDto updateEmployee(@PathVariable("id") Long id,
-                                        @RequestBody EmpDetailsDto dto){
-        return empService.update(id,dto);
+    public EmployeeDto updateEmployee(@PathVariable("id") Long id,
+                                      @RequestBody EmployeeDto dto){
+        return empService.updateEmployee(id,dto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Message> deleteById(@PathVariable("id") Long id){
-        boolean success = empService.delete(id);
+        boolean success = empService.deleteEmployeeById(id);
         if (success){
             Message successMsg = new Message("Success");
             return new ResponseEntity<>(successMsg,HttpStatus.ACCEPTED);

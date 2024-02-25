@@ -2,8 +2,8 @@ package com.spring.office;
 
 
 import com.spring.office.dto.ApplicationDto;
-import com.spring.office.dto.DepartReceiveDto;
-import com.spring.office.dto.EmpDetailsDto;
+import com.spring.office.dto.DepartmentDto;
+import com.spring.office.dto.EmployeeDto;
 import com.spring.office.dto.JobDto;
 import com.spring.office.service.ApplicationService;
 import com.spring.office.service.DepartmentService;
@@ -41,10 +41,10 @@ public class OfficeApplication {
     public CommandLineRunner dataLoad() {
         return (a) -> {
 
-            DepartReceiveDto dep = new DepartReceiveDto();
+            DepartmentDto dep = new DepartmentDto();
             dep.setDepartmentName("Administration");
             dep.setDepartmentDesc("Administration Department");
-            var saveDep = departmentService.save(dep);
+            var saveDep = departmentService.saveDepartment(dep);
 
             JobDto job = new JobDto();
             job.setJobTitle("Manager");
@@ -74,7 +74,7 @@ public class OfficeApplication {
             app.setCountry("Bangladesh");
             var saveApp = applicationService.save(app);
 
-            var emp = new EmpDetailsDto();
+            var emp = new EmployeeDto();
 
             emp.setFirstName("Tanjil");
             emp.setLastName("Bin Moin");
@@ -94,7 +94,7 @@ public class OfficeApplication {
             emp.setCountry("Bangladesh");
             emp.setDepartmentId(saveDep.getId());
 
-            var saveEmp = employeeService.save(emp);
+            var saveEmp = employeeService.saveEmployee(emp);
 
         };
     }

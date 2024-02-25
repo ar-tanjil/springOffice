@@ -2,7 +2,7 @@ package com.spring.office.controller;
 
 import com.spring.office.dto.ApplicantTableDto;
 import com.spring.office.dto.ApplicationDto;
-import com.spring.office.dto.EmpDetailsDto;
+import com.spring.office.dto.EmployeeDto;
 import com.spring.office.service.ApplicationService;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,7 +50,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/recruit/{id}")
-    public EmpDetailsDto recruitApplicant(
+    public EmployeeDto recruitApplicant(
             @PathVariable("id") Long id
     ){
         return service.recruitApplicant(id);

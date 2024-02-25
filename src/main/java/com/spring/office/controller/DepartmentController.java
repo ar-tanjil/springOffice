@@ -1,6 +1,6 @@
 package com.spring.office.controller;
 
-import com.spring.office.dto.DepartReceiveDto;
+import com.spring.office.dto.DepartmentDto;
 import com.spring.office.dto.Message;
 import com.spring.office.service.DepartmentService;
 import org.springframework.http.HttpStatus;
@@ -19,29 +19,29 @@ public class DepartmentController {
     }
 
     @GetMapping
-    public Iterable<DepartReceiveDto> getAll() {
-        return service.getAll();
+    public Iterable<DepartmentDto> getAll() {
+        return service.getAllDepartment();
     }
 
     @GetMapping("/{id}")
-    public DepartReceiveDto getById(@PathVariable("id") Long id){
-        return service.getById(id);
+    public DepartmentDto getById(@PathVariable("id") Long id){
+        return service.getDepartmentById(id);
     }
 
     @PostMapping
-    public DepartReceiveDto saveEmployee(@RequestBody DepartReceiveDto dto){
-        return service.save(dto);
+    public DepartmentDto saveEmployee(@RequestBody DepartmentDto dto){
+        return service.saveDepartment(dto);
     }
 
     @PutMapping("/{id}")
-    public DepartReceiveDto updateEmployee(@PathVariable("id") Long id,
-                                           @RequestBody DepartReceiveDto dto){
-        return service.update(id,dto);
+    public DepartmentDto updateEmployee(@PathVariable("id") Long id,
+                                        @RequestBody DepartmentDto dto){
+        return service.updateDepartment(id,dto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Message> deleteById(@PathVariable("id") Long id){
-        boolean success = service.delete(id);
+        boolean success = service.deleteDepartmentById(id);
         if (success){
             Message successMsg = new Message("Success");
             return new ResponseEntity<>(successMsg, HttpStatus.ACCEPTED);

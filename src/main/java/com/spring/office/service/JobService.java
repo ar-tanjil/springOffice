@@ -1,7 +1,6 @@
 package com.spring.office.service;
 
 import com.spring.office.domain.Department;
-import com.spring.office.domain.Employee;
 import com.spring.office.domain.Job;
 import com.spring.office.dto.JobDto;
 import com.spring.office.repo.JobRepo;
@@ -15,7 +14,10 @@ import java.util.Optional;
 @Service
 public class JobService {
 
+//    Job repository
     private final JobRepo jobRepo;
+
+//        A mapper class to convert job class to other class.
     private final JobMapper jobMapper;
 
     private JobService(
@@ -26,14 +28,16 @@ public class JobService {
         this.jobMapper = jobMapper;
     }
 
-    public Iterable<JobDto> getAll(){
-        Iterable<Job> allJob = jobRepo.findAllByDeletedFalse();
+//    Get all jobs from database where Deleted is false. Return JobDto list.
+    public List<JobDto> getAllJobs(){
+        List<Job> allJob = jobRepo.findAllByDeletedFalse();
         List<JobDto> dtoJob = new ArrayList<>();
         allJob.forEach((job) -> dtoJob.add(jobMapper.jobToDto(job)));
         return dtoJob;
     }
 
-    public List<JobDto> getAllByDepartment(Long id){
+//    Get all jobs by department. Return a jobDto list.
+    public List<JobDto> getAllJobsByDepartment(Long id){
         Department dep = new Department();
         dep.setId(id);
         List<Job> allJob = jobRepo.findAllByDepartment(dep);
@@ -42,6 +46,7 @@ public class JobService {
         return dtoJob;
     }
 
+//    Get all vacancy by department. Return a jobDto list.
     public List<JobDto> getAllVacancyByDepartment(Long id){
         Department dep = new Department();
         Integer vac = 0;
@@ -52,6 +57,7 @@ public class JobService {
         return dtoJob;
     }
 
+//    Get all vacancy. Return a JobDto List.
     public List<JobDto> getAllVacancy(){
         Integer vac = 0;
         List<Job> allJob = jobRepo.findAllByVacancyIsGreaterThan(vac);
@@ -60,12 +66,15 @@ public class JobService {
         return dtoJob;
     }
 
-    public JobDto getById(Long id){
+
+//    Get job by job id, Return a JobDto.
+    public JobDto getJobById(Long id){
         Optional<Job> job = jobRepo.findById(id);
         return job.map(jobMapper::jobToDto).orElse(null);
     }
 
 
+//    Save job. Return A JobDto.
     public JobDto saveJob(JobDto dto){
         dto.setVacancy(dto.getTotalPost());
         Job job = jobMapper.dtoToJob(dto);
@@ -73,13 +82,15 @@ public class JobService {
         return jobMapper.jobToDto(saveJob);
     }
 
-    public JobDto update(Long id, JobDto dto){
+//    Update Job by id. Return JobDto. It's complete updated.
+//    Should use in a patch mapping.
+    public JobDto updateJob(Long id, JobDto dto){
 
         Optional<Job> optJob = jobRepo.findById(id);
 
         if (optJob.isPresent()){
             Job oldJob = optJob.get();
-            Job mapJob = updateMapper(jobMapper.dtoToJob(dto),oldJob);
+            Job mapJob = jobMapper.updateMapper(jobMapper.dtoToJob(dto),oldJob);
             Job saveJob = jobRepo.save(mapJob);
             return jobMapper.jobToDto(saveJob);
         }
@@ -89,33 +100,38 @@ public class JobService {
         return jobMapper.jobToDto(saveJob);
     }
 
+//    Reduce vacancy of a Job. Return void.
     public void reduceVacancy(Integer req, Long id){
         jobRepo.reduceVacancy(req,id);
     }
 
-
+//      Add or Rise vacancy oa a Job. Return void.
     public void addVacancy(Integer req, Long id){
         jobRepo.addVacancy(req,id);
     }
 
 
-
-    public Boolean checkVacancy(Long id){
+// Check Vacancy for a Job by Job id. Return Boolean.
+    public Boolean checkVacancyByJobId(Long id){
         int vacancy = 0;
         Optional<Job> optJob = jobRepo.findByIdAndVacancyIsGreaterThan(
                 id, vacancy);
         return optJob.isPresent();
     }
 
-    public void updateTotalPost(int add, long jobId, long depId){
+//    Add new Post to a job. Return void.
+    public void addTotalPost(int add, long jobId, long depId){
 
         Department dep = new Department();
         dep.setId(depId);
 
         jobRepo.addTotalPost(add,jobId,dep);
     }
-
-    public boolean delete(Long id){
+// Delete a job by it's id. It needs further modification.
+//    like nobody can delete if this job has an active employee.
+//    Another modification is job needs a life cycle. when job was created
+//    when the job was dismissed. and have to make it a soft delete method.
+    public boolean deleteJobById(Long id){
         Optional<Job> optJob = jobRepo.findById(id);
         if (optJob.isPresent()){
             jobRepo.deleteById(id);
@@ -124,30 +140,8 @@ public class JobService {
         return false;
     }
 
-    private Job updateMapper(Job newJob, Job oldJob){
-        if (newJob.getId() != null){
-            oldJob.setId(newJob.getId());
-        }
-        if (newJob.getJobTitle() != null){
-            oldJob.setJobTitle(newJob.getJobTitle());
-        }
-        if (newJob.getDepartment() != null){
-            oldJob.setDepartment(newJob.getDepartment());
-        }
-        if (newJob.getMaxSalary() != oldJob.getMaxSalary()){
-            oldJob.setMaxSalary(newJob.getMaxSalary());
-        }
-        if (newJob.getMinSalary() != oldJob.getMinSalary()){
-            oldJob.setMinSalary(newJob.getMinSalary());
-        }
 
-        int totalPost = oldJob.getTotalPost() + newJob.getTotalPost();
-        int vacancy = oldJob.getVacancy() + newJob.getTotalPost();
-        if (newJob.getTotalPost() > 0){
-            oldJob.setTotalPost(totalPost);
-            oldJob.setVacancy(vacancy);
-        }
-        return oldJob;
-    }
+
+
 
 }

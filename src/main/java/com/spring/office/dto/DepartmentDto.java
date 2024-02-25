@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DepartReceiveDto {
+public class DepartmentDto {
     private Long id;
     private String departmentName;
     private Long managerId;

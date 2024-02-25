@@ -2,7 +2,7 @@ package com.spring.office.service;
 
 import com.spring.office.domain.Department;
 import com.spring.office.domain.Job;
-import com.spring.office.dto.DepartReceiveDto;
+import com.spring.office.dto.DepartmentDto;
 import com.spring.office.repo.DepartmentRepo;
 import com.spring.office.service.mapper.DepartmentMapper;
 import org.springframework.stereotype.Service;
@@ -18,52 +18,40 @@ public class DepartmentService {
     private DepartmentService(
             DepartmentRepo departmentRepo,
             DepartmentMapper departmentMapper
-                              ){
+    ) {
         this.departmentRepo = departmentRepo;
         this.departmentMapper = departmentMapper;
     }
 
-    public List<DepartReceiveDto> getAll(){
+    public List<DepartmentDto> getAllDepartment() {
         Iterable<Department> allDep = departmentRepo.findAllByDeletedFalse();
-        List<DepartReceiveDto> listDep = new ArrayList<>();
+        List<DepartmentDto> listDep = new ArrayList<>();
         allDep.forEach(department -> {
             listDep.add(departmentMapper.departmentToDto(department));
         });
         return listDep;
     }
 
-    public DepartReceiveDto getById(Long id){
+    public DepartmentDto getDepartmentById(Long id) {
         Optional<Department> optDep = departmentRepo.findById(id);
         return optDep.map(departmentMapper::departmentToDto).orElse(null);
     }
 
-    public DepartReceiveDto save(DepartReceiveDto dto){
-       Department dep = departmentMapper.dtoToDepartment(dto);
-       Department saveDep = departmentRepo.save(dep);
-       return departmentMapper.departmentToDto(saveDep);
+    public DepartmentDto saveDepartment(DepartmentDto dto) {
+        Department dep = departmentMapper.dtoToDepartment(dto);
+        Department saveDep = departmentRepo.save(dep);
+        return departmentMapper.departmentToDto(saveDep);
     }
 
-    public DepartReceiveDto update(Long id, DepartReceiveDto dto){
-        Department newDep = departmentMapper.dtoToDepartment(dto);
+    //    It is patch update method.
+    public DepartmentDto updateDepartment(Long id, DepartmentDto dto) {
         Optional<Department> optDep = departmentRepo.findById(id);
-        if (optDep.isPresent()){
+        if (optDep.isPresent()) {
+            Department newDep = departmentMapper.dtoToDepartment(dto);
             Department oldDep = optDep.get();
+            Department patchDep = departmentMapper.updateMapper(newDep, oldDep);
 
-            if (newDep.getDepartmentName() != null){
-                oldDep.setDepartmentName(newDep.getDepartmentName());
-            }
-            if (newDep.getDepartmentDesc() != null){
-                oldDep.setDepartmentDesc(newDep.getDepartmentDesc());
-            }
-            if (newDep.getJob() != null){
-                Set<Job> job = new HashSet<>();
-                if (oldDep.getJob() != null){
-                    job = oldDep.getJob();
-                }
-                job.addAll(newDep.getJob());
-            }
-
-          var saveDep = departmentRepo.save(oldDep);
+            var saveDep = departmentRepo.save(patchDep);
             return departmentMapper.departmentToDto(saveDep);
         }
 
@@ -72,9 +60,10 @@ public class DepartmentService {
         return departmentMapper.departmentToDto(saveDep2);
     }
 
-    public boolean delete(Long id){
+    //    Hard delete
+    public boolean deleteDepartmentById(Long id) {
         Optional<Department> dep = departmentRepo.findById(id);
-        if(dep.isPresent()){
+        if (dep.isPresent()) {
             departmentRepo.deleteById(id);
             return true;
         }
