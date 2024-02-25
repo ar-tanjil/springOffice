@@ -89,9 +89,16 @@ public class JobService {
         return jobMapper.jobToDto(saveJob);
     }
 
-    public void updateVacancy(Integer req, Long id){
+    public void reduceVacancy(Integer req, Long id){
         jobRepo.reduceVacancy(req,id);
     }
+
+
+    public void addVacancy(Integer req, Long id){
+        jobRepo.addVacancy(req,id);
+    }
+
+
 
     public Boolean checkVacancy(Long id){
         int vacancy = 0;

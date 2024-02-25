@@ -37,7 +37,7 @@ public class JobController {
             @PathVariable("job_id") Long jobId,
             @PathVariable("recruit") int recruit
     ){
-        service.updateVacancy(recruit, jobId);
+        service.reduceVacancy(recruit, jobId);
     }
 
     @GetMapping("check_vacancy/{id}")

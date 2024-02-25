@@ -143,7 +143,6 @@ public class ApplicationService {
     public EmpDetailsDto recruitApplicant(Long id){
         Optional<Application> optApp = repo.findByIdAndDeletedFalse(id);
         if (optApp.isPresent()){
-            jobService.updateVacancy(1,optApp.get().getJob().getId());
             this.delete(optApp.get().getId());
             var empDto = mapper.applicationToEmployee(optApp.get());
             return empService.save(empDto);

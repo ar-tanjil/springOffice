@@ -30,6 +30,10 @@ public interface JobRepo extends JpaRepository<Job, Long> {
     @Query("update Job j set j.vacancy = j.vacancy - :req where j.id = :id")
     void reduceVacancy(int req, Long id);
 
+    @Modifying
+    @Transactional
+    @Query("update Job j set j.vacancy = j.vacancy + :req where j.id = :id")
+    void addVacancy(int req, Long id);
 
     @Modifying
     @Transactional

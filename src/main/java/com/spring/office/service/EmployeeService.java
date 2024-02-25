@@ -6,6 +6,7 @@ import com.spring.office.repo.EmployeeRepo;
 import com.spring.office.service.mapper.EmployeeMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,13 +47,18 @@ public class EmployeeService {
 
 
     public EmpDetailsDto save(EmpDetailsDto dto) {
+            boolean vacancy = jobService.checkVacancy(dto.getJobId());
+            if (vacancy){
 
+                dto.setHireDate(LocalDate.now());
+                jobService.reduceVacancy(1,dto.getJobId());
+                Employee emp = empMapper.dtoToEmployee(dto);
+                Employee saveEmp = empRepo.save(emp);
 
+                return empMapper.employeeToDto(saveEmp);
+            }
+            return null;
 
-        Employee emp = empMapper.dtoToEmployee(dto);
-        Employee saveEmp = empRepo.save(emp);
-
-        return empMapper.employeeToDto(saveEmp);
     }
 
     public EmpDetailsDto update(Long id, EmpDetailsDto newDto) {
@@ -76,6 +82,7 @@ public class EmployeeService {
         Optional<Employee> optEmp = empRepo.findByCustomId(id);
         if (optEmp.isPresent()) {
             Employee emp = optEmp.get();
+            jobService.addVacancy(1,emp.getJob().getId());
             emp.setActive(false);
             emp.setDeleted(true);
             empRepo.save(emp);
