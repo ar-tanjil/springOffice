@@ -5,12 +5,14 @@ import com.spring.office.dto.EmployeeDto;
 import com.spring.office.dto.Message;
 import com.spring.office.service.EmployeeService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/employees")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -18,9 +20,6 @@ public class EmployeeController {
 
     private final EmployeeService empService;
 
-    private EmployeeController(EmployeeService employeeService) {
-        this.empService = employeeService;
-    }
 
     @GetMapping
     public List<EmployeeTable> getAll() {

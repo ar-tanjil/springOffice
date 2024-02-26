@@ -5,23 +5,18 @@ import com.spring.office.domain.Job;
 import com.spring.office.dto.DepartmentDto;
 import com.spring.office.repo.DepartmentRepo;
 import com.spring.office.service.mapper.DepartmentMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class DepartmentService {
 
     private final DepartmentRepo departmentRepo;
     private final DepartmentMapper departmentMapper;
 
-    private DepartmentService(
-            DepartmentRepo departmentRepo,
-            DepartmentMapper departmentMapper
-    ) {
-        this.departmentRepo = departmentRepo;
-        this.departmentMapper = departmentMapper;
-    }
 
     public List<DepartmentDto> getAllDepartment() {
         Iterable<Department> allDep = departmentRepo.findAllByDeletedFalse();

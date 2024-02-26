@@ -5,6 +5,7 @@ import com.spring.office.domain.Job;
 import com.spring.office.dto.JobDto;
 import com.spring.office.repo.JobRepo;
 import com.spring.office.service.mapper.JobMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class JobService {
 
 //    Job repository
@@ -19,14 +21,6 @@ public class JobService {
 
 //        A mapper class to convert job class to other class.
     private final JobMapper jobMapper;
-
-    private JobService(
-            JobRepo jobRepo,
-            JobMapper jobMapper
-    ){
-        this.jobRepo = jobRepo;
-        this.jobMapper = jobMapper;
-    }
 
 //    Get all jobs from database where Deleted is false. Return JobDto list.
     public List<JobDto> getAllJobs(){

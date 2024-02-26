@@ -3,10 +3,12 @@ package com.spring.office.controller;
 import com.spring.office.dto.JobDto;
 import com.spring.office.dto.Message;
 import com.spring.office.service.JobService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/designations")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -14,11 +16,7 @@ public class JobController {
 
     private final JobService service;
 
-    public JobController(
-            JobService service
-    ) {
-        this.service = service;
-    }
+
 
 
     @GetMapping

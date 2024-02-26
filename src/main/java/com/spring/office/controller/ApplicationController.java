@@ -4,8 +4,10 @@ import com.spring.office.dto.ApplicantTableDto;
 import com.spring.office.dto.ApplicationDto;
 import com.spring.office.dto.EmployeeDto;
 import com.spring.office.service.ApplicationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/applications")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -13,9 +15,6 @@ public class ApplicationController {
 
     private final ApplicationService service;
 
-    public ApplicationController(ApplicationService service){
-        this.service = service;
-    }
 
     @PostMapping
     public ApplicationDto saveApplication(

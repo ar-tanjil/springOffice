@@ -4,6 +4,7 @@ import com.spring.office.domain.Employee;
 import com.spring.office.dto.*;
 import com.spring.office.repo.EmployeeRepo;
 import com.spring.office.service.mapper.EmployeeMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class EmployeeService {
 //    Employee Repository
     private final EmployeeRepo empRepo;
@@ -24,18 +26,6 @@ public class EmployeeService {
 //    Job Service Class
     private final JobService jobService;
 
-
-
-    public EmployeeService(
-            EmployeeRepo employeeRepo,
-            EmployeeMapper mapper,
-            DepartmentService depService,
-            JobService jobService) {
-        this.empRepo = employeeRepo;
-        this.empMapper = mapper;
-        this.depService = depService;
-        this.jobService = jobService;
-    }
 
 //    Get All Employee if Deleted is False. Return EmployeeTable
     public List<EmployeeTable> getAllEmployee() {

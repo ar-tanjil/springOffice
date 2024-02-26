@@ -7,6 +7,7 @@ import com.spring.office.dto.EmployeeDto;
 import com.spring.office.repo.ApplicationRepo;
 import com.spring.office.service.mapper.ApplicationMapper;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,23 +16,12 @@ import java.util.Optional;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class ApplicationService {
     private final ApplicationRepo repo;
     private final EmployeeService empService;
     private final ApplicationMapper mapper;
     private final JobService jobService;
-
-    public ApplicationService(
-            ApplicationRepo repo,
-            EmployeeService empService,
-            ApplicationMapper mapper,
-            JobService jobService
-    ) {
-        this.repo = repo;
-        this.empService = empService;
-        this.mapper = mapper;
-        this.jobService = jobService;
-    }
 
 
     public ApplicationDto save(ApplicationDto dto) {
