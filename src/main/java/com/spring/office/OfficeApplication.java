@@ -1,14 +1,14 @@
 package com.spring.office;
 
 
-import com.spring.office.dto.ApplicationDto;
-import com.spring.office.dto.DepartmentDto;
-import com.spring.office.dto.EmployeeDto;
-import com.spring.office.dto.JobDto;
-import com.spring.office.service.ApplicationService;
-import com.spring.office.service.DepartmentService;
-import com.spring.office.service.EmployeeService;
-import com.spring.office.service.JobService;
+import com.spring.office.application.ApplicationDto;
+import com.spring.office.department.DepartmentDto;
+import com.spring.office.employee.EmployeeDto;
+import com.spring.office.job.JobDto;
+import com.spring.office.application.ApplicationService;
+import com.spring.office.department.DepartmentService;
+import com.spring.office.employee.EmployeeService;
+import com.spring.office.job.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
