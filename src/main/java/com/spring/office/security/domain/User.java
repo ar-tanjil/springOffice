@@ -31,10 +31,10 @@ public class User extends BaseModel implements UserDetails {
             nullable = false
     )
     private String password;
-    private boolean accountNonExpired = true;
-    private boolean accountNonLocked = true;
-    private boolean credentialsNonExpired = true;
-    private boolean enabled = true;
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
+    private boolean credentialsNonExpired;
+    private boolean enabled;
 
     @Enumerated(EnumType.STRING)
     private Role role;

@@ -35,7 +35,7 @@ public class DepartmentMapper {
         }
 
         if (newDep.getDepartmentName() != null){
-            oldDep.setDepartmentName(newDep.getDepartmentDesc();
+            oldDep.setDepartmentName(newDep.getDepartmentDesc());
         }
         return oldDep;
     }
