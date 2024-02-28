@@ -23,10 +23,7 @@ public abstract class BaseModel {
     @Id
     @GeneratedValue
     private Long id;
-
     private Boolean active = true;
-
-
     private Boolean deleted = false;
 
     @CreationTimestamp

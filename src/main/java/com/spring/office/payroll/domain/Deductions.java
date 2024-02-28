@@ -2,14 +2,19 @@ package com.spring.office.payroll.domain;
 
 
 import com.spring.office.domain.BaseModel;
+import com.spring.office.employee.Employee;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -19,13 +24,14 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class Deductions extends BaseModel {
 
-    private float unpaidLeave;
-    private float loanPayment;
-    private float tax;
-    private float insurance;
+    private Float unpaidLeave;
+    private Float loanPayment;
+    private Float tax;
+    private YearMonth month;
 
-    @OneToOne
-    @JoinColumn(name = "salary_id")
-    private Salary salary;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
 }
