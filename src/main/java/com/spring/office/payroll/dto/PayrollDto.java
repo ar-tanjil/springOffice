@@ -1,28 +1,30 @@
 package com.spring.office.payroll.dto;
 
 import com.spring.office.employee.Employee;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
-import org.springframework.stereotype.Service;
 
-import java.time.Month;
-import java.time.Year;
 import java.time.YearMonth;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
-public class AdditionsDto {
+public class PayrollDto {
 
     private Long id;
+    private YearMonth period;
+    private Double unpaidLeave;
+    private Double loanPayment;
+    private Double tax;
     private Double travelAllowance;
     private Double bonus;
-    private Integer year;
-    private Month month;
+    private Double basic;
+    private Double medicalAllowance;
+    private Double providentFund;
+    private Double netPay;
     private Long employeeId;
+
 
 }

@@ -11,9 +11,9 @@ import lombok.*;
 public class SalaryDto {
 
     private Long id;
-    private float basic;
-    private float medicalAllowance;
-    private float providentFund;
+    private Double basic;
+    private Double medicalAllowance;
+    private Double providentFund;
     private Long employeeId;
 
 }

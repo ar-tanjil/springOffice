@@ -17,11 +17,12 @@ public class AdditionsMapper {
             return null;
         }
 
-        YearMonth ym = att.getMonth();
+        YearMonth ym = att.getPeriod();
         Year y = Year.of(ym.getYear());
         Month m = Month.of(ym.getMonthValue());
 
         return AdditionsDto.builder()
+                .id(att.getId())
                 .bonus(att.getBonus())
                 .travelAllowance(att.getTravelAllowance())
                 .month(m)
@@ -43,8 +44,9 @@ public class AdditionsMapper {
         YearMonth ym = YearMonth.of(dto.getYear(), m);
 
        return Additions.builder()
+               .id(dto.getId())
                .bonus(dto.getBonus())
-               .month(ym)
+               .period(ym)
                .travelAllowance(dto.getTravelAllowance())
                .employee(emp)
                .build();

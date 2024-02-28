@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.invoke.SerializedLambda;
 
 @RestController
-@RequestMapping("/sal")
+@RequestMapping("/salary")
 @RequiredArgsConstructor
 public class SalaryController {
 

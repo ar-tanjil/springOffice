@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 public class Tax extends BaseModel {
 
     private String title;
-    private float percentage;
-    private float minRange;
-    private float maxRange;
+    private Double percentage;
+    private Double minRange;
+    private Double maxRange;
 }

@@ -1,19 +1,18 @@
 package com.spring.office.payroll.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.office.domain.BaseModel;
 import com.spring.office.employee.Employee;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 
 @EqualsAndHashCode(callSuper = true)
@@ -24,14 +23,15 @@ import java.time.YearMonth;
 @Entity
 public class Deductions extends BaseModel {
 
-    private Float unpaidLeave;
-    private Float loanPayment;
-    private Float tax;
-    private YearMonth month;
+    private Double unpaidLeave;
+    private Double loanPayment;
+    private Double tax;
+    private YearMonth period;
 
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
+    @JsonIgnore
     private Employee employee;
 
 }

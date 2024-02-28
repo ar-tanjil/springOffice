@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 
 @RestController
-@RequestMapping("/att")
+@RequestMapping("/attendances")
 @RequiredArgsConstructor
 public class AttendanceController {
 

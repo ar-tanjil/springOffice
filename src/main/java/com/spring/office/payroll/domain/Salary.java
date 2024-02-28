@@ -25,9 +25,9 @@ import java.util.Set;
 public class Salary extends BaseModel {
 
 
-    private Float basic;
-    private Float medicalAllowance;
-    private Float providentFund;
+    private Double basic;
+    private Double medicalAllowance;
+    private Double providentFund;
 
     @OneToOne
     @JoinColumn(name = "employee_id")
