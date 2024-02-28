@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @SpringBootApplication
 public class OfficeApplication {
@@ -34,6 +35,8 @@ public class OfficeApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(OfficeApplication.class, args);
+
+        System.out.println(LocalTime.now());
     }
 
 
