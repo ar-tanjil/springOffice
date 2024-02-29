@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/deductions")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class DeductionController {
 
     private final DeductionsService deductionsService;

@@ -5,7 +5,10 @@ import com.spring.office.payroll.domain.Deductions;
 import com.spring.office.payroll.domain.Payroll;
 import com.spring.office.payroll.domain.Salary;
 import com.spring.office.payroll.dto.PayrollDto;
+import com.spring.office.payroll.dto.PayrollTable;
 import org.springframework.stereotype.Service;
+
+import java.time.YearMonth;
 
 @Service
 public class PayrollMapper {
@@ -47,5 +50,21 @@ public class PayrollMapper {
 
         return dto;
     }
+
+
+    public PayrollTable payrollToTable(Payroll payroll) {
+        PayrollTable table = new PayrollTable();
+
+        if (payroll.getEmployee() != null) {
+            table.setEmployeeId(payroll.getEmployee().getId());
+            table.setFirstName(payroll.getEmployee().getFirstName());
+        }
+
+        table.setNetPay(payroll.getNetPay());
+        table.setPeriod(payroll.getPeriod());
+
+        return table;
+    }
+
 
 }

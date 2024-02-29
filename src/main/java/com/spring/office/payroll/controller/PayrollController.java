@@ -1,16 +1,15 @@
 package com.spring.office.payroll.controller;
 
 import com.spring.office.payroll.dto.PayrollDto;
+import com.spring.office.payroll.dto.PayrollTable;
 import com.spring.office.payroll.service.PayrollService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("payroll")
+@RequestMapping("payrolls")
+@CrossOrigin(origins = "http://localhost:4200")
 public class PayrollController {
 
     private final PayrollService payrollService;
@@ -23,4 +22,13 @@ public class PayrollController {
     ) {
         return payrollService.getPayrollByEmpAndPeriod(empId, year, month);
     }
+
+    @GetMapping("/{year}/{month}")
+    public Iterable<PayrollTable> getAllByPeriod(
+            @PathVariable("year") Integer year,
+            @PathVariable("month") Integer month
+    ){
+        return payrollService.getAllByPeriod(year, month);
+    }
+
 }

@@ -6,6 +6,7 @@ import com.spring.office.payroll.domain.Deductions;
 import com.spring.office.payroll.domain.Payroll;
 import com.spring.office.payroll.domain.Salary;
 import com.spring.office.payroll.dto.PayrollDto;
+import com.spring.office.payroll.dto.PayrollTable;
 import com.spring.office.payroll.repo.AdditionsRepository;
 import com.spring.office.payroll.repo.DeductionsRepository;
 import com.spring.office.payroll.repo.PayrollRepository;
@@ -14,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.YearMonth;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,39 +37,40 @@ public class PayrollService {
     private final PayrollMapper payrollMapper;
 
 
-    public Payroll generatePayroll(Long empId, Integer year, Integer month) {
+    public Payroll generatePayroll(Employee emp, YearMonth yearMonth) {
 
-        Employee emp = new Employee();
-        emp.setId(empId);
-        YearMonth yearMonth = YearMonth.of(year, month);
         Salary salary = salaryRepository.findByEmployee(emp).orElse(new Salary());
         Additions additions = additionsRepository.findByEmployeeAndPeriod(emp, yearMonth).orElse(new Additions());
         Deductions deductions = deductionsRepository.findByEmployeeAndPeriod(emp, yearMonth).orElse(new Deductions());
 //        Additions
         double basic = salary.getBasic();
-        double ma = salary.getMedicalAllowance();
+        double medicalAllowance = salary.getMedicalAllowance();
         double bonus = additions.getBonus();
-        double ta = additions.getTravelAllowance();
+        double travelAllowance = additions.getTravelAllowance();
 //    Deductions
         double loan = deductions.getLoanPayment();
         double unpaidLeave = deductions.getUnpaidLeave();
-        double pf = salary.getProvidentFund();
+        double providentFund = salary.getProvidentFund();
 
-        double grossPay = basic + bonus + ma + ta;
+        double grossPay = basic + bonus + medicalAllowance + travelAllowance;
         double taxablePay = grossPay - unpaidLeave;
         double tax = taxService.taxCalculation(taxablePay);
-        deductionsService.updateTax(tax, yearMonth, emp);
-        double netPay = taxablePay - tax - pf - loan;
+
+
+        double netPay = taxablePay - tax - providentFund - loan;
 
         Optional<Payroll> optPayroll = payrollRepository.findByEmployeeAndPeriod(emp, yearMonth);
 
-        if (optPayroll.isPresent()) {
-            return null;
+
+        Payroll payroll = payrollRepository.findByEmployeeAndPeriod(emp,yearMonth).orElse(null);
+
+
+        if (payroll == null) {
+            payroll = new Payroll();
+            payroll.setPeriod(yearMonth);
         }
 
-        Payroll payroll = new Payroll();
 
-        payroll.setPeriod(yearMonth);
         payroll.setNetPay(netPay);
 
         if (salary.getId() != null) {
@@ -77,11 +81,15 @@ public class PayrollService {
             payroll.setAdditions(additions);
         }
         if (deductions.getId() != null) {
+            deductions.setTax(tax);
             payroll.setDeductions(deductions);
+
         }
         if (emp.getId() != null) {
             payroll.setEmployee(emp);
         }
+
+        deductionsService.updateTax(tax, yearMonth, emp);
 
         return payrollRepository.save(payroll);
 
@@ -97,10 +105,17 @@ public class PayrollService {
         Employee employee = new Employee();
         employee.setId(empId);
 
-       var savePayroll = this.generatePayroll(empId, year, month);
+        var savePayroll = this.generatePayroll(employee, period);
 
-       return payrollMapper.payrollToDto(savePayroll);
+        return payrollMapper.payrollToDto(savePayroll);
+    }
 
+    public List<PayrollTable> getAllByPeriod(Integer year, Integer month){
+        YearMonth period = YearMonth.of(year, month);
+        List<Payroll> optPay = payrollRepository.findByPeriod(period);
+
+        return optPay.stream().map(payrollMapper::payrollToTable)
+                .collect(Collectors.toList());
 
     }
 

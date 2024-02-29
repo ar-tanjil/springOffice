@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/additions")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AdditionsController {
 
     private final AdditionService additionService;

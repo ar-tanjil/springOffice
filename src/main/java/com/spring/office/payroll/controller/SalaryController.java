@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.invoke.SerializedLambda;
 
 @RestController
-@RequestMapping("/salary")
+@RequestMapping("/salaries")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class SalaryController {
 
     private final SalaryService salaryService;

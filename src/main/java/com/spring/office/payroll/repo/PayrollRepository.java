@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.Period;
 import java.time.YearMonth;
+import java.util.List;
 import java.util.Optional;
 
 public interface PayrollRepository extends JpaRepository<Payroll, Long> {
@@ -14,4 +15,5 @@ public interface PayrollRepository extends JpaRepository<Payroll, Long> {
 
     int countByEmployeeAndPeriod(Employee employee, YearMonth Period);
 
+    List<Payroll> findByPeriod(YearMonth period);
 }

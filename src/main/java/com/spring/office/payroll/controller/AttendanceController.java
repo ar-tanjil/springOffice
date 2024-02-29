@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/attendances")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
