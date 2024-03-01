@@ -42,4 +42,5 @@ public class EmployeeDto {
     private Long applicationId;
     private String jobTitle;
     private String departmentName;
+    private Long salaryId;
 }

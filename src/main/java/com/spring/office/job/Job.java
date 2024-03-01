@@ -38,6 +38,7 @@ public class Job extends BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "department_id")
+    @JsonIgnore
     private Department department;
 
 }

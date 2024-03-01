@@ -23,9 +23,9 @@ import java.time.YearMonth;
 @Entity
 public class Deductions extends BaseModel {
 
-    private Double unpaidLeave;
-    private Double loanPayment;
-    private Double tax;
+    private double unpaidLeave;
+    private double loanPayment;
+    private double tax;
     private YearMonth period;
 
 

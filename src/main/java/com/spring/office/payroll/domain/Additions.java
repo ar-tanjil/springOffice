@@ -22,8 +22,8 @@ import java.time.YearMonth;
 @Entity
 public class Additions extends BaseModel {
 
-    private Double travelAllowance;
-    private Double bonus;
+    private double travelAllowance;
+    private double bonus;
     private YearMonth period;
 
     @ManyToOne

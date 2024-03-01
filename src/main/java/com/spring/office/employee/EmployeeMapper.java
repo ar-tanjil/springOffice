@@ -95,6 +95,10 @@ public class EmployeeMapper {
             dto.setDepartmentName(emp.getDepartment().getDepartmentName());
         }
 
+        if (emp.getSalary() != null){
+            dto.setSalaryId(emp.getSalary().getId());
+        }
+
         dto.setFirstName(emp.getFirstName());
         dto.setLastName(emp.getLastName());
         dto.setDob(emp.getDob());
@@ -183,6 +187,13 @@ public class EmployeeMapper {
         }
 
         return oldEmp;
+    }
+
+    public EmployeeSalary employeeToEmpSal(Employee employee){
+        return new EmployeeSalary(
+                employee.getId(),
+                employee.getFirstName()
+        );
     }
 
 }

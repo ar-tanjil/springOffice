@@ -28,12 +28,13 @@ public class TaxService {
                 .max(Comparator.comparing(TaxDto::getMaxRange))
                 .orElseThrow();
 
+        if (currentMax.getMaxRange() < taxablePay) {
+            return currentMax.getPercentage();
+        }
+
         for (TaxDto tax : taxList) {
-            if (tax.getMinRange() < taxablePay && tax.getMaxRange() > taxablePay) {
+            if (tax.getMinRange() <= taxablePay && tax.getMaxRange() >= taxablePay) {
                 return tax.getPercentage();
-            }
-            if (currentMax.getMaxRange() < taxablePay) {
-                return currentMax.getPercentage();
             }
         }
         return 0D;

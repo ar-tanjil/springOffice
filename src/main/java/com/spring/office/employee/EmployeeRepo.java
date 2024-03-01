@@ -1,5 +1,7 @@
 package com.spring.office.employee;
 
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,6 +22,7 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> {
     Optional<Employee> findByCustomId(@Param("val") Long id);
 //    Iterable<Employee> findByIsDeleted(boolean value);
 
+    List<Employee> findAllByDeletedFalseAndSalaryIsNull();
 
 
 }

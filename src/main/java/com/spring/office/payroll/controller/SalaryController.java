@@ -1,6 +1,7 @@
 package com.spring.office.payroll.controller;
 
 import com.spring.office.payroll.dto.SalaryDto;
+import com.spring.office.payroll.dto.SalaryTable;
 import com.spring.office.payroll.service.SalaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,4 +42,10 @@ public class SalaryController {
     ){
         return salaryService.getSalaryByEmployee(empId);
     }
+
+    @GetMapping
+    public Iterable<SalaryTable> getAllSalary(){
+        return salaryService.getAllSalary();
+    }
+
 }

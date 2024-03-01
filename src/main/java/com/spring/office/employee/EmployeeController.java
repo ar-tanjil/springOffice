@@ -51,4 +51,9 @@ public class EmployeeController {
         Message failedMsg = new Message("Not Found");
         return new ResponseEntity<>(failedMsg, HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/without_sal")
+    public Iterable<EmployeeSalary> getSalaryLessEmp(){
+        return empService.employeeWithoutSalary();
+    }
 }

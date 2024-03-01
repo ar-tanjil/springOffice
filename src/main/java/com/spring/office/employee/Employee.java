@@ -8,6 +8,7 @@ import com.spring.office.domain.embaded.Address;
 import com.spring.office.domain.embaded.Qualification;
 import com.spring.office.job.Job;
 import com.spring.office.job.JobHistory;
+import com.spring.office.payroll.domain.Salary;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -57,13 +58,16 @@ public class Employee extends BaseModel {
     private List<JobHistory> jobHistory;
 
     @Embedded
-    public Address address;
+    private Address address;
 
     @Embedded
-    public Qualification qualification;
+    private Qualification qualification;
 
     @OneToOne()
     @JoinColumn(name = "application_id")
-    public Application application;
+    private Application application;
+
+    @OneToOne(mappedBy = "employee")
+    private Salary salary;
 
 }

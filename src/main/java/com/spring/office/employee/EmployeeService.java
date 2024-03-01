@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -93,6 +94,13 @@ public class EmployeeService {
             return true;
         }
         return false;
+    }
+
+
+    public List<EmployeeSalary> employeeWithoutSalary(){
+        List<Employee> listEmployee = empRepo.findAllByDeletedFalseAndSalaryIsNull();
+        return listEmployee.stream().map(empMapper::employeeToEmpSal)
+                .collect(Collectors.toList());
     }
 
 }

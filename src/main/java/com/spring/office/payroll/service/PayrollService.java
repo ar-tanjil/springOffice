@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +37,6 @@ public class PayrollService {
 
 
     public Payroll generatePayroll(Employee emp, YearMonth yearMonth) {
-
         Salary salary = salaryRepository.findByEmployee(emp).orElse(new Salary());
         Additions additions = additionsRepository.findByEmployeeAndPeriod(emp, yearMonth).orElse(new Additions());
         Deductions deductions = deductionsRepository.findByEmployeeAndPeriod(emp, yearMonth).orElse(new Deductions());
@@ -59,10 +57,9 @@ public class PayrollService {
 
         double netPay = taxablePay - tax - providentFund - loan;
 
-        Optional<Payroll> optPayroll = payrollRepository.findByEmployeeAndPeriod(emp, yearMonth);
-
-
-        Payroll payroll = payrollRepository.findByEmployeeAndPeriod(emp,yearMonth).orElse(null);
+        Payroll payroll = payrollRepository
+                .findByEmployeeAndPeriod(emp,yearMonth)
+                .orElse(null);
 
 
         if (payroll == null) {
@@ -95,9 +92,6 @@ public class PayrollService {
 
     }
 
-    public void updateTax(Long empId, Integer year, Integer month) {
-
-    }
 
     public PayrollDto getPayrollByEmpAndPeriod(Long empId, Integer year, Integer month) {
 

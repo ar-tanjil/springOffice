@@ -1,8 +1,11 @@
 package com.spring.office.payroll.service;
 
+import com.spring.office.department.Department;
 import com.spring.office.employee.Employee;
+import com.spring.office.job.Job;
 import com.spring.office.payroll.domain.Salary;
 import com.spring.office.payroll.dto.SalaryDto;
+import com.spring.office.payroll.dto.SalaryTable;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +46,7 @@ public class SalaryMapper {
                 .build();
     }
 
-    public Salary swapSalary(Salary newSal, Salary oldSal){
+    public Salary swapSalary(SalaryDto newSal, Salary oldSal){
         if (newSal.getBasic() !=null){
             oldSal.setBasic(newSal.getBasic());
         }
@@ -56,6 +59,39 @@ public class SalaryMapper {
             oldSal.setMedicalAllowance(newSal.getMedicalAllowance());
         }
         return oldSal;
+    }
+
+    public SalaryTable salaryToTable(Salary salary){
+        Employee employee = salary.getEmployee();
+
+        if (employee == null){
+            return null;
+        }
+        Job job = employee.getJob();
+        Department department = employee.getDepartment();
+
+        if (job == null){
+            job = new Job();
+        }
+
+        if (department == null){
+            department = new Department();
+        }
+
+
+        return new SalaryTable(
+                salary.getId(),
+                salary.getBasic(),
+                salary.getMedicalAllowance(),
+                salary.getProvidentFund(),
+                employee.getId(),
+                employee.getFirstName(),
+                job.getJobTitle(),
+                department.getDepartmentName()
+
+        );
+
+
     }
 
 }

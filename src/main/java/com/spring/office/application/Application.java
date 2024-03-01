@@ -1,6 +1,7 @@
 package com.spring.office.application;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.office.domain.BaseModel;
 import com.spring.office.domain.embaded.Address;
 import com.spring.office.domain.embaded.Qualification;
@@ -34,6 +35,7 @@ public class Application extends BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "job_id")
+    @JsonIgnore
     private Job job;
     public String reference;
 

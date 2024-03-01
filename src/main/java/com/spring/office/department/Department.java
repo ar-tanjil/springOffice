@@ -25,8 +25,8 @@ public class Department extends BaseModel {
     private Long managerId;
     private String departmentDesc;
 
-    @OneToMany(mappedBy = "department")
     @JsonIgnore
+    @OneToMany(mappedBy = "department")
     private Set<Employee> employees;
 
     @JsonIgnore

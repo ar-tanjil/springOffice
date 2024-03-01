@@ -3,9 +3,7 @@ package com.spring.office.payroll.domain;
 
 import com.spring.office.domain.BaseModel;
 import com.spring.office.employee.Employee;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,8 +25,9 @@ public class Attendance extends BaseModel {
     private LocalDate day;
     private LocalTime entryTime;
     private LocalTime leaveTime;
+    private boolean present;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
