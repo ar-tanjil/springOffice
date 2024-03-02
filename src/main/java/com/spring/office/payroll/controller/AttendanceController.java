@@ -49,5 +49,15 @@ public class AttendanceController {
                 .getAttendanceSheet(starDate,endDate);
     }
 
+    @GetMapping("/day/{id}/{date}")
+    public AttendanceDto getByDate(
+            @PathVariable("id") Long id,
+            @PathVariable("date") String date
+    ){
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM-dd-yyyy");
+
+        var starDate = LocalDate.parse(date);
+        return attendanceService.getAttendanceByDay(id, starDate);
+    }
 
 }

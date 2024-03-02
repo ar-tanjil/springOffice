@@ -83,10 +83,7 @@ public class AttendanceService {
 
 
     private boolean getPresentFromAttendance(Attendance attendance) {
-        if (attendance.isPresent()) {
-            return true;
-        }
-        return false;
+        return attendance.isPresent();
     }
 
 
@@ -135,5 +132,14 @@ public class AttendanceService {
 
         return table;
 
+    }
+
+    public AttendanceDto getAttendanceByDay(Long id, LocalDate date){
+
+        Employee emp = new Employee();
+        emp.setId(id);
+
+        var save = attendanceRepository.findByEmployeeAndDay(emp,date);
+        return save.map(attendanceMapper::attendanceToDto).orElse(null);
     }
 }

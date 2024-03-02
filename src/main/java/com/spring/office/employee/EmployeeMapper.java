@@ -89,10 +89,12 @@ public class EmployeeMapper {
 
         if(emp.getJob() != null){
             dto.setJobTitle(emp.getJob().getJobTitle());
+            dto.setJobId(emp.getJob().getId());
         }
 
         if(emp.getDepartment() != null){
             dto.setDepartmentName(emp.getDepartment().getDepartmentName());
+            dto.setDepartmentId(emp.getDepartment().getId());
         }
 
         if (emp.getSalary() != null){
@@ -120,9 +122,7 @@ public class EmployeeMapper {
         dto.setRoadNo(address.getRoadNo());
         dto.setCity(address.getCity());
         dto.setCountry(address.getCountry());
-        if(emp.getJob() != null){
-            dto.setJobId(emp.getJob().getId());
-        }
+
         if(emp.getApplication() != null){
             dto.setApplicationId(emp.getApplication().getId());
         }
