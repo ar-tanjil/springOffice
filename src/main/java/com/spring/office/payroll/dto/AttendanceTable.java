@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 public class AttendanceTable {
 
-    private List<Boolean> present;
+    private boolean[] present;
     private String firstName;
 
 }

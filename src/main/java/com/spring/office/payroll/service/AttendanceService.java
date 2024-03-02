@@ -82,10 +82,23 @@ public class AttendanceService {
 
         AttendanceTable table = new AttendanceTable();
 
-        List<Boolean> present = new ArrayList<>();
+        Attendance maxAttendance = list.stream().max(Comparator.comparing(Attendance::getDay))
+                .orElse(null);
+
+        int size = 1;
+
+        if (maxAttendance != null){
+            size = maxAttendance.getDay().getDayOfMonth();
+        }
+
+        boolean[] present = new boolean[size];
 
         for (Attendance att : list) {
-            present.add(getPresentFromAttendance(att));
+
+            int index = att.getDay().getDayOfMonth() - 1;
+
+            present[index] = getPresentFromAttendance(att);
+
         }
 
         table.setFirstName(firstName);
