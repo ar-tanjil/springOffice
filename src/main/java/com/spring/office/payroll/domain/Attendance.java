@@ -23,8 +23,8 @@ import java.time.LocalTime;
 public class Attendance extends BaseModel {
 
     private LocalDate day;
-    private LocalTime entryTime;
-    private LocalTime leaveTime;
+    private LocalTime checkIn;
+    private LocalTime checkOut;
     private boolean present;
 
     @ManyToOne

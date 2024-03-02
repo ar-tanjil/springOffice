@@ -14,9 +14,14 @@ import com.spring.office.payroll.repo.SalaryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.time.YearMonth;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +36,7 @@ public class PayrollService {
     //   Service
     private final TaxService taxService;
     private final DeductionsService deductionsService;
-
+    private final HolidayService holidayService;
     //    Mapper
     private final PayrollMapper payrollMapper;
 
@@ -113,5 +118,17 @@ public class PayrollService {
 
     }
 
+
+    private Set<LocalDate> getTotalHolidayByPeriod(YearMonth period){
+        int year    = period.getYear();
+        Month month = period.getMonth();
+        Set<LocalDate> holidaySet = new HashSet<>();
+        IntStream.rangeClosed(1,YearMonth.of(year, month).lengthOfMonth())
+                .mapToObj(day -> LocalDate.of(year, month, day))
+                .filter(date -> holidayService.checkHoliday(date))
+                .forEach(date -> holidaySet.add(date));
+
+        return holidaySet;
+    }
 
 }

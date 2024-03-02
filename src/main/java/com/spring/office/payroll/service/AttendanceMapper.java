@@ -27,8 +27,8 @@ public class AttendanceMapper {
         return AttendanceDto.builder()
                 .id(att.getId())
                 .day(att.getDay())
-                .entryTime(att.getEntryTime())
-                .leaveTime(att.getLeaveTime())
+                .entryTime(att.getCheckIn())
+                .leaveTime(att.getCheckOut())
                 .employeeId(att.getEmployee().getId())
                 .build();
     }

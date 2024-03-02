@@ -1,13 +1,16 @@
 package com.spring.office.payroll.service;
 
 import com.spring.office.employee.Employee;
+import com.spring.office.employee.EmployeeRepo;
 import com.spring.office.payroll.domain.Attendance;
 import com.spring.office.payroll.dto.AttendanceDto;
 import com.spring.office.payroll.dto.AttendanceTable;
+import com.spring.office.payroll.dto.EmployeeNameAndId;
 import com.spring.office.payroll.repo.AttendanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -16,14 +19,23 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AttendanceService {
 
+    private final EmployeeRepo employeeRepo;
     private final AttendanceRepository attendanceRepository;
     private final AttendanceMapper attendanceMapper;
+    private final HolidayService holidayService;
+
+
 
     public AttendanceDto giveAttendance(Long empId) {
 
         Employee emp = new Employee();
         emp.setId(empId);
         LocalDate day = LocalDate.now();
+
+        if (holidayService.checkHoliday(day)){
+            return null;
+        }
+
         Optional<Attendance> optAtt = attendanceRepository.findByEmployeeAndDay(emp, day);
 
         if (optAtt.isEmpty()) {
@@ -31,29 +43,29 @@ public class AttendanceService {
 
             att.setDay(day);
             att.setEmployee(emp);
-            att.setEntryTime(LocalTime.now());
+            att.setCheckIn(LocalTime.now());
 
             var saveAtt = attendanceRepository.save(att);
             return new AttendanceDto(
                     saveAtt.getId(),
                     saveAtt.getDay(),
-                    saveAtt.getEntryTime(),
-                    saveAtt.getLeaveTime(),
+                    saveAtt.getCheckIn(),
+                    saveAtt.getCheckOut(),
                     saveAtt.getEmployee().getId()
             );
         }
 
 
         var updateAtt = optAtt.get();
-        updateAtt.setLeaveTime(LocalTime.now());
+        updateAtt.setCheckOut(LocalTime.now());
         updateAtt.setPresent(true);
         attendanceRepository.save(updateAtt);
 
         return new AttendanceDto(
                 updateAtt.getId(),
                 updateAtt.getDay(),
-                updateAtt.getEntryTime(),
-                updateAtt.getLeaveTime(),
+                updateAtt.getCheckIn(),
+                updateAtt.getCheckOut(),
                 updateAtt.getEmployee().getId()
         );
     }
@@ -82,16 +94,11 @@ public class AttendanceService {
 
         AttendanceTable table = new AttendanceTable();
 
-        Attendance maxAttendance = list.stream().max(Comparator.comparing(Attendance::getDay))
-                .orElse(null);
 
-        int size = 1;
-
-        if (maxAttendance != null){
-            size = maxAttendance.getDay().getDayOfMonth();
-        }
+        int size = LocalDate.now().getDayOfMonth();
 
         boolean[] present = new boolean[size];
+
 
         for (Attendance att : list) {
 
@@ -111,14 +118,19 @@ public class AttendanceService {
 
     public List<AttendanceTable> getAttendanceSheet(LocalDate start, LocalDate end) {
 
-        Set<Employee> setEmp = attendanceRepository.findByPeriod(start, end);
+        List<Long> empId = employeeRepo.findAllEmployeeId();
 
         List<AttendanceTable> table = new ArrayList<>();
 
-        for (Employee emp : setEmp) {
+        for (Long id : empId) {
+            Employee emp = new Employee();
+            emp.setId(id);
             List<Attendance> list = attendanceRepository
                     .findByEmployeeAndDayIsBetween(emp, start, end);
-            table.add(getAttendanceTable(list, emp.getFirstName()));
+
+            String firstName = employeeRepo.findFirstName(id);
+
+            table.add(getAttendanceTable(list, firstName));
         }
 
         return table;
