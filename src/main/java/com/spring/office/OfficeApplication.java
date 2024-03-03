@@ -9,6 +9,9 @@ import com.spring.office.application.ApplicationService;
 import com.spring.office.department.DepartmentService;
 import com.spring.office.employee.EmployeeService;
 import com.spring.office.job.JobService;
+import com.spring.office.payroll.domain.Salary;
+import com.spring.office.payroll.dto.SalaryDto;
+import com.spring.office.payroll.service.SalaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -32,6 +35,9 @@ public class OfficeApplication {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private SalaryService salaryService;
 
     public static void main(String[] args) {
         SpringApplication.run(OfficeApplication.class, args);
@@ -98,6 +104,14 @@ public class OfficeApplication {
             emp.setDepartmentId(saveDep.getId());
 
             var saveEmp = employeeService.saveEmployee(emp);
+
+            SalaryDto salDto = SalaryDto.builder()
+                    .employeeId(saveEmp.getId())
+                    .basic(5000D)
+                    .medicalAllowance(500D)
+                    .providentFund(500D)
+                    .build();
+            var saveSal = salaryService.addSalary(salDto);
 
         };
     }

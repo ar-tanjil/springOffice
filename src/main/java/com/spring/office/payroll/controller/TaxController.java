@@ -27,4 +27,16 @@ public class TaxController {
         return taxService.taxCalculation(salary);
     }
 
+    @GetMapping("/{id}")
+    public TaxDto getTaxById(
+            @PathVariable("id") Long id
+    ){
+        return taxService.getById(id);
+    }
+
+    @GetMapping
+    public Iterable<TaxDto> getAll(){
+        return taxService.getAllTax();
+    }
+
 }
