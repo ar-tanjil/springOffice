@@ -14,6 +14,8 @@ public class SalaryDto {
     private Double basic;
     private Double medicalAllowance;
     private Double providentFund;
+    private Double provident;
+    private Double medical;
     private Long employeeId;
 
 }

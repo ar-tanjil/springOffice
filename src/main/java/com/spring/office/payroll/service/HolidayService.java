@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -19,6 +21,7 @@ public class HolidayService {
 
 private HolidayDto holidayToDto(Holiday holiday){
     return new HolidayDto(
+            holiday.getId(),
             holiday.getDay(),
             holiday.getReason()
     );
@@ -26,6 +29,7 @@ private HolidayDto holidayToDto(Holiday holiday){
 
 private Holiday dtoToHoliday(HolidayDto dto){
     Holiday holiday = new Holiday();
+    holiday.setId(dto.id());
     holiday.setDay(dto.day());
     holiday.setReason(dto.reason());
     return holiday;
@@ -42,6 +46,27 @@ public HolidayDto addHoliday(HolidayDto dto){
     var saveHoliday = holidayRepo.save(holiday);
     return holidayToDto(saveHoliday);
 }
+
+
+public List<HolidayDto> getAllHoliday(){
+    return holidayRepo.findAll().stream().map(this::holidayToDto)
+            .collect(Collectors.toList());
+}
+
+public HolidayDto getHolidayById(Long id){
+    return holidayRepo.findById(id)
+            .map(this::holidayToDto).orElse(null);
+}
+
+public HolidayDto updateHoliday(HolidayDto dto){
+    var saveHoliday = holidayRepo.save(dtoToHoliday(dto));
+    return this.holidayToDto(saveHoliday);
+}
+
+public void deleteHoliday(Long id){
+    holidayRepo.deleteById(id);
+}
+
 
 public HolidayDto getHolidayByDay(LocalDate date){
     var holiday = holidayRepo.findByDay(date);

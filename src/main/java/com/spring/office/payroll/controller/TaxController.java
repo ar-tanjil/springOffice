@@ -20,12 +20,26 @@ public class TaxController {
         return taxService.saveTax(dto);
     }
 
-    @GetMapping("/{salary}")
-    public Double getTax(
-            @PathVariable("salary") Double salary
+    @PutMapping
+    public TaxDto updateTax(
+            @RequestBody TaxDto dto
     ) {
-        return taxService.taxCalculation(salary);
+        return taxService.saveTax(dto);
     }
+
+    @DeleteMapping("{id}")
+    public void deleteTax(
+            @PathVariable("id") Long id
+    ) {
+        taxService.deleteTax(id);
+    }
+
+//    @GetMapping("/{salary}")
+//    public Double getTax(
+//            @PathVariable("salary") Double salary
+//    ) {
+//        return taxService.taxCalculation(salary);
+//    }
 
     @GetMapping("/{id}")
     public TaxDto getTaxById(

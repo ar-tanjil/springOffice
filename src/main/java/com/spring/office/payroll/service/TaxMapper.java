@@ -19,7 +19,6 @@ public class TaxMapper {
                 .maxRange(tax.getMaxRange())
                 .minRange(tax.getMinRange())
                 .build();
-
     }
 
     public Tax dtoToTax(TaxDto dto){

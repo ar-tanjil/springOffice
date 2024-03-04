@@ -19,7 +19,7 @@ public class TaxService {
 
     public Double taxCalculation(Double salary) {
         Double per = getTaxPer(salary);
-        return salary * per;
+            return salary * per;
     }
 
     private Double getTaxPer(Double taxablePay) {
@@ -51,6 +51,7 @@ public class TaxService {
     public List<TaxDto> getAllTax(){
         List<Tax> taxList = taxRepository.findAll();
         return taxList.stream().map(taxMapper::taxToDto)
+                .sorted()
                 .toList();
     }
 
@@ -59,4 +60,7 @@ public class TaxService {
        return saveTax.map(taxMapper::taxToDto).orElse(null);
     }
 
+    public void deleteTax(Long id){
+        taxRepository.deleteById(id);
+    }
 }

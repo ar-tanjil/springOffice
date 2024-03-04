@@ -9,6 +9,8 @@ import com.spring.office.payroll.dto.SalaryTable;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import java.nio.DoubleBuffer;
+
 @Service
 public class SalaryMapper {
 
@@ -43,6 +45,8 @@ public class SalaryMapper {
                 .basic(salary.getBasic())
                 .medicalAllowance(salary.getMedicalAllowance())
                 .providentFund(salary.getProvidentFund())
+                .medical(calculateMedical(salary.getBasic(), salary.getMedicalAllowance()))
+                .provident(calculateProvident(salary.getBasic(), salary.getProvidentFund()))
                 .build();
     }
 
@@ -93,5 +97,21 @@ public class SalaryMapper {
 
 
     }
+
+
+    private Double calculateMedical(double salary, double ma){
+        if(ma > 0){
+            return salary * ma / 100;
+        }
+        return 0D;
+    }
+
+    private Double calculateProvident(double salary, double pf){
+        if (pf > 0){
+            return salary * pf / 100;
+        }
+        return 0D;
+    }
+
 
 }
