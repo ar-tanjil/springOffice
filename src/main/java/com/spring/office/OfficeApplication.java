@@ -108,8 +108,11 @@ public class OfficeApplication {
             SalaryDto salDto = SalaryDto.builder()
                     .employeeId(saveEmp.getId())
                     .basic(5000D)
-                    .medicalAllowance(500D)
-                    .providentFund(500D)
+                    .medicalAllowance(5D)
+                    .providentFund(5D)
+                    .travelAllowance(5D)
+                    .loan(500D)
+                    .bonus(2)
                     .build();
             var saveSal = salaryService.addSalary(salDto);
 

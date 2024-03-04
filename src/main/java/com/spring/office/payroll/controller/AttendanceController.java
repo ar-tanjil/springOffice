@@ -6,7 +6,6 @@ import com.spring.office.payroll.service.AttendanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -33,7 +32,7 @@ public class AttendanceController {
             @PathVariable("end_date") LocalDate end
     ) {
         return attendanceService
-                .getEmployeeAttendanceBetweenTime(empId, start, end);
+                .getEmployeeAttendanceByMonth(empId, start, end);
     }
 
     @GetMapping("/{start_date}/{end_date}")

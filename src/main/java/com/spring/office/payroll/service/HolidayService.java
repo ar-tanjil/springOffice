@@ -71,19 +71,12 @@ public void deleteHoliday(Long id){
 public HolidayDto getHolidayByDay(LocalDate date){
     var holiday = holidayRepo.findByDay(date);
 
-    if (holiday.isPresent()){
-        return holidayToDto(holiday.get());
-    }
-    return null;
+    return holiday.map(this::holidayToDto).orElse(null);
 }
 
 public boolean checkHoliday(LocalDate date){
     var holiday = getHolidayByDay(date);
-    var isHoliday = false;
-
-    if (holiday != null){
-        isHoliday = true;
-    }
+    var isHoliday = holiday != null;
 
     var weekend = date.getDayOfWeek() == DayOfWeek.FRIDAY ||
             date.getDayOfWeek() == DayOfWeek.SATURDAY;

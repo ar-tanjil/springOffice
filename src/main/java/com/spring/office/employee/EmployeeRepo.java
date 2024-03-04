@@ -1,18 +1,12 @@
 package com.spring.office.employee;
 
-import com.spring.office.payroll.dto.EmployeeNameAndId;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 public interface EmployeeRepo extends JpaRepository<Employee, Long> {

@@ -17,5 +17,6 @@ public class AttendanceDto {
     private LocalDate day;
     private LocalTime entryTime;
     private LocalTime leaveTime;
+    private boolean present;
     private Long employeeId;
 }

@@ -18,6 +18,8 @@ public class AttendanceMapper {
     }
 
 
+
+
     public AttendanceDto attendanceToDto(Attendance att){
 
         if (att.getEmployee() == null){
@@ -29,6 +31,7 @@ public class AttendanceMapper {
                 .day(att.getDay())
                 .entryTime(att.getCheckIn())
                 .leaveTime(att.getCheckOut())
+                .present(att.isPresent())
                 .employeeId(att.getEmployee().getId())
                 .build();
     }

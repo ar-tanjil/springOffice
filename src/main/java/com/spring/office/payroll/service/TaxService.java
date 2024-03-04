@@ -19,7 +19,7 @@ public class TaxService {
 
     public Double taxCalculation(Double salary) {
         Double per = getTaxPer(salary);
-            return salary * per;
+        return salary * per / 100;
     }
 
     private Double getTaxPer(Double taxablePay) {
@@ -28,14 +28,18 @@ public class TaxService {
 
         TaxDto currentMax = taxList.stream()
                 .max(Comparator.comparing(TaxDto::getMaxRange))
-                .orElseThrow();
+                .orElse(null);
+
+        if (currentMax == null){
+            return 0D;
+        }
 
         if (currentMax.getMaxRange() < taxablePay) {
             return currentMax.getPercentage();
         }
 
         for (TaxDto tax : taxList) {
-            if (tax.getMinRange() <= taxablePay && tax.getMaxRange() >= taxablePay) {
+            if (taxablePay >= tax.getMinRange() && taxablePay <= tax.getMaxRange()) {
                 return tax.getPercentage();
             }
         }
@@ -48,19 +52,19 @@ public class TaxService {
         return taxMapper.taxToDto(saveTax);
     }
 
-    public List<TaxDto> getAllTax(){
+    public List<TaxDto> getAllTax() {
         List<Tax> taxList = taxRepository.findAll();
         return taxList.stream().map(taxMapper::taxToDto)
                 .sorted()
                 .toList();
     }
 
-    public TaxDto getById(Long id){
+    public TaxDto getById(Long id) {
         Optional<Tax> saveTax = taxRepository.findById(id);
-       return saveTax.map(taxMapper::taxToDto).orElse(null);
+        return saveTax.map(taxMapper::taxToDto).orElse(null);
     }
 
-    public void deleteTax(Long id){
+    public void deleteTax(Long id) {
         taxRepository.deleteById(id);
     }
 }

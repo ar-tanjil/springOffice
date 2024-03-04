@@ -65,5 +65,10 @@ public class SalaryService {
 
     }
 
+    public void updateLoan(Long empId, double payment){
+        Employee emp = new Employee();
+        emp.setId(empId);
+        salaryRepository.updateSalary(payment,emp);
+    }
 
 }

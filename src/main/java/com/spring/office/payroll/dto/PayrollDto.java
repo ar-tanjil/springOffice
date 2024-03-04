@@ -15,16 +15,18 @@ public class PayrollDto {
 
     private Long id;
     private YearMonth period;
+    private Double netSalary;
+    private Double grossSalary;
+    private Double basicSalary;
     private Double unpaidLeave;
     private Double loanPayment;
     private Double tax;
     private Double travelAllowance;
-    private Double bonus;
-    private Double basic;
     private Double medicalAllowance;
     private Double providentFund;
-    private Double netPay;
+    private Double bonusAmount;
+    private Double otherEarning;
+    private Double otherDeduction;
     private Long employeeId;
-
 
 }

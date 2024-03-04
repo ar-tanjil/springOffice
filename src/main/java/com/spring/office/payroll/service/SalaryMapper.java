@@ -29,6 +29,9 @@ public class SalaryMapper {
                 .basic(dto.getBasic())
                 .medicalAllowance(dto.getMedicalAllowance())
                 .providentFund(dto.getProvidentFund())
+                .travelAllowance(dto.getTravelAllowance())
+                .bonus(dto.getBonus())
+                .loan(dto.getLoan())
                 .employee(emp)
                 .build();
     }
@@ -45,6 +48,10 @@ public class SalaryMapper {
                 .basic(salary.getBasic())
                 .medicalAllowance(salary.getMedicalAllowance())
                 .providentFund(salary.getProvidentFund())
+                .bonus(salary.getBonus())
+                .loan(salary.getLoan())
+                .travelAllowance(salary.getTravelAllowance())
+                .travel(calculateTravel(salary.getBasic(), salary.getTravelAllowance()))
                 .medical(calculateMedical(salary.getBasic(), salary.getMedicalAllowance()))
                 .provident(calculateProvident(salary.getBasic(), salary.getProvidentFund()))
                 .build();
@@ -99,16 +106,23 @@ public class SalaryMapper {
     }
 
 
-    private Double calculateMedical(double salary, double ma){
+    private Double calculateMedical(Double salary, Double ma){
         if(ma > 0){
             return salary * ma / 100;
         }
         return 0D;
     }
 
-    private Double calculateProvident(double salary, double pf){
+    private Double calculateProvident(Double salary, Double pf){
         if (pf > 0){
             return salary * pf / 100;
+        }
+        return 0D;
+    }
+
+    private Double calculateTravel(double salary, double ta){
+        if (ta > 0){
+            return salary * ta / 100;
         }
         return 0D;
     }

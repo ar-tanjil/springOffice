@@ -24,11 +24,10 @@ import java.time.LocalDate;
 @Table(name = "_leave")
 public class Leave extends BaseModel {
 
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDate day;
     private String type;
     private String reason;
-    private String status;
+    private boolean status;
 
     @OneToOne
     @JoinColumn(name = "employee_id")

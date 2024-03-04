@@ -5,15 +5,16 @@ import com.spring.office.employee.EmployeeRepo;
 import com.spring.office.payroll.domain.Attendance;
 import com.spring.office.payroll.dto.AttendanceDto;
 import com.spring.office.payroll.dto.AttendanceTable;
-import com.spring.office.payroll.dto.EmployeeNameAndId;
 import com.spring.office.payroll.repo.AttendanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Month;
+import java.time.YearMonth;
 import java.util.*;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,7 @@ public class AttendanceService {
         emp.setId(empId);
         LocalDate day = LocalDate.now();
 
+
         if (holidayService.checkHoliday(day)){
             return null;
         }
@@ -46,13 +48,7 @@ public class AttendanceService {
             att.setCheckIn(LocalTime.now());
 
             var saveAtt = attendanceRepository.save(att);
-            return new AttendanceDto(
-                    saveAtt.getId(),
-                    saveAtt.getDay(),
-                    saveAtt.getCheckIn(),
-                    saveAtt.getCheckOut(),
-                    saveAtt.getEmployee().getId()
-            );
+            return attendanceMapper.attendanceToDto(saveAtt);
         }
 
 
@@ -61,24 +57,29 @@ public class AttendanceService {
         updateAtt.setPresent(true);
         attendanceRepository.save(updateAtt);
 
-        return new AttendanceDto(
-                updateAtt.getId(),
-                updateAtt.getDay(),
-                updateAtt.getCheckIn(),
-                updateAtt.getCheckOut(),
-                updateAtt.getEmployee().getId()
-        );
+        return attendanceMapper.attendanceToDto(updateAtt);
     }
 
-    public List<AttendanceDto> getEmployeeAttendanceBetweenTime(Long id, LocalDate start, LocalDate end) {
+    public List<AttendanceDto> getEmployeeAttendanceByMonth(Long empId, LocalDate start, LocalDate end) {
         Employee emp = new Employee();
-        emp.setId(id);
+        emp.setId(empId);
 
         List<Attendance> listAtt = attendanceRepository
                 .findByEmployeeAndDayIsBetween(emp, start, end);
 
         return attendanceMapper.attendanceToDtoList(listAtt);
     }
+
+    public List<AttendanceDto> getEmployeePresentDayByMonth(Long empId, LocalDate start, LocalDate end){
+        Employee emp = new Employee();
+        emp.setId(empId);
+
+        List<Attendance> listAtt = attendanceRepository
+                .findByEmployeeAndDayIsBetweenAndPresentTrue(emp, start, end);
+
+        return attendanceMapper.attendanceToDtoList(listAtt);
+    }
+
 
 
 

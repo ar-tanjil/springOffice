@@ -9,9 +9,17 @@ import java.time.YearMonth;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PayrollTable {
+public class PayrollTable implements Comparable<PayrollTable> {
+    private Long id;
     private Long employeeId;
+    private String jobTitle;
     private String firstName;
-    private Double netPay;
+    private Double grossSalary;
+    private Double netSalary;
     private YearMonth period;
+
+    @Override
+    public int compareTo(PayrollTable o) {
+        return this.getGrossSalary().compareTo(o.grossSalary);
+    }
 }
