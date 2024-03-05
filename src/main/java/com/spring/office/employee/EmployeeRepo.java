@@ -1,5 +1,6 @@
 package com.spring.office.employee;
 
+import com.spring.office.department.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,4 +30,5 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> {
             "AND e.active = true AND e.id = :id")
     String findFirstName(Long id);
 
+    int countByDepartmentAndDeletedFalse(Department department);
 }

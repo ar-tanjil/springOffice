@@ -8,6 +8,7 @@ import com.spring.office.payroll.dto.PayrollTable;
 import com.spring.office.payroll.dto.SalaryDto;
 import com.spring.office.payroll.repo.PayrollRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PayrollService {
 
 
@@ -36,6 +38,7 @@ public class PayrollService {
     private final TaxService taxService;
     //    Mapper
     private final PayrollMapper payrollMapper;
+    private double loan;
 
 
     public PayrollDto getPayrollByEmpAndPeriod(Long empId, Integer year, Integer month) {
@@ -44,9 +47,9 @@ public class PayrollService {
         Employee employee = new Employee();
         employee.setId(empId);
         Optional<Payroll> findPayroll = payrollRepository.findByEmployeeAndPeriod(employee, period);
-            if (findPayroll.isEmpty()){
-                return payrollMapper.payrollToDto(generatePayroll(empId,period));
-            }
+        if (findPayroll.isEmpty()) {
+            return payrollMapper.payrollToDto(generatePayroll(empId, period));
+        }
 
         return payrollMapper.payrollToDto(findPayroll.get());
     }
@@ -72,14 +75,19 @@ public class PayrollService {
         double unpaidLeave = unpaidLeave(empId, period, salary.getBasic());
         double providentFund = salary.getProvident();
         double travelAllowance = salary.getTravel();
-        double medicalAllowance = salary.getMedicalAllowance();
+        double medicalAllowance = salary.getMedical();
         double loan = salary.getLoan();
 
 
         double grossSalary = basic + providentFund + medicalAllowance
                 + travelAllowance - unpaidLeave;
         double tax = taxService.taxCalculation(grossSalary);
-        double netSalary = grossSalary - tax - loan;
+        double netSalary = grossSalary - tax;
+
+        if (loan < netSalary){
+            netSalary -= loan;
+            salaryService.updateLoan(empId, loan);
+        }
 
 
         Payroll payroll = Payroll.builder()
@@ -99,11 +107,7 @@ public class PayrollService {
 
 
         return payrollRepository.save(payroll);
-   }
-
-
-
-
+    }
 
 
     private Double unpaidLeave(Long employeeId, YearMonth period, Double basicSal) {
@@ -121,6 +125,7 @@ public class PayrollService {
         Set<LocalDate> grantedAbsenceDay = leaveService.getLeaveGrantedDay(empId, period);
 
         int unpaid = absenceDayList.size();
+        System.out.println(unpaid);
         for (LocalDate abs : absenceDayList) {
             for (LocalDate gran : grantedAbsenceDay) {
                 if (gran == abs) {
@@ -130,6 +135,7 @@ public class PayrollService {
             }
         }
 
+        System.out.println(unpaid);
         return unpaid;
 
     }
@@ -153,19 +159,21 @@ public class PayrollService {
                 .getEmployeePresentDayByMonth(empId, start, end);
 
 
-        Set<LocalDate> holidays = getTotalHolidayByPeriod(YearMonth.of(year, month));
-
-
         Set<LocalDate> absenceDates = new HashSet<>();
 
         IntStream.rangeClosed(1, YearMonth.of(year, month).lengthOfMonth())
                 .mapToObj(day -> LocalDate.of(year, month, day))
-                .filter(holidayService::checkHoliday)
+                .filter(this::filterHoliday)
                 .filter(day -> checkAbsenceDay(day, allAttendance))
                 .forEach(absenceDates::add);
 
         return absenceDates;
     }
+
+    private boolean filterHoliday(LocalDate date) {
+        return !holidayService.checkHoliday(date);
+    }
+
 
     private Set<LocalDate> getTotalHolidayByPeriod(YearMonth period) {
         int year = period.getYear();
@@ -182,7 +190,7 @@ public class PayrollService {
     private boolean checkAbsenceDay(LocalDate day, List<AttendanceDto> attendanceSheet) {
 
         for (AttendanceDto att : attendanceSheet) {
-            if (day == att.getDay()) {
+            if (day.isEqual(att.getDay())) {
                 return false;
             }
         }

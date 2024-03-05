@@ -18,7 +18,7 @@ public interface SalaryRepository extends JpaRepository<Salary, Long> {
 
     @Modifying
     @Transactional
-    @Query("update Salary s set s.loan = :payment where s.employee = :emp")
+    @Query("update Salary s set s.loan = s.loan - :payment where s.employee = :emp")
     void updateSalary(double payment, Employee emp);
 
 }

@@ -22,33 +22,41 @@ public class NotificationController {
     private final SimpMessagingTemplate messagingTemplate;
     private final NotificationService notificationService;
 
-    @MessageMapping("/notification")
+    @MessageMapping("/admin")
     public void processMessage(@Payload NotificationEntity notification) {
-        NotificationEntity savedMsg = notificationService.save(notification);
+//        NotificationEntity savedMsg = notificationService.save(notification);
         messagingTemplate.convertAndSendToUser(
-                notification.getRecipientId(), "/queue",
-                new NotificationDto(
-                        savedMsg.getId(),
-                        savedMsg.getSenderId(),
-                        savedMsg.getRecipientId(),
-                        savedMsg.getContent()
-                )
+                "admin", "/topic",
+                "haaaaaaaaaaa"
         );
     }
 
 
-    @MessageMapping("/admin")
-    @SendTo("/notification/topic")
-    public NotificationDto sendAdmin(@Payload NotificationEntity notification) {
-        NotificationEntity savedMsg = notificationService.save(notification);
 
-             return  new NotificationDto(
-                        savedMsg.getId(),
-                        savedMsg.getSenderId(),
-                        savedMsg.getRecipientId(),
-                        savedMsg.getContent()
-                );
-    }
+//    @MessageMapping("/admin")
+//    public void simpMessage(
+//            @Payload NotificationDto notificationDto
+//    ){
+//        String de = notificationDto.getRecipientId();
+//        messagingTemplate.convertAndSend("/notification/" +de, notificationDto);
+//    }
+
+
+
+
+
+//    @MessageMapping("/admin")
+//    @SendTo("/notification/topic")
+//    public NotificationDto sendAdmin(@Payload NotificationEntity notification) {
+//        NotificationEntity savedMsg = notificationService.save(notification);
+//
+//             return  new NotificationDto(
+//                        savedMsg.getId(),
+//                        savedMsg.getSenderId(),
+//                        savedMsg.getRecipientId(),
+//                        savedMsg.getContent()
+//                );
+//    }
 
 
     @GetMapping("/messages/{senderId}/{recipientId}")

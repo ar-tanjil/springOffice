@@ -1,5 +1,7 @@
 package com.spring.office.department;
 
+import com.spring.office.chart.domain.DepartmentChart;
+import com.spring.office.chart.service.DepartmentChartService;
 import com.spring.office.dto.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class DepartmentController {
 
     private final DepartmentService service;
+    private final DepartmentChartService departmentChartService;
 
 
     @GetMapping
@@ -47,6 +50,11 @@ public class DepartmentController {
         return new ResponseEntity<>(failedMsg, HttpStatus.NOT_FOUND);
     }
 
+
+    @GetMapping("/chart/dep")
+    public Iterable<DepartmentChart> getDepChart(){
+        return departmentChartService.processDepartmentChart();
+    }
 
 
 }
