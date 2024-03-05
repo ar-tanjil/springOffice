@@ -143,4 +143,10 @@ public class AttendanceService {
         var save = attendanceRepository.findByEmployeeAndDay(emp,date);
         return save.map(attendanceMapper::attendanceToDto).orElse(null);
     }
+
+    public Integer todayPresentEmployee(LocalDate localDate) {
+
+        return attendanceRepository.countByDayAndCheckInIsNotNull(localDate);
+
+    }
 }

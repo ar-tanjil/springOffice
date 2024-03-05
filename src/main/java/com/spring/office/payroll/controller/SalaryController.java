@@ -48,4 +48,10 @@ public class SalaryController {
         return salaryService.getAllSalary();
     }
 
+
+    @GetMapping("/sum/salary")
+    public Integer sumAllSalary(){
+        return salaryService.sumAllSalary();
+    }
+
 }

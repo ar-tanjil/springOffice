@@ -24,47 +24,26 @@ public class NotificationController {
 
     @MessageMapping("/admin")
     public void processMessage(@Payload NotificationEntity notification) {
-//        NotificationEntity savedMsg = notificationService.save(notification);
+        NotificationEntity savedMsg = notificationService.save(notification);
         messagingTemplate.convertAndSendToUser(
-                "admin", "/topic",
-                "haaaaaaaaaaa"
+                notification.getRecipientId(), "/topic",
+                new NotificationDto(
+                        savedMsg.getId(),
+                        savedMsg.getSenderId(),
+                        savedMsg.getRecipientId(),
+                        savedMsg.getContent()
+                )
         );
     }
 
 
 
-//    @MessageMapping("/admin")
-//    public void simpMessage(
-//            @Payload NotificationDto notificationDto
-//    ){
-//        String de = notificationDto.getRecipientId();
-//        messagingTemplate.convertAndSend("/notification/" +de, notificationDto);
-//    }
-
-
-
-
-
-//    @MessageMapping("/admin")
-//    @SendTo("/notification/topic")
-//    public NotificationDto sendAdmin(@Payload NotificationEntity notification) {
-//        NotificationEntity savedMsg = notificationService.save(notification);
-//
-//             return  new NotificationDto(
-//                        savedMsg.getId(),
-//                        savedMsg.getSenderId(),
-//                        savedMsg.getRecipientId(),
-//                        savedMsg.getContent()
-//                );
-//    }
-
-
-    @GetMapping("/messages/{senderId}/{recipientId}")
-    public ResponseEntity<List<NotificationEntity>> findChatMessages(@PathVariable String senderId,
-                                                              @PathVariable String recipientId) {
-        return ResponseEntity
-                .ok(notificationService.findChatMessages(senderId, recipientId));
-    }
+@GetMapping("/messages/{senderId}/{recipientId}")
+public ResponseEntity<List<NotificationEntity>> findChatMessages(@PathVariable String senderId,
+                                                                 @PathVariable String recipientId) {
+    return ResponseEntity
+            .ok(notificationService.findChatMessages(senderId, recipientId));
+}
 
 
 

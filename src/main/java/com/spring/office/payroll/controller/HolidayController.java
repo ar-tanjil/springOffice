@@ -1,6 +1,5 @@
 package com.spring.office.payroll.controller;
 
-import com.spring.office.payroll.domain.Holiday;
 import com.spring.office.payroll.dto.HolidayDto;
 import com.spring.office.payroll.service.HolidayService;
 import lombok.RequiredArgsConstructor;

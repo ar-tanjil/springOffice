@@ -103,4 +103,7 @@ public class EmployeeService {
                 .collect(Collectors.toList());
     }
 
+    public Integer countAllEmployee() {
+        return empRepo.countByDeletedFalse();
+    }
 }

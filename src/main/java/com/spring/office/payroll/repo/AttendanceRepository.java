@@ -32,4 +32,5 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     @Query("update Attendance d set d.present = :val where d.day = :day and d.employee = :emp")
     void updatePresent(boolean val, LocalDate day, Employee emp);
 
+    Integer countByDayAndCheckInIsNotNull(LocalDate localDate);
 }

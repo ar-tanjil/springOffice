@@ -30,7 +30,8 @@ public class Payroll extends BaseModel {
     private double providentFund;
     private double medicalAllowance;
     private double travelAllowance;
-    private double other;
+    private double otherEarning;
+    private double otherDeduction;
 
 
     @ManyToOne

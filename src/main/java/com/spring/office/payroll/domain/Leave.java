@@ -1,12 +1,10 @@
 package com.spring.office.payroll.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.office.domain.BaseModel;
 import com.spring.office.employee.Employee;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,7 +27,8 @@ public class Leave extends BaseModel {
     private String reason;
     private boolean status;
 
-    @OneToOne
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
 }

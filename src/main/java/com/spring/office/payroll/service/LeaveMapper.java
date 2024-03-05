@@ -27,7 +27,7 @@ public class LeaveMapper {
         }
 
         Employee emp = new Employee();
-        emp.setId(dto.getId());
+        emp.setId(dto.getEmployeeId());
 
         return Leave.builder()
                 .id(dto.getId())

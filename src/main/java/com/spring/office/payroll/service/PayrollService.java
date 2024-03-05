@@ -79,14 +79,16 @@ public class PayrollService {
         double loan = salary.getLoan();
 
 
-        double grossSalary = basic + providentFund + medicalAllowance
-                + travelAllowance - unpaidLeave;
+        double grossSalary = basic + medicalAllowance
+                + travelAllowance - (unpaidLeave + providentFund );
         double tax = taxService.taxCalculation(grossSalary);
         double netSalary = grossSalary - tax;
 
         if (loan < netSalary){
             netSalary -= loan;
             salaryService.updateLoan(empId, loan);
+        } else {
+            loan = 0;
         }
 
 

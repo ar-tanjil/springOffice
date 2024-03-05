@@ -71,4 +71,7 @@ public class SalaryService {
         salaryRepository.updateSalary(payment,emp);
     }
 
+    public Integer sumAllSalary() {
+        return salaryRepository.sumAllSalary();
+    }
 }

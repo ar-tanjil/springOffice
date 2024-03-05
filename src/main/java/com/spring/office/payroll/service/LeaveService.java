@@ -46,4 +46,20 @@ public class LeaveService {
 
     }
 
+
+    public LeaveDto saveLeave(LeaveDto dto){
+        var saveLeave = leaveRepository.save(leaveMapper.dtoToLeave(dto));
+        return leaveMapper.leaveToDto(saveLeave);
+    }
+
+
+    public LeaveDto grantLeave(Long id) {
+        var saveLeave = leaveRepository.findById(id).orElse(null);
+        if (saveLeave != null){
+            saveLeave.setStatus(true);
+            var updateLeave = leaveRepository.save(saveLeave);
+            return leaveMapper.leaveToDto(updateLeave);
+        }
+        return null;
+    }
 }

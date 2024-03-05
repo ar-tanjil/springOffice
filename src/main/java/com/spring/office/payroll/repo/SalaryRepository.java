@@ -21,4 +21,6 @@ public interface SalaryRepository extends JpaRepository<Salary, Long> {
     @Query("update Salary s set s.loan = s.loan - :payment where s.employee = :emp")
     void updateSalary(double payment, Employee emp);
 
+    @Query("select sum(s.basic) from Salary s")
+    Integer sumAllSalary();
 }

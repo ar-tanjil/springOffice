@@ -59,4 +59,11 @@ public class AttendanceController {
         return attendanceService.getAttendanceByDay(id, starDate);
     }
 
+    @GetMapping("/count/present")
+    public Integer todayPresentEmployee(){
+        LocalDate localDate = LocalDate.now();
+        return attendanceService.todayPresentEmployee(localDate);
+    }
+
+
 }

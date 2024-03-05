@@ -56,4 +56,10 @@ public class EmployeeController {
     public Iterable<EmployeeSalary> getSalaryLessEmp(){
         return empService.employeeWithoutSalary();
     }
+
+    @GetMapping("/count/employee")
+    public Integer countAllEmployee(){
+        return empService.countAllEmployee();
+    }
+
 }
