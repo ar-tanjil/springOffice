@@ -1,14 +1,17 @@
 package com.spring.office;
 
 
-import com.spring.office.dto.ApplicationDto;
-import com.spring.office.dto.DepartReceiveDto;
-import com.spring.office.dto.EmpDetailsDto;
-import com.spring.office.dto.JobDto;
-import com.spring.office.service.ApplicationService;
-import com.spring.office.service.DepartmentService;
-import com.spring.office.service.EmployeeService;
-import com.spring.office.service.JobService;
+import com.spring.office.application.ApplicationDto;
+import com.spring.office.department.DepartmentDto;
+import com.spring.office.employee.EmployeeDto;
+import com.spring.office.job.JobDto;
+import com.spring.office.application.ApplicationService;
+import com.spring.office.department.DepartmentService;
+import com.spring.office.employee.EmployeeService;
+import com.spring.office.job.JobService;
+import com.spring.office.payroll.domain.Salary;
+import com.spring.office.payroll.dto.SalaryDto;
+import com.spring.office.payroll.service.SalaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +19,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @SpringBootApplication
 public class OfficeApplication {
@@ -32,19 +36,24 @@ public class OfficeApplication {
     @Autowired
     private ApplicationService applicationService;
 
+    @Autowired
+    private SalaryService salaryService;
+
     public static void main(String[] args) {
         SpringApplication.run(OfficeApplication.class, args);
+
+        System.out.println(LocalTime.now());
     }
 
 
-    	@Bean
+//    	@Bean
     public CommandLineRunner dataLoad() {
         return (a) -> {
 
-            DepartReceiveDto dep = new DepartReceiveDto();
+            DepartmentDto dep = new DepartmentDto();
             dep.setDepartmentName("Administration");
             dep.setDepartmentDesc("Administration Department");
-            var saveDep = departmentService.save(dep);
+            var saveDep = departmentService.saveDepartment(dep);
 
             JobDto job = new JobDto();
             job.setJobTitle("Manager");
@@ -74,7 +83,7 @@ public class OfficeApplication {
             app.setCountry("Bangladesh");
             var saveApp = applicationService.save(app);
 
-            var emp = new EmpDetailsDto();
+            var emp = new EmployeeDto();
 
             emp.setFirstName("Tanjil");
             emp.setLastName("Bin Moin");
@@ -94,7 +103,18 @@ public class OfficeApplication {
             emp.setCountry("Bangladesh");
             emp.setDepartmentId(saveDep.getId());
 
-            var saveEmp = employeeService.save(emp);
+            var saveEmp = employeeService.saveEmployee(emp);
+
+            SalaryDto salDto = SalaryDto.builder()
+                    .employeeId(saveEmp.getId())
+                    .basic(5000D)
+                    .medicalAllowance(5D)
+                    .providentFund(5D)
+                    .travelAllowance(5D)
+                    .loan(500D)
+                    .bonus(2)
+                    .build();
+            var saveSal = salaryService.addSalary(salDto);
 
         };
     }
