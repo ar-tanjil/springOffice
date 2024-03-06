@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TaxDto implements Comparable<TaxDto> {
+public class TaxDto implements Comparable<TaxDto>{
 
     private Long id;
     private String title;
@@ -16,8 +16,7 @@ public class TaxDto implements Comparable<TaxDto> {
     private Double maxRange;
 
     @Override
-    public int compareTo(TaxDto p) {
-        return this.getPercentage().compareTo(p.getPercentage());
+    public int compareTo(TaxDto o) {
+        return this.minRange.compareTo(o.minRange);
     }
-
 }

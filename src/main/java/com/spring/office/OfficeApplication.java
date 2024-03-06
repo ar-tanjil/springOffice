@@ -46,7 +46,7 @@ public class OfficeApplication {
     }
 
 
-    	@Bean
+//    	@Bean
     public CommandLineRunner dataLoad() {
         return (a) -> {
 

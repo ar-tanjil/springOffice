@@ -23,23 +23,26 @@ public class TaxService {
     }
 
     private Double getTaxPer(Double taxablePay) {
+
+        double taxThrashHold = taxablePay * 12;
+
         List<TaxDto> taxList = taxRepository.findAll()
                 .stream().map(taxMapper::taxToDto).toList();
 
-        TaxDto currentMax = taxList.stream()
-                .max(Comparator.comparing(TaxDto::getMaxRange))
+        TaxDto maxMin = taxList.stream()
+                .max(Comparator.comparing(TaxDto::getMinRange))
                 .orElse(null);
 
-        if (currentMax == null){
+        if (maxMin == null){
             return 0D;
         }
 
-        if (currentMax.getMaxRange() < taxablePay) {
-            return currentMax.getPercentage();
+        if (maxMin.getMinRange() < taxThrashHold) {
+            return maxMin.getPercentage();
         }
 
         for (TaxDto tax : taxList) {
-            if (taxablePay >= tax.getMinRange() && taxablePay <= tax.getMaxRange()) {
+            if (taxThrashHold >= tax.getMinRange() && taxThrashHold <= tax.getMaxRange()) {
                 return tax.getPercentage();
             }
         }
