@@ -24,7 +24,7 @@ public class DepartmentChartService {
         List<Employee> empList = employeeRepo.findAllByDeletedFalse();
 
         int totalDip = listDip.size();
-        int totalEmp = empList.size();
+        double totalEmp = empList.size();
 
         if (listDip.isEmpty() || empList.isEmpty()){
             DepartmentChart chart = DepartmentChart.builder()
@@ -39,10 +39,13 @@ public class DepartmentChartService {
         for (Department dep : listDip){
             DepartmentChart chart = new DepartmentChart();
             String name = dep.getDepartmentName();
-            int empSizeByDep = employeeRepo.countByDepartmentAndDeletedFalse(dep);
+            double empSizeByDep = employeeRepo.countByDepartmentAndDeletedFalse(dep);
             double y = 0;
             if (empSizeByDep > 0){
-               y = (empSizeByDep / totalEmp) * 100;
+               y = empSizeByDep / totalEmp * 100;
+            }
+            if (y <= 0){
+                break;
             }
             chart.setName(name);
             chart.setY(y);

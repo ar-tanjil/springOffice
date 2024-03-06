@@ -1,5 +1,6 @@
 package com.spring.office.payroll.service;
 
+import com.spring.office.department.Department;
 import com.spring.office.employee.Employee;
 import com.spring.office.payroll.domain.Payroll;
 import com.spring.office.payroll.dto.AttendanceDto;
@@ -207,4 +208,10 @@ public class PayrollService {
     }
 
 
+    public void deleteAllPayroll() {
+        List<Payroll> listDep = payrollRepository.findAll();
+
+        payrollRepository.deleteAll(listDep);
+
+    }
 }

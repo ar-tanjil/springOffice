@@ -36,7 +36,7 @@ public class AttendanceController {
     }
 
     @GetMapping("/{start_date}/{end_date}")
-    public Iterable<AttendanceTable> getById(
+    public Iterable<AttendanceTable> getAttendanceSheet(
             @PathVariable("start_date") String start,
             @PathVariable("end_date") String end
     ){
@@ -46,6 +46,14 @@ public class AttendanceController {
         var endDate = LocalDate.parse(end);
         return attendanceService
                 .getAttendanceSheet(starDate,endDate);
+    }
+
+    @GetMapping("sheet/current_month")
+    public Iterable<AttendanceTable> getThisMonthAttendanceSheet(){
+        var date = LocalDate.now();
+        var startDate = LocalDate.of(date.getYear(), date.getMonth(), 1);
+        var endDate = LocalDate.of(date.getYear(), date.getMonth(), date.lengthOfMonth());
+        return attendanceService.getAttendanceSheet(startDate, endDate);
     }
 
     @GetMapping("/day/{id}/{date}")

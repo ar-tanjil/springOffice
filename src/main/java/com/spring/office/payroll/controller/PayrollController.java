@@ -31,4 +31,9 @@ public class PayrollController {
         return payrollService.getAllByPeriod(year, month);
     }
 
+    @GetMapping("/refresh")
+    public void refresh(){
+        payrollService.deleteAllPayroll();
+    }
+
 }
