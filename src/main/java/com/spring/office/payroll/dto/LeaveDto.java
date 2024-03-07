@@ -15,6 +15,7 @@ public class LeaveDto {
     private LocalDate day;
     private String type;
     private String reason;
-    private boolean status;
+    private String status;
     private Long employeeId;
+    private String employeeName;
 }

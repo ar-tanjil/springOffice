@@ -1,5 +1,6 @@
 package com.spring.office.security.auth;
 
+import com.spring.office.employee.Employee;
 import com.spring.office.security.auth.dto.AuthRequest;
 import com.spring.office.security.auth.dto.AuthResponse;
 import com.spring.office.security.auth.dto.RegisterRequest;
@@ -25,10 +26,16 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public void register(RegisterRequest request) {
+        if (request.getEmployeeId() == null){
+            return;
+        }
         Role role = Role.OTHER;
         if (request.getRole() != null){
             role = Role.valueOf(request.getRole());
         }
+
+        Employee employee = new Employee();
+        employee.setId(request.getEmployeeId());
 
         var user =  User.builder()
                 .username(request.getUsername())
@@ -38,6 +45,7 @@ public class AuthService {
                 .accountNonLocked(true)
                 .enabled(true)
                 .credentialsNonExpired(true)
+                .employee(employee)
                 .build();
         userRepository.save(user);
 
@@ -56,6 +64,9 @@ public class AuthService {
 
         HashMap<String, Object> role = new HashMap<>();
         role.put("role", user.getRole());
+        if (user.getEmployee() != null){
+            role.put("id", user.getEmployee().getId());
+        }
 
         var jwtToken = jwtService.generateToken(role, user);
         return AuthResponse.builder()

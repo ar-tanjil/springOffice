@@ -19,11 +19,10 @@ public class EmployeeUserService {
     public EmployeeDto createNewUser(EmployeeDto dto){
         var saveDto = employeeService.saveEmployee(dto);
 
-
-
         RegisterRequest register = RegisterRequest.builder()
                 .username(saveDto.getEmail())
                 .password(saveDto.getFirstName())
+                .employeeId(saveDto.getId())
                 .role("OTHER")
                 .build();
 

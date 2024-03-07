@@ -1,8 +1,6 @@
 package com.spring.office.notification.notificaion;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,5 +22,8 @@ public class NotificationEntity {
     private String senderId;
     private String recipientId;
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    private Type type;
     private Date timestamp;
 }

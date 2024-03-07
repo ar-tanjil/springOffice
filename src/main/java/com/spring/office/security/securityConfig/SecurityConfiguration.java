@@ -35,6 +35,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("/office/auth/**")
                                 .permitAll()
+                                .requestMatchers("/myapp/**")
+                                .permitAll()
                                 .requestMatchers("/swagger-ui/**")
                                 .permitAll()
                                 .requestMatchers("/v3/api-docs/**")

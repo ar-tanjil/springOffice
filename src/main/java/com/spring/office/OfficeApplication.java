@@ -125,6 +125,7 @@ public class OfficeApplication {
                     .username("ashiq")
                     .password("ashiq")
                     .role("ADMIN")
+                    .employeeId(saveEmp.getId())
                     .build();
 
 

@@ -1,14 +1,19 @@
 package com.spring.office.payroll.controller;
 
 
+import com.spring.office.notification.NotificationController;
 import com.spring.office.notification.notificaion.NotificationDto;
 import com.spring.office.notification.notificaion.NotificationEntity;
 import com.spring.office.notification.notificaion.NotificationService;
+import com.spring.office.notification.notificaion.Type;
 import com.spring.office.payroll.dto.LeaveDto;
 import com.spring.office.payroll.service.LeaveService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,39 +22,43 @@ import org.springframework.web.bind.annotation.*;
 public class LeaveController {
 
     private final LeaveService leaveService;
-    private final SimpMessagingTemplate messagingTemplate;
-    private final NotificationService notificationService;
+    private final NotificationController notificationController;
     @PostMapping
     public LeaveDto saveLeave(
+            @RequestHeader("Name") String name,
             @RequestBody LeaveDto dto
     ){
         var save = leaveService.saveLeave(dto);
-
         NotificationEntity notify = new NotificationEntity();
-        notify.setContent(save.getId()+ "-" + save.getEmployeeId());
-        notify.setSenderId(save.getEmployeeId().toString());
+        notify.setContent("Leave Request From " + name.toUpperCase());
+        notify.setType(Type.LEAVE);
+        notify.setSenderId(name.toLowerCase());
         notify.setRecipientId("admin");
 
-        var notification = notificationService.save(notify);
+        notificationController.sendNotificationToAdmin(notify);
 
-        messagingTemplate.convertAndSendToUser(
-                "admin", "/topic",
-                new NotificationDto(
-                        notification.getId(),
-                        notification.getSenderId(),
-                        notification.getRecipientId(),
-                        notification.getContent()
-                )
-        );
         return save;
     }
 
-    @PutMapping("/{leaveId}")
+    @GetMapping("grant/{leaveId}")
     public LeaveDto grantLeave(
             @PathVariable("leaveId") Long id
     ){
         return leaveService.grantLeave(id);
     }
 
+
+    @GetMapping("reject/{leaveId}")
+    public LeaveDto rejectLeave(
+            @PathVariable("leaveId") Long id
+    ){
+        return leaveService.rejectLeave(id);
+    }
+
+
+    @GetMapping
+    public Iterable<LeaveDto> getAllLeave(){
+        return leaveService.getAllLeave();
+    }
 
 }
