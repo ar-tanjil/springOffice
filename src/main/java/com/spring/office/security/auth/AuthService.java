@@ -13,6 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -23,11 +25,15 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public void register(RegisterRequest request) {
+        Role role = Role.OTHER;
+        if (request.getRole() != null){
+            role = Role.valueOf(request.getRole());
+        }
 
         var user =  User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ADMIN)
+                .role(role)
                 .accountNonExpired(true)
                 .accountNonLocked(true)
                 .enabled(true)
@@ -48,7 +54,10 @@ public class AuthService {
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow();
 
-        var jwtToken = jwtService.generateToken(user);
+        HashMap<String, Object> role = new HashMap<>();
+        role.put("role", user.getRole());
+
+        var jwtToken = jwtService.generateToken(role, user);
         return AuthResponse.builder()
                 .token(jwtToken)
                 .build();

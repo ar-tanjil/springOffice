@@ -33,7 +33,7 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/**")
+                        req.requestMatchers("/office/auth/**")
                                 .permitAll()
                                 .requestMatchers("/swagger-ui/**")
                                 .permitAll()

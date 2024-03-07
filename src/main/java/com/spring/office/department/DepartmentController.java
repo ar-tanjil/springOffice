@@ -4,9 +4,11 @@ import com.spring.office.chart.domain.DepartmentChart;
 import com.spring.office.chart.service.DepartmentChartService;
 import com.spring.office.dto.Message;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -29,7 +31,8 @@ public class DepartmentController {
     }
 
     @PostMapping
-    public DepartmentDto saveEmployee(@RequestBody DepartmentDto dto){
+    public DepartmentDto saveDepartment(
+            @RequestBody DepartmentDto dto){
         return service.saveDepartment(dto);
     }
 

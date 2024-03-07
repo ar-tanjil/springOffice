@@ -12,6 +12,8 @@ import com.spring.office.job.JobService;
 import com.spring.office.payroll.domain.Salary;
 import com.spring.office.payroll.dto.SalaryDto;
 import com.spring.office.payroll.service.SalaryService;
+import com.spring.office.security.auth.AuthService;
+import com.spring.office.security.auth.dto.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -39,6 +41,9 @@ public class OfficeApplication {
     @Autowired
     private SalaryService salaryService;
 
+    @Autowired
+    private AuthService authService;
+
     public static void main(String[] args) {
         SpringApplication.run(OfficeApplication.class, args);
 
@@ -46,7 +51,7 @@ public class OfficeApplication {
     }
 
 
-//    	@Bean
+    	@Bean
     public CommandLineRunner dataLoad() {
         return (a) -> {
 
@@ -115,6 +120,15 @@ public class OfficeApplication {
                     .bonus(2)
                     .build();
             var saveSal = salaryService.addSalary(salDto);
+
+            var register = RegisterRequest.builder()
+                    .username("ashiq")
+                    .password("ashiq")
+                    .role("ADMIN")
+                    .build();
+
+
+        authService.register(register);
 
         };
     }
