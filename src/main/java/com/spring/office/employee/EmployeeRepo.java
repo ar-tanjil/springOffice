@@ -30,6 +30,10 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> {
             "AND e.active = true AND e.id = :id")
     String findFirstName(Long id);
 
+
+
+
+
     int countByDepartmentAndDeletedFalse(Department department);
 
     Integer countByDeletedFalse();

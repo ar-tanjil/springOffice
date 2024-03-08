@@ -14,7 +14,7 @@ public class PayrollController {
 
     private final PayrollService payrollService;
 
-    @GetMapping("/{emp_id}/{year}/{month}")
+    @GetMapping("employee/{emp_id}/{year}/{month}")
     public PayrollDto getPayroll(
             @PathVariable("emp_id") Long empId,
             @PathVariable("year") Integer year,
@@ -34,6 +34,14 @@ public class PayrollController {
     @GetMapping("/refresh")
     public void refresh(){
         payrollService.deleteAllPayroll();
+    }
+
+
+    @GetMapping("{id}")
+    public PayrollDto getPayrollById(
+            @PathVariable("id") Long id
+    ){
+        return payrollService.getPayrollById(id);
     }
 
 }

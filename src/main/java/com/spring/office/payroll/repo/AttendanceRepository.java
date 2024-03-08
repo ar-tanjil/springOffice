@@ -33,4 +33,6 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     void updatePresent(boolean val, LocalDate day, Employee emp);
 
     Integer countByDayAndCheckInIsNotNull(LocalDate localDate);
+
+    List<Attendance> findByDayIsBetween(LocalDate start, LocalDate end);
 }

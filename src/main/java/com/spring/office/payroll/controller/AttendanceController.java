@@ -1,7 +1,8 @@
 package com.spring.office.payroll.controller;
 
 import com.spring.office.payroll.dto.AttendanceDto;
-import com.spring.office.payroll.dto.AttendanceTable;
+import com.spring.office.payroll.dto.AttendanceSheet;
+import com.spring.office.payroll.dto.TimePeriod;
 import com.spring.office.payroll.service.AttendanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class AttendanceController {
         return attendanceService.giveAttendance(empId);
     }
 
-    @GetMapping("/{emp_id}/{start_date}/{end_date}")
+    @GetMapping("/employee/{emp_id}/{start_date}/{end_date}")
     public Iterable<AttendanceDto> getById(
             @PathVariable("emp_id") Long empId,
             @PathVariable("star_date") LocalDate start,
@@ -35,26 +36,24 @@ public class AttendanceController {
                 .getEmployeeAttendanceByMonth(empId, start, end);
     }
 
-    @GetMapping("/{start_date}/{end_date}")
-    public Iterable<AttendanceTable> getAttendanceSheet(
-            @PathVariable("start_date") String start,
-            @PathVariable("end_date") String end
+    @PostMapping("/table")
+    public Iterable<AttendanceDto> getAttendanceTable(
+            @RequestBody TimePeriod time
+            ){
+        return attendanceService.getAttendanceLog(time.getStartDate(), time.getEndDate());
+    }
+
+    @GetMapping("/sheet/{start_date}/{end_date}")
+    public Iterable<AttendanceSheet> getAttendanceSheet(
+            @PathVariable("start_date") LocalDate start,
+            @PathVariable("end_date") LocalDate end
     ){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM-dd-yyyy");
 
-        var starDate = LocalDate.parse(start);
-        var endDate = LocalDate.parse(end);
+
         return attendanceService
-                .getAttendanceSheet(starDate,endDate);
+                .getAttendanceSheet(start,end);
     }
 
-    @GetMapping("sheet/current_month")
-    public Iterable<AttendanceTable> getThisMonthAttendanceSheet(){
-        var date = LocalDate.now();
-        var startDate = LocalDate.of(date.getYear(), date.getMonth(), 1);
-        var endDate = LocalDate.of(date.getYear(), date.getMonth(), date.lengthOfMonth());
-        return attendanceService.getAttendanceSheet(startDate, endDate);
-    }
 
     @GetMapping("/day/{id}/{date}")
     public AttendanceDto getByDate(

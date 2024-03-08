@@ -1,7 +1,7 @@
 package com.spring.office.payroll.service;
 
-import com.spring.office.department.Department;
 import com.spring.office.employee.Employee;
+import com.spring.office.employee.EmployeeService;
 import com.spring.office.payroll.domain.Payroll;
 import com.spring.office.payroll.dto.AttendanceDto;
 import com.spring.office.payroll.dto.PayrollDto;
@@ -15,11 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @Service
@@ -37,6 +33,7 @@ public class PayrollService {
     private final LeaveService leaveService;
     private final SalaryService salaryService;
     private final TaxService taxService;
+    private final EmployeeService employeeService;
     //    Mapper
     private final PayrollMapper payrollMapper;
     private double loan;
@@ -49,45 +46,83 @@ public class PayrollService {
         employee.setId(empId);
         Optional<Payroll> findPayroll = payrollRepository.findByEmployeeAndPeriod(employee, period);
         if (findPayroll.isEmpty()) {
-            return payrollMapper.payrollToDto(generatePayroll(empId, period));
+            return payrollMapper.payrollToDto(generatePayroll(employee, period));
         }
 
         return payrollMapper.payrollToDto(findPayroll.get());
     }
 
     public List<PayrollTable> getAllByPeriod(Integer year, Integer month) {
-        YearMonth period = YearMonth.of(year, month);
-        List<Payroll> optPay = payrollRepository.findByPeriod(period);
 
-        return optPay.stream().map(payrollMapper::payrollToTable)
-                .sorted()
-                .collect(Collectors.toList());
+   return generateAllPayroll(year, month).stream()
+           .map(payrollMapper::payrollToTable)
+           .toList();
+    }
+
+
+    private List<Payroll> generateAllPayroll(int year, int month){
+
+        YearMonth period = YearMonth.of(year, month);
+
+        List<Employee> listEmployee = employeeService.getAllEmployeeOrg();
+        List<Payroll> listPayroll = new ArrayList<>();
+        for (Employee employee : listEmployee){
+            var employeeHireDate = employee.getHireDate();
+            YearMonth hireDate = YearMonth.of(employeeHireDate.getYear(), employeeHireDate.getMonth());
+
+            if (hireDate.isAfter(period)){
+                break;
+            }
+
+            Optional<Payroll> generated = payrollRepository
+                    .findByEmployeeAndPeriod(employee,period);
+
+            if (generated.isPresent()){
+                listPayroll.add(generated.get());
+                break;
+            }
+
+            listPayroll.add(generatePayroll(employee, period));
+
+        }
+
+        return listPayroll;
 
     }
 
 
-    public Payroll generatePayroll(Long empId, YearMonth period) {
 
-        Employee employee = new Employee();
-        employee.setId(empId);
+    public Payroll generatePayroll(Employee employee, YearMonth period) {
 
-        SalaryDto salary = salaryService.getSalaryByEmployee(empId);
+//        Employee employee = new Employee();
+//        employee.setId(empId);
+//        Add
+        int totalWorkingDay = totalWorkingDay(period);
+        int unpaidLeaveDay = unpaidLeaveDay(employee.getId(), period);
+        int totalLeaveDay = getAbsenceDays(employee.getId(), period).size();
+
+
+        SalaryDto salary = salaryService.getSalaryByEmployee(employee.getId());
         double basic = salary.getBasic();
-        double unpaidLeave = unpaidLeave(empId, period, salary.getBasic());
+        double unpaidLeave = unpaidLeave(employee.getId(), period, salary.getBasic());
         double providentFund = salary.getProvident();
+        double providentInformation = salary.getProvidentFund();
         double travelAllowance = salary.getTravel();
+        double travelInformation = salary.getTravelAllowance();
         double medicalAllowance = salary.getMedical();
+        double medicalInformation = salary.getMedicalAllowance();
         double loan = salary.getLoan();
 
 
         double grossSalary = basic + medicalAllowance
                 + travelAllowance - (unpaidLeave + providentFund );
         double tax = taxService.taxCalculation(grossSalary);
+        double taxInformation = taxService.getTaxPer(grossSalary);
         double netSalary = grossSalary - tax;
 
         if (loan < netSalary){
             netSalary -= loan;
-            salaryService.updateLoan(empId, loan);
+            salaryService.updateLoan(employee.getId(), loan);
         } else {
             loan = 0;
         }
@@ -105,7 +140,14 @@ public class PayrollService {
                 .unpaidLeave(unpaidLeave)
                 .tax(tax)
                 .loanPayment(loan)
-                .unpaidLeave(unpaidLeave)
+                .unpaidLeaveDay(unpaidLeaveDay)
+                .workingDay(totalWorkingDay)
+                .totalLeaveDay(totalLeaveDay)
+                .taxInformation(taxInformation)
+                .totalLeaveDay(totalLeaveDay)
+                .providentInformation(providentInformation)
+                .medicalInformation(medicalInformation)
+                .travelInformation(travelInformation)
                 .build();
 
 
@@ -213,5 +255,11 @@ public class PayrollService {
 
         payrollRepository.deleteAll(listDep);
 
+    }
+
+    public PayrollDto getPayrollById(Long id) {
+        return payrollRepository.findById(id)
+                .map(payrollMapper::payrollToDto)
+                .orElse(null);
     }
 }

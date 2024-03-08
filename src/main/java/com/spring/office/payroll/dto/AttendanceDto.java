@@ -5,6 +5,7 @@ import jakarta.persistence.NamedQueries;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -15,8 +16,10 @@ import java.time.LocalTime;
 public class AttendanceDto {
     private Long id;
     private LocalDate day;
-    private LocalTime entryTime;
-    private LocalTime leaveTime;
+    private LocalDateTime entryTime;
+    private LocalDateTime leaveTime;
     private boolean present;
     private Long employeeId;
+    private String employeeName;
+
 }

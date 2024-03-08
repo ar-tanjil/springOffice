@@ -25,14 +25,21 @@ public class Payroll extends BaseModel {
     private double basicSalary;
     private double unpaidLeave;
     private double tax;
+    private double taxInformation;
     private double loanPayment;
     private double bonusAmount;
     private double providentFund;
+    private double providentInformation;
     private double medicalAllowance;
+    private double medicalInformation;
+    private double travelInformation;
     private double travelAllowance;
     private double otherEarning;
     private double otherDeduction;
-
+    private int workingDay;
+    private int unpaidLeaveDay;
+    private int totalLeaveDay;
+    private boolean status;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")

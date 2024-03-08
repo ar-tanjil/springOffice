@@ -29,10 +29,11 @@ public class AttendanceMapper {
         return AttendanceDto.builder()
                 .id(att.getId())
                 .day(att.getDay())
-                .entryTime(att.getCheckIn())
-                .leaveTime(att.getCheckOut())
+                .entryTime(att.getCheckIn().atDate(att.getDay()))
+                .leaveTime(att.getCheckOut().atDate(att.getDay()))
                 .present(att.isPresent())
                 .employeeId(att.getEmployee().getId())
+                .employeeName(att.getEmployee().getFirstName())
                 .build();
     }
 

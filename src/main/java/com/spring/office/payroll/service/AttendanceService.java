@@ -4,17 +4,14 @@ import com.spring.office.employee.Employee;
 import com.spring.office.employee.EmployeeRepo;
 import com.spring.office.payroll.domain.Attendance;
 import com.spring.office.payroll.dto.AttendanceDto;
-import com.spring.office.payroll.dto.AttendanceTable;
+import com.spring.office.payroll.dto.AttendanceSheet;
 import com.spring.office.payroll.repo.AttendanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Month;
-import java.time.YearMonth;
 import java.util.*;
-import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +31,9 @@ public class AttendanceService {
         LocalDate day = LocalDate.now();
 
 
-        if (holidayService.checkHoliday(day)){
-            return null;
-        }
+//        if (holidayService.checkHoliday(day)){
+//            return null;
+//        }
 
         Optional<Attendance> optAtt = attendanceRepository.findByEmployeeAndDay(emp, day);
 
@@ -88,12 +85,15 @@ public class AttendanceService {
     }
 
 
-    private AttendanceTable getAttendanceTable(List<Attendance> list, String firstName) {
+    private AttendanceSheet getAttendanceSheet(List<Attendance> list, String firstName,
+                                               LocalDate end) {
 
-        AttendanceTable table = new AttendanceTable();
+        AttendanceSheet table = new AttendanceSheet();
 
 
-        int size = LocalDate.now().getDayOfMonth();
+        boolean endDate = LocalDate.now().isAfter(end);
+
+        int size = endDate ? end.getDayOfMonth() : LocalDate.now().getDayOfMonth();
 
         boolean[] present = new boolean[size];
 
@@ -114,11 +114,11 @@ public class AttendanceService {
     }
 
 
-    public List<AttendanceTable> getAttendanceSheet(LocalDate start, LocalDate end) {
+    public List<AttendanceSheet> getAttendanceSheet(LocalDate start, LocalDate end) {
 
         List<Long> empId = employeeRepo.findAllEmployeeId();
 
-        List<AttendanceTable> table = new ArrayList<>();
+        List<AttendanceSheet> table = new ArrayList<>();
 
         for (Long id : empId) {
             Employee emp = new Employee();
@@ -128,7 +128,7 @@ public class AttendanceService {
 
             String firstName = employeeRepo.findFirstName(id);
 
-            table.add(getAttendanceTable(list, firstName));
+            table.add(getAttendanceSheet(list, firstName, end));
         }
 
         return table;
@@ -148,5 +148,12 @@ public class AttendanceService {
 
         return attendanceRepository.countByDayAndCheckInIsNotNull(localDate);
 
+    }
+
+
+    public List<AttendanceDto> getAttendanceLog(LocalDate start, LocalDate end){
+        List<Attendance> listLog = attendanceRepository.findByDayIsBetween(start, end);
+        return listLog.stream().map(attendanceMapper::attendanceToDto)
+                .toList();
     }
 }

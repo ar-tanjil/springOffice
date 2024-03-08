@@ -106,4 +106,8 @@ public class EmployeeService {
     public Integer countAllEmployee() {
         return empRepo.countByDeletedFalse();
     }
+
+    public List<Employee> getAllEmployeeOrg(){
+        return empRepo.findAllByDeletedFalse();
+    }
 }

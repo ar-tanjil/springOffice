@@ -13,6 +13,10 @@ public class PayrollMapper {
         return PayrollDto.builder()
                 .id(payroll.getId())
                 .employeeId(payroll.getEmployee().getId())
+                .workingDays(payroll.getWorkingDay())
+                .unpaidLeaveDays(payroll.getUnpaidLeaveDay())
+                .departmentName(payroll.getEmployee().getDepartment().getDepartmentName())
+                .jobTitle(payroll.getEmployee().getJob().getJobTitle())
                 .period(payroll.getPeriod())
                 .basicSalary(payroll.getBasicSalary())
                 .grossSalary(payroll.getGrossSalary())
@@ -26,6 +30,12 @@ public class PayrollMapper {
                 .medicalAllowance(payroll.getMedicalAllowance())
                 .providentFund(payroll.getProvidentFund())
                 .travelAllowance(payroll.getTravelAllowance())
+                .taxInformation(payroll.getTaxInformation())
+                .employeeName(payroll.getEmployee().getFirstName() + " " + payroll.getEmployee().getLastName())
+                .totalLeaveDays(payroll.getTotalLeaveDay())
+                .medicalInformation(payroll.getMedicalInformation())
+                .travelInformation(payroll.getTravelInformation())
+                .providentInformation(payroll.getProvidentInformation())
                 .build();
     }
 
@@ -37,10 +47,13 @@ public class PayrollMapper {
             table.setEmployeeId(payroll.getEmployee().getId());
             table.setFirstName(payroll.getEmployee().getFirstName());
 
-            if (payroll.getEmployee().getDepartment() != null){
+            if (payroll.getEmployee().getJob() != null){
                 table.setJobTitle(payroll.getEmployee().getJob().getJobTitle());
             }
 
+            if (payroll.getEmployee().getDepartment() != null){
+                table.setDepartmentName(payroll.getEmployee().getDepartment().getDepartmentName());
+            }
         }
 
         table.setGrossSalary(payroll.getGrossSalary());
