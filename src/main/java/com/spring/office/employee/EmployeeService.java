@@ -99,7 +99,7 @@ public class EmployeeService {
 
     public List<EmployeeShortDetails> employeeWithoutSalary(){
         List<Employee> listEmployee = empRepo.findAllByDeletedFalseAndSalaryIsNull();
-        return listEmployee.stream().map(empMapper::employeeToEmpSal)
+        return listEmployee.stream().map(empMapper::employeeToShortDetails)
                 .collect(Collectors.toList());
     }
 
@@ -113,7 +113,7 @@ public class EmployeeService {
 
     public Iterable<EmployeeShortDetails> employeeWithoutLeavePolicy() {
         List<Employee> listEmployee = empRepo.findAllByDeletedFalseAndLeavePolicyIsNull();
-        return listEmployee.stream().map(empMapper::employeeToEmpSal)
+        return listEmployee.stream().map(empMapper::employeeToShortDetails)
                 .collect(Collectors.toList());
     }
 }

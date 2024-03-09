@@ -189,7 +189,7 @@ public class EmployeeMapper {
         return oldEmp;
     }
 
-    public EmployeeShortDetails employeeToEmpSal(Employee employee){
+    public EmployeeShortDetails employeeToShortDetails(Employee employee){
         return new EmployeeShortDetails(
                 employee.getId(),
                 employee.getFirstName(),
