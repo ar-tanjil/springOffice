@@ -55,8 +55,13 @@ public class EmployeeController {
     }
 
     @GetMapping("/without_sal")
-    public Iterable<EmployeeSalary> getSalaryLessEmp(){
+    public Iterable<EmployeeShortDetails> getSalaryLessEmp(){
         return empService.employeeWithoutSalary();
+    }
+
+    @GetMapping("/without_leave")
+    public Iterable<EmployeeShortDetails> getLevePolicyLessEmp(){
+        return empService.employeeWithoutLeavePolicy();
     }
 
     @GetMapping("/count/employee")

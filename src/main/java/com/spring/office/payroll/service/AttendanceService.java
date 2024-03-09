@@ -31,9 +31,9 @@ public class AttendanceService {
         LocalDate day = LocalDate.now();
 
 
-//        if (holidayService.checkHoliday(day)){
-//            return null;
-//        }
+        if (holidayService.checkHoliday(day)){
+            return null;
+        }
 
         Optional<Attendance> optAtt = attendanceRepository.findByEmployeeAndDay(emp, day);
 

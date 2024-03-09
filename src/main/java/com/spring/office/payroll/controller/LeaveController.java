@@ -41,7 +41,7 @@ public class LeaveController {
     }
 
     @GetMapping("grant/{leaveId}")
-    public LeaveDto grantLeave(
+    public boolean grantLeave(
             @PathVariable("leaveId") Long id
     ){
         return leaveService.grantLeave(id);
@@ -49,7 +49,7 @@ public class LeaveController {
 
 
     @GetMapping("reject/{leaveId}")
-    public LeaveDto rejectLeave(
+    public boolean rejectLeave(
             @PathVariable("leaveId") Long id
     ){
         return leaveService.rejectLeave(id);

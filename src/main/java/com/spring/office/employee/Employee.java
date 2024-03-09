@@ -9,6 +9,7 @@ import com.spring.office.domain.embaded.Qualification;
 import com.spring.office.job.Job;
 import com.spring.office.job.JobHistory;
 import com.spring.office.payroll.domain.Leave;
+import com.spring.office.payroll.domain.LeavePolicy;
 import com.spring.office.payroll.domain.Salary;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -71,6 +72,9 @@ public class Employee extends BaseModel {
 
     @OneToOne(mappedBy = "employee")
     private Salary salary;
+
+    @OneToOne(mappedBy = "employee")
+    private LeavePolicy leavePolicy;
 
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
