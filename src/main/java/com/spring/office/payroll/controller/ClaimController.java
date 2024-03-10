@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/claim")
+@RequestMapping("/claims")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ClaimController {
 

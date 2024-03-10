@@ -1,5 +1,7 @@
 package com.spring.office.payroll.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.office.domain.BaseModel;
 import com.spring.office.employee.Employee;
 import jakarta.persistence.*;
@@ -27,11 +29,13 @@ public class Claim extends BaseModel {
     private LocalDate date;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category")
+    @JsonManagedReference
     private ClaimCategory claimCategory;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
+    @JsonIgnore
     private Employee employee;
 }

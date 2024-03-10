@@ -22,7 +22,7 @@ public class ClaimCategoryMapper {
         return ClaimCategory.builder()
                 .id(dto.getId())
                 .name(dto.getName())
-                .claimType(ClaimType.valueOf(dto.getName().toUpperCase()))
+                .claimType(ClaimType.valueOf(dto.getClaimType().toUpperCase()))
                 .build();
     }
 

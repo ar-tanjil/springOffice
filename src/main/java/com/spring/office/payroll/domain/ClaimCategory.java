@@ -1,5 +1,7 @@
 package com.spring.office.payroll.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.office.domain.BaseModel;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,6 +30,8 @@ public class ClaimCategory extends BaseModel {
     private ClaimType claimType;
 
     @OneToMany(mappedBy = "claimCategory")
+    @JsonIgnore
+    @JsonBackReference
     private Set<Claim> claims;
 
 

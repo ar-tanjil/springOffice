@@ -17,6 +17,13 @@ public class ClaimMapper {
     private final EmployeeMapper employeeMapper;
     public ClaimDto claimToDto(Claim claim){
 
+if (claim.getClaimCategory() == null){
+    return null;
+}
+if (claim.getEmployee() == null){
+    return  null;
+}
+
         return ClaimDto.builder()
                 .id(claim.getId())
                 .title(claim.getTitle())
@@ -37,12 +44,16 @@ public class ClaimMapper {
         ClaimCategory category = new ClaimCategory();
         category.setId(dto.getCategoryId());
 
+        String status = dto.getClaimStatus();
+        if (status == null){
+            status = "PENDING";
+        }
 
         return Claim.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())
                 .amount(dto.getAmount())
-                .claimStatus(ClaimStatus.valueOf(dto.getClaimStatus()))
+                .claimStatus(ClaimStatus.valueOf(status.toUpperCase()))
                 .date(dto.getDate())
                 .claimCategory(category)
                 .employee(employee)
