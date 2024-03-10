@@ -34,7 +34,7 @@ public class Payroll extends BaseModel {
     private double medicalInformation;
     private double travelInformation;
     private double travelAllowance;
-    private double otherEarning;
+    private double reimbursement;
     private double otherDeduction;
     private int workingDay;
     private int unpaidLeaveDay;

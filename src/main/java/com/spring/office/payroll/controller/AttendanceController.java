@@ -19,7 +19,7 @@ public class AttendanceController {
 
     private final AttendanceService attendanceService;
 
-    @PostMapping("/{emp_id}")
+    @GetMapping("/{emp_id}")
     public AttendanceDto giveAttendance(
             @PathVariable("emp_id") Long empId
     ) {

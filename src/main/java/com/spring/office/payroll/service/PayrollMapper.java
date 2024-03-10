@@ -22,7 +22,7 @@ public class PayrollMapper {
                 .grossSalary(payroll.getGrossSalary())
                 .netSalary(payroll.getNetSalary())
                 .bonusAmount(payroll.getBonusAmount())
-                .otherEarning(payroll.getOtherEarning())
+                .reimbursement(payroll.getReimbursement())
                 .otherDeduction(payroll.getOtherDeduction())
                 .loanPayment(payroll.getLoanPayment())
                 .unpaidLeave(payroll.getUnpaidLeave())

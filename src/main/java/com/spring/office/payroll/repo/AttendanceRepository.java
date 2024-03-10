@@ -21,16 +21,16 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     List<Attendance> findByEmployeeAndDayIsBetween(Employee emp, LocalDate start, LocalDate end);
 
-    List<Attendance> findByEmployeeAndDayIsBetweenAndPresentTrue(Employee employee, LocalDate start, LocalDate end);
+//    List<Attendance> findByEmployeeAndDayIsBetweenAndPresentTrue(Employee employee, LocalDate start, LocalDate end);
 
     @Query(value = "select a.employee from Attendance a where a.day BETWEEN :start AND :end")
     Set<Employee> findByPeriod(LocalDate start, LocalDate end);
 
 
-    @Modifying
-    @Transactional
-    @Query("update Attendance d set d.present = :val where d.day = :day and d.employee = :emp")
-    void updatePresent(boolean val, LocalDate day, Employee emp);
+//    @Modifying
+//    @Transactional
+//    @Query("update Attendance d set d.present = :val where d.day = :day and d.employee = :emp")
+//    void updatePresent(boolean val, LocalDate day, Employee emp);
 
     Integer countByDayAndCheckInIsNotNull(LocalDate localDate);
 

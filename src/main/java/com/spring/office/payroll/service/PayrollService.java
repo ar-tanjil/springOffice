@@ -115,9 +115,9 @@ public class PayrollService {
         LocalDate end = LocalDate.of(period.getYear(), period.getMonth(), period.lengthOfMonth());
 
 
-        double otherAddition = claimService.allClaimAdditions(employee.getId(), start, end);
+        double reimbursement = claimService.reimbursementClaimByPeriod(employee.getId(), start, end);
         double otherDeduction = claimService.allClaimDeductions(employee.getId(), start, end);
-
+        double bonus = claimService.bonusByPeriod(employee.getId(), start, end);
 
 //                Salary Information
         SalaryDto salary = salaryService.getSalaryByEmployee(employee.getId());
@@ -133,10 +133,10 @@ public class PayrollService {
 
 
         double grossSalary = basic + medicalAllowance
-                + travelAllowance - (unpaidLeave + providentFund );
+                + travelAllowance +  bonus - (unpaidLeave + providentFund );
         double tax = taxService.taxCalculation(grossSalary);
         double taxInformation = taxService.getTaxPer(grossSalary);
-        double netSalary = grossSalary - tax + (otherAddition - otherDeduction);
+        double netSalary = grossSalary - tax + (reimbursement - otherDeduction) ;
 
         if (loan < netSalary){
             netSalary -= loan;
@@ -166,7 +166,8 @@ public class PayrollService {
                 .providentInformation(providentInformation)
                 .medicalInformation(medicalInformation)
                 .travelInformation(travelInformation)
-                .otherEarning(otherAddition)
+                .reimbursement(reimbursement)
+                .bonusAmount(bonus)
                 .otherDeduction(otherDeduction)
                 .status(PayrollStatus.PENDING)
                 .build();

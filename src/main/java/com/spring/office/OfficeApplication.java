@@ -11,6 +11,7 @@ import com.spring.office.employee.EmployeeService;
 import com.spring.office.job.JobService;
 import com.spring.office.payroll.domain.Salary;
 import com.spring.office.payroll.dto.SalaryDto;
+import com.spring.office.payroll.service.OfficeDaysService;
 import com.spring.office.payroll.service.SalaryService;
 import com.spring.office.security.auth.AuthService;
 import com.spring.office.security.auth.dto.RegisterRequest;
@@ -44,6 +45,9 @@ public class OfficeApplication {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private OfficeDaysService officeDaysService;
+
     public static void main(String[] args) {
         SpringApplication.run(OfficeApplication.class, args);
 
@@ -54,6 +58,10 @@ public class OfficeApplication {
     	@Bean
     public CommandLineRunner dataLoad() {
         return (a) -> {
+
+
+
+            officeDaysService.initialSave();
 
             DepartmentDto dep = new DepartmentDto();
             dep.setDepartmentName("Administration");

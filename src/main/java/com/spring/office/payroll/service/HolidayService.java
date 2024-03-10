@@ -1,6 +1,7 @@
 package com.spring.office.payroll.service;
 
 import com.spring.office.payroll.domain.Holiday;
+import com.spring.office.payroll.domain.OfficeDays;
 import com.spring.office.payroll.dto.HolidayDto;
 import com.spring.office.payroll.repo.HolidayRepo;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class HolidayService {
 
     private final HolidayRepo holidayRepo;
+    private final OfficeDaysService officeDaysService;
 
 
 private HolidayDto holidayToDto(Holiday holiday){
@@ -78,8 +80,16 @@ public boolean checkHoliday(LocalDate date){
     var holiday = getHolidayByDay(date);
     var isHoliday = holiday != null;
 
-    var weekend = date.getDayOfWeek() == DayOfWeek.FRIDAY ||
-            date.getDayOfWeek() == DayOfWeek.SATURDAY;
+    List<OfficeDays> listWeekend = officeDaysService.getWeekends();
+    boolean weekend = false;
+
+    for(OfficeDays days: listWeekend){
+        if (days.getDay() == date.getDayOfWeek()) {
+            weekend = true;
+            break;
+        }
+    }
+
 
     return isHoliday || weekend;
 

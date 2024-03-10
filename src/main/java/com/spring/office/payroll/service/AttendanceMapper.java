@@ -5,6 +5,9 @@ import com.spring.office.payroll.dto.AttendanceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,12 +29,28 @@ public class AttendanceMapper {
             return null;
         }
 
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+
+        String in = "";
+        String out = "";
+
+        if (att.getCheckIn() != null){
+            in = timeFormat.format(att.getCheckIn());
+        }
+
+        if (att.getCheckOut() != null){
+            out = timeFormat.format(att.getCheckOut());
+        }
+
+
+
         return AttendanceDto.builder()
                 .id(att.getId())
                 .day(att.getDay())
-                .entryTime(att.getCheckIn().atDate(att.getDay()))
-                .leaveTime(att.getCheckOut().atDate(att.getDay()))
-                .present(att.isPresent())
+                .checkIn(in)
+                .checkOut(out)
+                .checkInStatus(att.getCheckInStatus())
+                .checkOutStatus(att.getCheckOutStatus())
                 .employeeId(att.getEmployee().getId())
                 .employeeName(att.getEmployee().getFirstName())
                 .build();

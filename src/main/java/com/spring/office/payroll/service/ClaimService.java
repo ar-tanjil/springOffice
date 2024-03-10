@@ -1,7 +1,6 @@
 package com.spring.office.payroll.service;
 
 import com.spring.office.employee.Employee;
-import com.spring.office.payroll.domain.Claim;
 import com.spring.office.payroll.domain.ClaimStatus;
 import com.spring.office.payroll.domain.ClaimType;
 import com.spring.office.payroll.dto.ClaimDto;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,16 +53,29 @@ public class ClaimService {
     }
 
 
-    public double allClaimAdditions(Long empId, LocalDate start, LocalDate end){
+    public double reimbursementClaimByPeriod(Long empId, LocalDate start, LocalDate end){
 
         Employee emp = new Employee();
         emp.setId(empId);
 
-        var additions = claimRepo.findAllAdditionsByEmployee(emp,start,end,
-                ClaimStatus.APPROVED, ClaimType.ADDITIONS);
+        var reimbursement = claimRepo.findAllAdditionsByEmployee(emp,start,end,
+                ClaimStatus.APPROVED, ClaimType.REIMBURSEMENT);
 
-        if (additions != null){
-            return additions;
+        if (reimbursement != null){
+            return reimbursement;
+        }
+        return 0;
+    }
+
+    public double bonusByPeriod(Long empId, LocalDate start, LocalDate end) {
+        Employee emp = new Employee();
+        emp.setId(empId);
+
+        var bonus = claimRepo.findAllAdditionsByEmployee(emp,start,end,
+                ClaimStatus.APPROVED, ClaimType.BONUS);
+
+        if (bonus != null){
+            return bonus;
         }
         return 0;
     }
@@ -108,6 +118,7 @@ public class ClaimService {
         claimRepo.updateClaim(id, ClaimStatus.REJECTED);
         return true;
     }
+
 
 
 }
