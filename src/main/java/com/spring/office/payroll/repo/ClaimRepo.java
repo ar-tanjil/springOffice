@@ -5,7 +5,9 @@ import com.spring.office.payroll.domain.Claim;
 import com.spring.office.payroll.domain.ClaimStatus;
 import com.spring.office.payroll.domain.ClaimType;
 import com.spring.office.payroll.dto.ClaimDto;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
@@ -24,4 +26,11 @@ public interface ClaimRepo extends JpaRepository<Claim, Long> {
                                    ClaimType type);
 
     List<Claim> findByEmployee(Employee emp);
+
+    @Modifying
+    @Transactional
+    @Query("update Claim c set c.claimStatus = :claimStatus where  c.id = :id")
+    void updateClaim(Long id, ClaimStatus claimStatus);
+
+
 }

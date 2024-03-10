@@ -38,5 +38,6 @@ public class PayrollDto {
     private String employeeName;
     private String departmentName;
     private String jobTitle;
+    private String status;
 
 }

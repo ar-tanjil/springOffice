@@ -39,7 +39,7 @@ public class Payroll extends BaseModel {
     private int workingDay;
     private int unpaidLeaveDay;
     private int totalLeaveDay;
-    private boolean status;
+    private PayrollStatus status;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")

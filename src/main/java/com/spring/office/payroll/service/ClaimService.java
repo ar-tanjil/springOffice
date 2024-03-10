@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,9 +21,8 @@ public class ClaimService {
     private final ClaimMapper claimMapper;
     private final ClaimRepo claimRepo;
 
-    public ClaimDto save(ClaimDto dto){
+    public void save(ClaimDto dto){
         var save = claimRepo.save(claimMapper.dtoToClaim(dto));
-        return claimMapper.claimToDto(save);
     }
 
     public List<ClaimDto> getAll(){
@@ -97,4 +97,17 @@ public class ClaimService {
                 .map(claimMapper::claimToDto)
                 .toList();
     }
+
+    public boolean approveClaim(Long id) {
+        claimRepo.updateClaim(id, ClaimStatus.APPROVED);
+        return true;
+    }
+
+
+    public boolean rejectClaim(Long id) {
+        claimRepo.updateClaim(id, ClaimStatus.REJECTED);
+        return true;
+    }
+
+
 }

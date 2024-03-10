@@ -36,6 +36,7 @@ public class PayrollMapper {
                 .medicalInformation(payroll.getMedicalInformation())
                 .travelInformation(payroll.getTravelInformation())
                 .providentInformation(payroll.getProvidentInformation())
+                .status(payroll.getStatus().name())
                 .build();
     }
 

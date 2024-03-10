@@ -35,7 +35,7 @@ public class LeaveService {
         emp.setId(empId);
 
         List<Leave> listLeave = leaveRepository
-                .findByEmployeeAndDayIsBetweenAndStatusTrue(emp, start, end);
+                .findByEmployeeAndDayIsBetweenAndStatus(emp, start, end, LeaveStatus.APPROVED);
 
         return listLeave.stream()
                 .map(leaveMapper::leaveToDto).toList();

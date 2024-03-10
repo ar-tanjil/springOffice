@@ -3,6 +3,7 @@ package com.spring.office.payroll.service;
 import com.spring.office.employee.Employee;
 import com.spring.office.employee.EmployeeService;
 import com.spring.office.payroll.domain.Payroll;
+import com.spring.office.payroll.domain.PayrollStatus;
 import com.spring.office.payroll.dto.AttendanceDto;
 import com.spring.office.payroll.dto.PayrollDto;
 import com.spring.office.payroll.dto.PayrollTable;
@@ -53,7 +54,16 @@ public class PayrollService {
         return payrollMapper.payrollToDto(findPayroll.get());
     }
 
-    public List<PayrollTable> getAllByPeriod(Integer year, Integer month) {
+    public List<PayrollTable> getPendingPayroll(){
+
+       var pendingPayroll = payrollRepository.findAllByStatusOrderByPeriodDesc(PayrollStatus.PENDING);
+
+       return pendingPayroll.stream()
+               .map(payrollMapper::payrollToTable)
+               .toList();
+    }
+
+    public List<PayrollTable> processAllPayroll(Integer year, Integer month) {
 
    return generateAllPayroll(year, month).stream()
            .map(payrollMapper::payrollToTable)
@@ -157,7 +167,8 @@ public class PayrollService {
                 .medicalInformation(medicalInformation)
                 .travelInformation(travelInformation)
                 .otherEarning(otherAddition)
-                .otherEarning(otherDeduction)
+                .otherDeduction(otherDeduction)
+                .status(PayrollStatus.PENDING)
                 .build();
 
 
@@ -180,10 +191,9 @@ public class PayrollService {
         Set<LocalDate> grantedAbsenceDay = leaveService.getLeaveGrantedDay(empId, period);
 
         int unpaid = absenceDayList.size();
-        System.out.println(unpaid);
         for (LocalDate abs : absenceDayList) {
             for (LocalDate gran : grantedAbsenceDay) {
-                if (gran == abs) {
+                if (gran.isEqual(abs)) {
                     unpaid--;
                     break;
                 }
@@ -273,6 +283,10 @@ public class PayrollService {
                 .orElse(null);
     }
 
+
+    public void deletePayroll(Long id){
+        payrollRepository.deletePayroll(id, PayrollStatus.PENDING);
+    }
 
 
 }

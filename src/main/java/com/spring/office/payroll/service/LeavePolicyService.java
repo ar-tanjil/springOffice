@@ -51,7 +51,7 @@ public class LeavePolicyService {
     }
     public boolean checkMedicalLeave(LeavePolicy policy, int day){
         int remainingLeave = policy.getMedical() - policy.getMedicalSpent();
-        if (remainingLeave > day){
+        if (remainingLeave >= day){
             return true;
         }
         return false;
@@ -77,7 +77,7 @@ public class LeavePolicyService {
 
     public boolean checkCasualLeave(LeavePolicy policy, int day){
         int remainingLeave = policy.getCasual() - policy.getCasualSpent();
-        if (remainingLeave > day){
+        if (remainingLeave >= day){
             return true;
         }
         return false;

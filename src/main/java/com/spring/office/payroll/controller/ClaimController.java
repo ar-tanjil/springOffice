@@ -32,10 +32,10 @@ public class ClaimController {
     }
 
     @PostMapping
-    public ClaimDto saveClaim(
+    public void saveClaim(
             @RequestBody ClaimDto dto
     ){
-        return claimService.save(dto);
+       claimService.save(dto);
     }
 
     @GetMapping
@@ -48,6 +48,20 @@ public class ClaimController {
             @PathVariable("emp_id") Long empId
     ){
         return claimService.getAllOfEmployee(empId);
+    }
+
+    @GetMapping("/approved/{claim_id}")
+    public boolean approveClaim(
+            @PathVariable("claim_id") Long id
+    ){
+        return claimService.approveClaim(id);
+    }
+
+    @GetMapping("/reject/{claim_id}")
+    public boolean rejectClaim(
+            @PathVariable("claim_id") Long id
+    ){
+        return claimService.rejectClaim(id);
     }
 
 }

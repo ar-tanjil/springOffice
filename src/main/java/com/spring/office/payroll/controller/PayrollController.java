@@ -23,12 +23,17 @@ public class PayrollController {
         return payrollService.getPayrollByEmpAndPeriod(empId, year, month);
     }
 
-    @GetMapping("/{year}/{month}")
-    public Iterable<PayrollTable> getAllByPeriod(
+    @GetMapping("/process/{year}/{month}")
+    public Iterable<PayrollTable> processAllByPeriod(
             @PathVariable("year") Integer year,
             @PathVariable("month") Integer month
     ){
-        return payrollService.getAllByPeriod(year, month);
+        return payrollService.processAllPayroll(year, month);
+    }
+
+    @GetMapping("/pending")
+    public Iterable<PayrollTable> getAllPendingPayroll(){
+        return payrollService.getPendingPayroll();
     }
 
     @GetMapping("/refresh")
@@ -36,6 +41,13 @@ public class PayrollController {
         payrollService.deleteAllPayroll();
     }
 
+
+    @DeleteMapping("/{id}")
+    public void deletePayroll(
+            @PathVariable("id") Long id
+    ){
+        payrollService.deletePayroll(id);
+    }
 
     @GetMapping("{id}")
     public PayrollDto getPayrollById(
