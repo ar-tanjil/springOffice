@@ -5,5 +5,7 @@ public enum ClaimType {
     BONUS,
     ARREARS,
     ADDITIONS,
-    DEDUCTIONS
+    DEDUCTIONS,
+    ALLOWANCES,
+    LOAN
 }

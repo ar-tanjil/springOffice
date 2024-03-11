@@ -1,14 +1,16 @@
 package com.spring.office.payroll.service;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.office.employee.Employee;
 import com.spring.office.employee.EmployeeService;
-import com.spring.office.payroll.domain.Payroll;
-import com.spring.office.payroll.domain.PayrollStatus;
+import com.spring.office.payroll.domain.*;
 import com.spring.office.payroll.dto.AttendanceDto;
 import com.spring.office.payroll.dto.PayrollDto;
 import com.spring.office.payroll.dto.PayrollTable;
 import com.spring.office.payroll.dto.SalaryDto;
 import com.spring.office.payroll.repo.PayrollRepository;
+import jakarta.persistence.OneToMany;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -54,41 +56,41 @@ public class PayrollService {
         return payrollMapper.payrollToDto(findPayroll.get());
     }
 
-    public List<PayrollTable> getPendingPayroll(){
+    public List<PayrollTable> getPendingPayroll() {
 
-       var pendingPayroll = payrollRepository.findAllByStatusOrderByPeriodDesc(PayrollStatus.PENDING);
+        var pendingPayroll = payrollRepository.findAllByStatusOrderByPeriodDesc(PayrollStatus.PENDING);
 
-       return pendingPayroll.stream()
-               .map(payrollMapper::payrollToTable)
-               .toList();
+        return pendingPayroll.stream()
+                .map(payrollMapper::payrollToTable)
+                .toList();
     }
 
     public List<PayrollTable> processAllPayroll(Integer year, Integer month) {
 
-   return generateAllPayroll(year, month).stream()
-           .map(payrollMapper::payrollToTable)
-           .toList();
+        return generateAllPayroll(year, month).stream()
+                .map(payrollMapper::payrollToTable)
+                .toList();
     }
 
 
-    private List<Payroll> generateAllPayroll(int year, int month){
+    private List<Payroll> generateAllPayroll(int year, int month) {
 
         YearMonth period = YearMonth.of(year, month);
 
         List<Employee> listEmployee = employeeService.getAllEmployeeOrg();
         List<Payroll> listPayroll = new ArrayList<>();
-        for (Employee employee : listEmployee){
+        for (Employee employee : listEmployee) {
             var employeeHireDate = employee.getHireDate();
             YearMonth hireDate = YearMonth.of(employeeHireDate.getYear(), employeeHireDate.getMonth());
 
-            if (hireDate.isAfter(period)){
+            if (hireDate.isAfter(period)) {
                 break;
             }
 
             Optional<Payroll> generated = payrollRepository
-                    .findByEmployeeAndPeriod(employee,period);
+                    .findByEmployeeAndPeriod(employee, period);
 
-            if (generated.isPresent()){
+            if (generated.isPresent()) {
                 listPayroll.add(generated.get());
                 break;
             }
@@ -100,7 +102,6 @@ public class PayrollService {
         return listPayroll;
 
     }
-
 
 
     public Payroll generatePayroll(Employee employee, YearMonth period) {
@@ -115,9 +116,21 @@ public class PayrollService {
         LocalDate end = LocalDate.of(period.getYear(), period.getMonth(), period.lengthOfMonth());
 
 
-        double reimbursement = claimService.reimbursementClaimByPeriod(employee.getId(), start, end);
-        double otherDeduction = claimService.allClaimDeductions(employee.getId(), start, end);
-        double bonus = claimService.bonusByPeriod(employee.getId(), start, end);
+        double reimbursement = claimService.getClaimAmountByPeriodAndEmployee(
+                employee, start, end, ClaimStatus.APPROVED, ClaimType.REIMBURSEMENT
+        );
+        double otherDeduction = claimService
+                .getClaimAmountByPeriodAndEmployee(employee, start, end,
+                        ClaimStatus.APPROVED, ClaimType.DEDUCTIONS);
+
+        double bonus = claimService
+                .getClaimAmountByPeriodAndEmployee(employee, start, end,
+                        ClaimStatus.APPROVED, ClaimType.BONUS);
+
+
+
+
+
 
 //                Salary Information
         SalaryDto salary = salaryService.getSalaryByEmployee(employee.getId());
@@ -133,12 +146,12 @@ public class PayrollService {
 
 
         double grossSalary = basic + medicalAllowance
-                + travelAllowance +  bonus - (unpaidLeave + providentFund );
+                + travelAllowance + bonus - (unpaidLeave + providentFund);
         double tax = taxService.taxCalculation(grossSalary);
         double taxInformation = taxService.getTaxPer(grossSalary);
-        double netSalary = grossSalary - tax + (reimbursement - otherDeduction) ;
+        double netSalary = grossSalary - tax + (reimbursement - otherDeduction);
 
-        if (loan < netSalary){
+        if (loan < netSalary) {
             netSalary -= loan;
             salaryService.updateLoan(employee.getId(), loan);
         } else {
@@ -173,7 +186,24 @@ public class PayrollService {
                 .build();
 
 
-        return payrollRepository.save(payroll);
+        Payroll save = payrollRepository.save(payroll);
+
+        Payroll mock = new Payroll();
+        mock.setId(save.getId());
+
+        claimService.changeClaimStatusByPeriodAndEmployee(employee, start, end,
+                ClaimStatus.APPROVED,
+                ClaimType.REIMBURSEMENT, ClaimStatus.ONPROCESS, mock);
+
+        claimService.changeClaimStatusByPeriodAndEmployee(employee, start, end,
+                ClaimStatus.APPROVED,
+                ClaimType.BONUS, ClaimStatus.ONPROCESS , mock);
+
+        claimService.changeClaimStatusByPeriodAndEmployee(employee, start, end,
+                ClaimStatus.APPROVED,
+                ClaimType.DEDUCTIONS, ClaimStatus.ONPROCESS , mock);
+
+    return save;
     }
 
 
@@ -285,7 +315,10 @@ public class PayrollService {
     }
 
 
-    public void deletePayroll(Long id){
+    public void deletePayroll(Long id) {
+        Payroll payroll = new Payroll();
+        payroll.setId(id);
+        claimService.updateClaimByPayroll(payroll, ClaimStatus.APPROVED);
         payrollRepository.deletePayroll(id, PayrollStatus.PENDING);
     }
 

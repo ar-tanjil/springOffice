@@ -38,4 +38,9 @@ public class Claim extends BaseModel {
     @JoinColumn(name = "employee_id")
     @JsonIgnore
     private Employee employee;
+
+    @ManyToOne
+    @JoinColumn(name = "payroll_id")
+    @JsonIgnore
+    private Payroll payroll;
 }

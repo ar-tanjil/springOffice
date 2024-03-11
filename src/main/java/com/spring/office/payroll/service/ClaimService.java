@@ -3,6 +3,7 @@ package com.spring.office.payroll.service;
 import com.spring.office.employee.Employee;
 import com.spring.office.payroll.domain.ClaimStatus;
 import com.spring.office.payroll.domain.ClaimType;
+import com.spring.office.payroll.domain.Payroll;
 import com.spring.office.payroll.dto.ClaimDto;
 import com.spring.office.payroll.repo.ClaimRepo;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +80,33 @@ public class ClaimService {
         }
         return 0;
     }
+
+
+    public double getClaimAmountByPeriodAndEmployee(Employee emp, LocalDate start,
+                                                    LocalDate end, ClaimStatus status,
+                                                    ClaimType type){
+
+
+        var amount = claimRepo.findAllAdditionsByEmployee(emp,start,end,
+                status, type);
+
+        if (amount != null){
+            return amount;
+        }
+        return 0;
+    }
+    public void changeClaimStatusByPeriodAndEmployee(Employee employee, LocalDate start, LocalDate end,
+                                  ClaimStatus claimStatus, ClaimType type,
+                                                     ClaimStatus newStatus, Payroll payroll){
+        claimRepo.updateClaimByPeriod(employee, start, end,
+                claimStatus, type,  payroll);
+    }
+
+
+    public void updateClaimByPayroll(Payroll payroll, ClaimStatus status){
+//        claimRepo.updateClaimByPayroll(payroll, status);
+    }
+
 
     public double allClaimDeductions(Long empId, LocalDate start, LocalDate end){
 

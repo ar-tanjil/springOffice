@@ -1,5 +1,7 @@
 package com.spring.office.payroll.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.office.domain.BaseModel;
 import com.spring.office.employee.Employee;
 import jakarta.persistence.*;
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.YearMonth;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -44,5 +47,7 @@ public class Payroll extends BaseModel {
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
+
+
 
 }
