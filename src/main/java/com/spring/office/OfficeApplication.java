@@ -125,7 +125,6 @@ public class OfficeApplication {
                     .providentFund(5D)
                     .travelAllowance(5D)
                     .loan(500D)
-                    .bonus(2)
                     .build();
             var saveSal = salaryService.addSalary(salDto);
 

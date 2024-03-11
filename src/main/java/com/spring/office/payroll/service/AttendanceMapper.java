@@ -29,7 +29,7 @@ public class AttendanceMapper {
             return null;
         }
 
-        DateTimeFormatter timeFormat = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM);
 
         String in = "";
         String out = "";

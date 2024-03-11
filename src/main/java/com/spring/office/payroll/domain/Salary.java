@@ -29,7 +29,6 @@ public class Salary extends BaseModel {
     private double medicalAllowance;
     private double providentFund;
     private double travelAllowance;
-    private int bonus;
     private double loan;
 
     @OneToOne

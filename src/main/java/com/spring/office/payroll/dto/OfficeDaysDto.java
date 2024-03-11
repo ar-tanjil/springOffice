@@ -13,8 +13,8 @@ public class OfficeDaysDto {
 
     private Long id;
     private String day;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private String startTime;
+    private String endTime;
     private String status;
 
 }

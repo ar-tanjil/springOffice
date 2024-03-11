@@ -26,14 +26,14 @@ public class AttendanceController {
         return attendanceService.giveAttendance(empId);
     }
 
-    @GetMapping("/employee/{emp_id}/{start_date}/{end_date}")
+    @PostMapping("/table/{emp_id}")
     public Iterable<AttendanceDto> getById(
             @PathVariable("emp_id") Long empId,
-            @PathVariable("star_date") LocalDate start,
-            @PathVariable("end_date") LocalDate end
+            @RequestBody() TimePeriod period
+
     ) {
         return attendanceService
-                .getEmployeeAttendanceByMonth(empId, start, end);
+                .getEmployeeAttendanceByMonth(empId, period.getStartDate(), period.getEndDate());
     }
 
     @PostMapping("/table")

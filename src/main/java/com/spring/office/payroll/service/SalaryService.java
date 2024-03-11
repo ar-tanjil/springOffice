@@ -3,11 +3,12 @@ package com.spring.office.payroll.service;
 import com.spring.office.employee.Employee;
 import com.spring.office.payroll.domain.Salary;
 import com.spring.office.payroll.dto.SalaryDto;
-import com.spring.office.payroll.dto.SalaryTable;
 import com.spring.office.payroll.repo.SalaryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,11 +58,11 @@ public class SalaryService {
     }
 
 
-    public List<SalaryTable> getAllSalary() {
-        List<Salary> listSalary = salaryRepository.findAll();
+    public List<SalaryDto> getAllSalary() {
+        List<Salary> listSalary = salaryRepository.findAll(Sort.by(Sort.Direction.DESC, "basic"));
 
-        return listSalary.stream().map(salaryMapper::salaryToTable)
-                .collect(Collectors.toList());
+        return listSalary.stream().map(salaryMapper::salaryToDto)
+               .collect(Collectors.toList());
 
     }
 
