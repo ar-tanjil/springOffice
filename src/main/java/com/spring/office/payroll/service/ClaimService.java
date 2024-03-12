@@ -19,20 +19,20 @@ public class ClaimService {
     private final ClaimMapper claimMapper;
     private final ClaimRepo claimRepo;
 
-    public void save(ClaimDto dto){
+    public void save(ClaimDto dto) {
         var save = claimRepo.save(claimMapper.dtoToClaim(dto));
     }
 
-    public List<ClaimDto> getAll(){
+    public List<ClaimDto> getAll() {
         return claimRepo.findAll()
                 .stream()
-                .map(claimMapper:: claimToDto)
+                .map(claimMapper::claimToDto)
                 .toList();
     }
 
-    public List<ClaimDto> getClaimByEmployeeAndPeriod(Long employeeId, LocalDate start, LocalDate end){
+    public List<ClaimDto> getClaimByEmployeeAndPeriod(Long employeeId, LocalDate start, LocalDate end) {
 
-        Employee emp  = new Employee();
+        Employee emp = new Employee();
         emp.setId(employeeId);
 
         return claimRepo.findByEmployeeAndDateIsBetween(emp, start, end)
@@ -42,11 +42,11 @@ public class ClaimService {
     }
 
 
-    public List<ClaimDto> getClaimByPeriodEmployeeStatus(Long empId, ClaimStatus status, LocalDate start, LocalDate end){
+    public List<ClaimDto> getClaimByPeriodEmployeeStatus(Long empId, ClaimStatus status, LocalDate start, LocalDate end) {
         Employee employee = new Employee();
         employee.setId(empId);
 
-        return  claimRepo
+        return claimRepo
                 .findByEmployeeAndClaimStatusAndDateIsBetween(employee, status, start, end)
                 .stream()
                 .map(claimMapper::claimToDto)
@@ -54,15 +54,15 @@ public class ClaimService {
     }
 
 
-    public double reimbursementClaimByPeriod(Long empId, LocalDate start, LocalDate end){
+    public double reimbursementClaimByPeriod(Long empId, LocalDate start, LocalDate end) {
 
         Employee emp = new Employee();
         emp.setId(empId);
 
-        var reimbursement = claimRepo.findAllAdditionsByEmployee(emp,start,end,
+        var reimbursement = claimRepo.findAllAdditionsByEmployee(emp, start, end,
                 ClaimStatus.APPROVED, ClaimType.REIMBURSEMENT);
 
-        if (reimbursement != null){
+        if (reimbursement != null) {
             return reimbursement;
         }
         return 0;
@@ -72,10 +72,10 @@ public class ClaimService {
         Employee emp = new Employee();
         emp.setId(empId);
 
-        var bonus = claimRepo.findAllAdditionsByEmployee(emp,start,end,
+        var bonus = claimRepo.findAllAdditionsByEmployee(emp, start, end,
                 ClaimStatus.APPROVED, ClaimType.BONUS);
 
-        if (bonus != null){
+        if (bonus != null) {
             return bonus;
         }
         return 0;
@@ -84,45 +84,51 @@ public class ClaimService {
 
     public double getClaimAmountByPeriodAndEmployee(Employee emp, LocalDate start,
                                                     LocalDate end, ClaimStatus status,
-                                                    ClaimType type){
+                                                    ClaimType type) {
 
 
-        var amount = claimRepo.findAllAdditionsByEmployee(emp,start,end,
+        var amount = claimRepo.findAllAdditionsByEmployee(emp, start, end,
                 status, type);
 
-        if (amount != null){
+        if (amount != null) {
             return amount;
         }
         return 0;
     }
-    public void changeClaimStatusByPeriodAndEmployee(Employee employee, LocalDate start, LocalDate end,
-                                  ClaimStatus claimStatus, ClaimType type,
-                                                     ClaimStatus newStatus, Payroll payroll){
-        claimRepo.updateClaimByPeriod(employee, start, end,
-                claimStatus, type,  payroll);
+
+    public void changeClaimStatusByPeriodAndEmployee(Employee employee,
+                                                     LocalDate start,
+                                                     LocalDate end,
+                                                     ClaimStatus claimStatus,
+                                                     ClaimType type,
+                                                     ClaimStatus newStatus,
+                                                     Payroll payroll) {
+        claimRepo.updateClaimByPeriod(employee.getId(), start, end,
+                claimStatus.toString(), type.toString(), payroll.getId(), newStatus.toString());
     }
 
 
-    public void updateClaimByPayroll(Payroll payroll, ClaimStatus status){
-//        claimRepo.updateClaimByPayroll(payroll, status);
+    public void updateClaimByPayroll(Payroll payroll, ClaimStatus status) {
+        claimRepo.updateClaimByPeriodAndStatus(status.toString(),
+                payroll.getId());
     }
 
 
-    public double allClaimDeductions(Long empId, LocalDate start, LocalDate end){
+    public double allClaimDeductions(Long empId, LocalDate start, LocalDate end) {
 
         Employee emp = new Employee();
         emp.setId(empId);
 
-       var deduction = claimRepo.findAllAdditionsByEmployee(emp,start,end,
+        var deduction = claimRepo.findAllAdditionsByEmployee(emp, start, end,
                 ClaimStatus.APPROVED, ClaimType.DEDUCTIONS);
 
-       if (deduction != null){
-           return deduction;
-       }
-       return 0;
+        if (deduction != null) {
+            return deduction;
+        }
+        return 0;
     }
 
-    public void paidClaim(Long id){
+    public void paidClaim(Long id) {
 
 
     }
@@ -146,7 +152,6 @@ public class ClaimService {
         claimRepo.updateClaim(id, ClaimStatus.REJECTED);
         return true;
     }
-
 
 
 }

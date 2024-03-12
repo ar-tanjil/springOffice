@@ -1,5 +1,6 @@
 package com.spring.office.department;
 
+import com.spring.office.dto.table.EmployeeTable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,5 +14,6 @@ public class DepartmentDto {
     private Long id;
     private String departmentName;
     private Long managerId;
+    private EmployeeTable manager;
     private String departmentDesc;
 }

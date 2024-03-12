@@ -1,9 +1,15 @@
 package com.spring.office.department;
 
+import com.spring.office.employee.Employee;
+import com.spring.office.employee.EmployeeMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class DepartmentMapper {
+
+    private final EmployeeMapper employeeMapper;
 
     public Department dtoToDepartment(DepartmentDto dto){
         Department dep = new Department();
@@ -11,9 +17,14 @@ public class DepartmentMapper {
             dep.setId(dto.getId());
         }
 
+        if (dto.getManagerId() != null){
+            Employee manager = new Employee();
+            manager.setId(dto.getManagerId());
+            dep.setManager(manager);
+        }
+
         dep.setDepartmentName(dto.getDepartmentName());
         dep.setDepartmentDesc(dto.getDepartmentDesc());
-        dep.setManagerId(dto.getManagerId());
         return dep;
     }
 
@@ -22,9 +33,13 @@ public class DepartmentMapper {
         if (dep.getId() != null) {
             dto.setId(dep.getId());
         }
+
+        if (dep.getManager() != null){
+            dto.setManager(employeeMapper.employeeToTable(dep.getManager()));
+        }
+
         dto.setDepartmentName(dep.getDepartmentName());
         dto.setDepartmentDesc(dep.getDepartmentDesc());
-        dto.setManagerId(dep.getManagerId());
         return dto;
     }
 

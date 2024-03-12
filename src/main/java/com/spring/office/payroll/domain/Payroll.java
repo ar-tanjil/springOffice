@@ -2,6 +2,7 @@ package com.spring.office.payroll.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.office.domain.BaseModel;
 import com.spring.office.employee.Employee;
 import jakarta.persistence.*;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.YearMonth;
+import java.util.HashSet;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -48,6 +50,9 @@ public class Payroll extends BaseModel {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
+
+    @OneToMany(mappedBy = "payroll")
+    private Set<Claim> claims = new HashSet<>();
 
 
 }

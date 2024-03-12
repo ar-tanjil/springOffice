@@ -319,7 +319,7 @@ public class PayrollService {
         Payroll payroll = new Payroll();
         payroll.setId(id);
         claimService.updateClaimByPayroll(payroll, ClaimStatus.APPROVED);
-        payrollRepository.deletePayroll(id, PayrollStatus.PENDING);
+        payrollRepository.delete(payroll);
     }
 
 

@@ -1,5 +1,6 @@
 package com.spring.office.payroll.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.office.domain.BaseModel;
@@ -39,8 +40,7 @@ public class Claim extends BaseModel {
     @JsonIgnore
     private Employee employee;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payroll_id")
-    @JsonIgnore
     private Payroll payroll;
 }
