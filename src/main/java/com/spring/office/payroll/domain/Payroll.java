@@ -44,15 +44,13 @@ public class Payroll extends BaseModel {
     private int workingDay;
     private int unpaidLeaveDay;
     private int totalLeaveDay;
+
+    @Enumerated(EnumType.STRING)
     private PayrollStatus status;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
-
-
-    @OneToMany(mappedBy = "payroll")
-    private Set<Claim> claims = new HashSet<>();
 
 
 }

@@ -60,6 +60,7 @@ public class PayrollMapper {
         table.setGrossSalary(payroll.getGrossSalary());
         table.setNetSalary(payroll.getNetSalary());
         table.setPeriod(payroll.getPeriod());
+        table.setStatus(payroll.getStatus().toString());
 
         return table;
     }

@@ -29,4 +29,13 @@ public interface PayrollRepository extends JpaRepository<Payroll, Long> {
     void deletePayroll(Long id, PayrollStatus status);
 
     List<Payroll> findAllByStatusOrderByPeriodDesc(PayrollStatus payrollStatus);
+
+
+    @Modifying
+    @Transactional
+    @Query("update Payroll p set p.status = :payrollStatus " +
+            " where  p.id = :id")
+    void changePayrollStatus(Long id, PayrollStatus payrollStatus);
+
+
 }

@@ -58,12 +58,25 @@ public class PayrollService {
 
     public List<PayrollTable> getPendingPayroll() {
 
-        var pendingPayroll = payrollRepository.findAllByStatusOrderByPeriodDesc(PayrollStatus.PENDING);
+        var pendingPayroll = payrollRepository
+                .findAllByStatusOrderByPeriodDesc(PayrollStatus.PENDING);
 
         return pendingPayroll.stream()
                 .map(payrollMapper::payrollToTable)
                 .toList();
     }
+
+
+    public List<PayrollTable> getPaymentPayroll() {
+
+        var pendingPayroll = payrollRepository
+                .findAllByStatusOrderByPeriodDesc(PayrollStatus.PAYMENT);
+
+        return pendingPayroll.stream()
+                .map(payrollMapper::payrollToTable)
+                .toList();
+    }
+
 
     public List<PayrollTable> processAllPayroll(Integer year, Integer month) {
 
@@ -81,7 +94,8 @@ public class PayrollService {
         List<Payroll> listPayroll = new ArrayList<>();
         for (Employee employee : listEmployee) {
             var employeeHireDate = employee.getHireDate();
-            YearMonth hireDate = YearMonth.of(employeeHireDate.getYear(), employeeHireDate.getMonth());
+            YearMonth hireDate = YearMonth.of(employeeHireDate.getYear(),
+                    employeeHireDate.getMonth());
 
             if (hireDate.isAfter(period)) {
                 break;
@@ -91,7 +105,13 @@ public class PayrollService {
                     .findByEmployeeAndPeriod(employee, period);
 
             if (generated.isPresent()) {
-                listPayroll.add(generated.get());
+
+                Payroll payroll = generated.get();
+
+                if (payroll.getStatus() == PayrollStatus.PAYMENT) {
+                    break;
+                }
+                listPayroll.add(payroll);
                 break;
             }
 
@@ -126,10 +146,6 @@ public class PayrollService {
         double bonus = claimService
                 .getClaimAmountByPeriodAndEmployee(employee, start, end,
                         ClaimStatus.APPROVED, ClaimType.BONUS);
-
-
-
-
 
 
 //                Salary Information
@@ -188,22 +204,20 @@ public class PayrollService {
 
         Payroll save = payrollRepository.save(payroll);
 
-        Payroll mock = new Payroll();
-        mock.setId(save.getId());
 
         claimService.changeClaimStatusByPeriodAndEmployee(employee, start, end,
                 ClaimStatus.APPROVED,
-                ClaimType.REIMBURSEMENT, ClaimStatus.ONPROCESS, mock);
+                ClaimType.REIMBURSEMENT, ClaimStatus.ONPROCESS, save.getId());
 
         claimService.changeClaimStatusByPeriodAndEmployee(employee, start, end,
                 ClaimStatus.APPROVED,
-                ClaimType.BONUS, ClaimStatus.ONPROCESS , mock);
+                ClaimType.BONUS, ClaimStatus.ONPROCESS, save.getId());
 
         claimService.changeClaimStatusByPeriodAndEmployee(employee, start, end,
                 ClaimStatus.APPROVED,
-                ClaimType.DEDUCTIONS, ClaimStatus.ONPROCESS , mock);
+                ClaimType.DEDUCTIONS, ClaimStatus.ONPROCESS, save.getId());
 
-    return save;
+        return save;
     }
 
 
@@ -316,11 +330,14 @@ public class PayrollService {
 
 
     public void deletePayroll(Long id) {
-        Payroll payroll = new Payroll();
-        payroll.setId(id);
-        claimService.updateClaimByPayroll(payroll, ClaimStatus.APPROVED);
-        payrollRepository.delete(payroll);
+        claimService.updateClaimByPayroll(id, ClaimStatus.APPROVED);
+        payrollRepository.deleteById(id);
     }
 
+
+    public void completePayment(Long id) {
+        claimService.updateClaimByPayroll(id, ClaimStatus.PYAMENT);
+        payrollRepository.changePayrollStatus(id, PayrollStatus.PAYMENT);
+    }
 
 }

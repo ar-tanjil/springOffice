@@ -1,9 +1,9 @@
 package com.spring.office.payroll.service;
 
 import com.spring.office.employee.Employee;
+import com.spring.office.payroll.domain.Claim;
 import com.spring.office.payroll.domain.ClaimStatus;
 import com.spring.office.payroll.domain.ClaimType;
-import com.spring.office.payroll.domain.Payroll;
 import com.spring.office.payroll.dto.ClaimDto;
 import com.spring.office.payroll.repo.ClaimRepo;
 import lombok.RequiredArgsConstructor;
@@ -102,15 +102,15 @@ public class ClaimService {
                                                      ClaimStatus claimStatus,
                                                      ClaimType type,
                                                      ClaimStatus newStatus,
-                                                     Payroll payroll) {
-        claimRepo.updateClaimByPeriod(employee.getId(), start, end,
-                claimStatus.toString(), type.toString(), payroll.getId(), newStatus.toString());
+                                                     Long payrollId) {
+        claimRepo.changeClaimStatusByPeriod(employee.getId(), start, end,
+                claimStatus.toString(), type.toString(), payrollId, newStatus.toString());
     }
 
 
-    public void updateClaimByPayroll(Payroll payroll, ClaimStatus status) {
-        claimRepo.updateClaimByPeriodAndStatus(status.toString(),
-                payroll.getId());
+    public void updateClaimByPayroll(Long payrollId, ClaimStatus status) {
+        claimRepo.changeClaimStatusByPayroll(status.toString(),
+                payrollId);
     }
 
 
@@ -143,13 +143,35 @@ public class ClaimService {
     }
 
     public boolean approveClaim(Long id) {
-        claimRepo.updateClaim(id, ClaimStatus.APPROVED);
-        return true;
+        Claim claim = claimRepo.findById(id).orElse(null);
+        if (claim == null) {
+            return false;
+        }
+
+        if (claim.getClaimStatus() == ClaimStatus.PENDING ||
+                claim.getClaimStatus() == ClaimStatus.REJECTED) {
+            claimRepo.changeClaimStatus(id, ClaimStatus.APPROVED);
+            return true;
+        }
+
+        return false;
     }
 
 
     public boolean rejectClaim(Long id) {
-        claimRepo.updateClaim(id, ClaimStatus.REJECTED);
+
+        Claim claim = claimRepo.findById(id).orElse(null);
+
+        if (claim == null) {
+            return false;
+        }
+
+        if (claim.getClaimStatus() == ClaimStatus.ONPROCESS ||
+                claim.getClaimStatus() == ClaimStatus.PYAMENT) {
+            return false;
+        }
+
+        claimRepo.changeClaimStatus(id, ClaimStatus.REJECTED);
         return true;
     }
 

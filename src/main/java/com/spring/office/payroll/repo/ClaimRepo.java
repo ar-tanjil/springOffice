@@ -2,9 +2,7 @@ package com.spring.office.payroll.repo;
 
 import com.spring.office.employee.Employee;
 import com.spring.office.payroll.domain.*;
-import com.spring.office.payroll.dto.ClaimDto;
 import jakarta.transaction.Transactional;
-import net.bytebuddy.asm.Advice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -30,7 +28,7 @@ public interface ClaimRepo extends JpaRepository<Claim, Long> {
     @Modifying
     @Transactional
     @Query("update Claim c set c.claimStatus = :claimStatus where  c.id = :id")
-    void updateClaim(Long id, ClaimStatus claimStatus);
+    void changeClaimStatus(Long id, ClaimStatus claimStatus);
 
 
     @Modifying
@@ -47,21 +45,21 @@ public interface ClaimRepo extends JpaRepository<Claim, Long> {
             " AND c.date BETWEEN :start AND :end " +
             " AND c.claim_status = :claimStatus  " +
             " and cc.claim_type = :type ", nativeQuery = true)
-    void updateClaimByPeriod(@Param("empId") Long empId,
-                             @Param("start") LocalDate start,
-                             @Param("end") LocalDate end,
-                             @Param("claimStatus") String claimStatus,
-                             @Param("type") String type,
-                             @Param("payrollId") Long payrollId,
-                             @Param("newStatus") String newStatus);
+    void changeClaimStatusByPeriod(@Param("empId") Long empId,
+                                   @Param("start") LocalDate start,
+                                   @Param("end") LocalDate end,
+                                   @Param("claimStatus") String claimStatus,
+                                   @Param("type") String type,
+                                   @Param("payrollId") Long payrollId,
+                                   @Param("newStatus") String newStatus);
 
 
     @Modifying
     @Transactional
-    @Query(value = "update claim c set c.claim_status = :claimStatus" +
+    @Query(value = "update claim c set c.claim_status = :claimStatus " +
             " where  c.payroll_id = :payroll", nativeQuery = true)
-    void updateClaimByPeriodAndStatus(@Param("claimStatus") String claimStatus,
-                                     @Param("payroll") Long payroll);
+    void changeClaimStatusByPayroll(@Param("claimStatus") String claimStatus,
+                                    @Param("payroll") Long payroll);
 
 
 

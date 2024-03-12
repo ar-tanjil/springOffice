@@ -39,8 +39,5 @@ public class Claim extends BaseModel {
     @JoinColumn(name = "employee_id")
     @JsonIgnore
     private Employee employee;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payroll_id")
-    private Payroll payroll;
+    private Long payrollId;
 }

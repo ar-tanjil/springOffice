@@ -18,6 +18,7 @@ public class PayrollTable implements Comparable<PayrollTable> {
     private Double grossSalary;
     private Double netSalary;
     private YearMonth period;
+    private String status;
 
     @Override
     public int compareTo(PayrollTable o) {

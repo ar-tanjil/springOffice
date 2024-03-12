@@ -36,6 +36,11 @@ public class PayrollController {
         return payrollService.getPendingPayroll();
     }
 
+    @GetMapping("/payment")
+    public Iterable<PayrollTable> getAllPaymentPayroll(){
+        return payrollService.getPaymentPayroll();
+    }
+
     @GetMapping("/refresh")
     public void refresh(){
         payrollService.deleteAllPayroll();
@@ -49,11 +54,18 @@ public class PayrollController {
         payrollService.deletePayroll(id);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public PayrollDto getPayrollById(
             @PathVariable("id") Long id
     ){
         return payrollService.getPayrollById(id);
+    }
+
+    @GetMapping("/payment/{id}")
+    public void makePayment(
+            @PathVariable("id") Long id
+    ){
+        payrollService.completePayment(id);
     }
 
 }
