@@ -41,6 +41,8 @@ public class SecurityConfiguration {
                                 .permitAll()
                                 .requestMatchers("/v3/api-docs/**")
                                 .permitAll()
+                                .requestMatchers("/jasper/**")
+                                .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
