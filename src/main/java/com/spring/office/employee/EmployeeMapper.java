@@ -193,7 +193,8 @@ public class EmployeeMapper {
         return new EmployeeShortDetails(
                 employee.getId(),
                 employee.getFirstName(),
-                employee.getLastName()
+                employee.getLastName(),
+                employee.getEmail()
         );
     }
 

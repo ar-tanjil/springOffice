@@ -1,6 +1,7 @@
 package com.spring.office.employee;
 
 import com.spring.office.department.Department;
+import com.spring.office.job.Job;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -39,4 +40,8 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> {
     Integer countByDeletedFalse();
 
     List<Employee> findAllByDeletedFalseAndLeavePolicyIsNull();
+
+    List<EmployeeShortDetails> findByJobAndDeletedFalse(Job job);
+
+    List<EmployeeShortDetails> findByDepartmentAndDeletedFalse(Department department);
 }

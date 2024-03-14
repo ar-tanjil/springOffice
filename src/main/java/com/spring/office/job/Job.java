@@ -12,6 +12,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -27,6 +29,9 @@ public class Job extends BaseModel {
     private int maxSalary;
     private int totalPost;
     private int vacancy;
+
+    @ElementCollection
+    private List<String> requirements;
 
     @OneToMany(mappedBy = "job")
     @JsonIgnore

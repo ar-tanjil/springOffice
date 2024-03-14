@@ -37,11 +37,12 @@ public class Employee extends BaseModel {
     private LocalDate separationDate;
     private LocalDate dob;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
+    @JsonIgnore
     private Job job;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "department_id")
     @JsonIgnore
     private Department department;
@@ -67,13 +68,16 @@ public class Employee extends BaseModel {
     private Qualification qualification;
 
     @OneToOne()
+    @JsonIgnore
     @JoinColumn(name = "application_id")
     private Application application;
 
     @OneToOne(mappedBy = "employee")
+    @JsonIgnore
     private Salary salary;
 
     @OneToOne(mappedBy = "employee")
+    @JsonIgnore
     private LeavePolicy leavePolicy;
 
     @JsonIgnore

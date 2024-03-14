@@ -49,6 +49,10 @@ public class DepartmentMapper {
             oldDep.setDepartmentName(newDep.getDepartmentName());
         }
 
+        if (newDep.getManager() != null){
+            oldDep.setManager(newDep.getManager());
+        }
+
         if (newDep.getDepartmentDesc() != null){
             oldDep.setDepartmentDesc(newDep.getDepartmentDesc());
         }

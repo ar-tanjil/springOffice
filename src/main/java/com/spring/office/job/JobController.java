@@ -69,7 +69,7 @@ public class JobController {
     @PutMapping("/{id}")
     public JobDto updateEmployee(@PathVariable("id") Long id,
                                  @RequestBody JobDto dto) {
-        return service.updateJob(id,dto);
+        return service.updateJob(id, dto);
     }
 
     @DeleteMapping("/{id}")

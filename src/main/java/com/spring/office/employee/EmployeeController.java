@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,4 +70,18 @@ public class EmployeeController {
         return empService.countAllEmployee();
     }
 
+    @GetMapping("/job/{id}")
+    public Iterable<EmployeeShortDetails> getByJob(
+            @PathVariable("id") Long id
+    ){
+        return empService.getEmployeeByJob(id);
+    }
+
+
+    @GetMapping("/department/{id}")
+    public Iterable<EmployeeShortDetails> getByDepartment(
+            @PathVariable("id") Long id
+    ){
+        return empService.getEmployeeByDepartment(id);
+    }
 }

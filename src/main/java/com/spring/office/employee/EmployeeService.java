@@ -1,7 +1,9 @@
 package com.spring.office.employee;
 
+import com.spring.office.department.Department;
 import com.spring.office.department.DepartmentService;
 import com.spring.office.dto.table.EmployeeTable;
+import com.spring.office.job.Job;
 import com.spring.office.job.JobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -115,5 +117,19 @@ public class EmployeeService {
         List<Employee> listEmployee = empRepo.findAllByDeletedFalseAndLeavePolicyIsNull();
         return listEmployee.stream().map(empMapper::employeeToShortDetails)
                 .collect(Collectors.toList());
+    }
+
+    public List<EmployeeShortDetails> getEmployeeByJob(Long id) {
+        Job job = new Job();
+        job.setId(id);
+        return empRepo.findByJobAndDeletedFalse(job);
+
+    }
+
+    public List<EmployeeShortDetails> getEmployeeByDepartment(Long id) {
+        Department department = new Department();
+        department.setId(id);
+        return empRepo.findByDepartmentAndDeletedFalse(department);
+
     }
 }
