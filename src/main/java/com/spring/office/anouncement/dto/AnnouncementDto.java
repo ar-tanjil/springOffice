@@ -1,14 +1,17 @@
 package com.spring.office.anouncement.dto;
 
-import com.spring.office.anouncement.domain.AnnouncementTarget;
-import com.spring.office.department.Department;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import com.spring.office.department.DepartmentDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AnnouncementDto {
 
     private Long id;
@@ -18,5 +21,6 @@ public class AnnouncementDto {
     private String subject;
     private String description;
     private Long departmentId;
+    private DepartmentDto departmentDto;
 
 }
