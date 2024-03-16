@@ -38,6 +38,7 @@ public class PayrollService {
     private final TaxService taxService;
     private final EmployeeService employeeService;
     private final ClaimService claimService;
+    private final OfficeRuleService officeRuleService;
     //    Mapper
     private final PayrollMapper payrollMapper;
     private double loan;
@@ -130,6 +131,7 @@ public class PayrollService {
         int totalWorkingDay = totalWorkingDay(period);
         int unpaidLeaveDay = unpaidLeaveDay(employee.getId(), period);
         int totalLeaveDay = getAbsenceDays(employee.getId(), period).size();
+        int fineDay = totalFineDay(employee.getId(), period);
 
 //        Claim Information
         LocalDate start = LocalDate.of(period.getYear(), period.getMonth(), 1);
@@ -152,6 +154,7 @@ public class PayrollService {
         SalaryDto salary = salaryService.getSalaryByEmployee(employee.getId());
         double basic = salary.getBasic();
         double unpaidLeave = unpaidLeave(employee.getId(), period, salary.getBasic());
+        double fine = fine(employee.getId(), period, basic);
         double providentFund = salary.getProvident();
         double providentInformation = salary.getProvidentFund();
         double travelAllowance = salary.getTravel();
@@ -162,7 +165,7 @@ public class PayrollService {
 
 
         double grossSalary = basic + medicalAllowance
-                + travelAllowance + bonus - (unpaidLeave + providentFund);
+                + travelAllowance + bonus - (unpaidLeave + providentFund + fine);
         double tax = taxService.taxCalculation(grossSalary);
         double taxInformation = taxService.getTaxPer(grossSalary);
         double netSalary = grossSalary - tax + (reimbursement - otherDeduction);
@@ -199,6 +202,8 @@ public class PayrollService {
                 .bonusAmount(bonus)
                 .otherDeduction(otherDeduction)
                 .status(PayrollStatus.PENDING)
+                .fine(fine)
+                .fineDay(fineDay)
                 .build();
 
 
@@ -220,6 +225,53 @@ public class PayrollService {
         return save;
     }
 
+
+    private int totalFineDay(Long empId, YearMonth period) {
+        LocalDate start = LocalDate.of(period.getYear()
+                , period.getMonth()
+                , 1);
+
+        LocalDate end = LocalDate.of(period.getYear(),
+                period.getMonth(),
+                period.lengthOfMonth());
+
+        int earlyDay = 0;
+        int lateDay = 0;
+        int halfDay = 0;
+
+        int early = attendanceService.getTotalEarly(empId, start, end);
+        int earlyPenalty = officeRuleService.getPenalty(RulesEnum.EARLY);
+
+        if (early != 0 && earlyPenalty != 0) {
+            earlyDay = early / earlyPenalty;
+        }
+
+
+        int late = attendanceService.getTotalLate(empId, start, end);
+        int latePenalty = officeRuleService.getPenalty(RulesEnum.LATE);
+
+        if (late != 0 && latePenalty != 0) {
+            lateDay = late / latePenalty;
+        }
+
+        int half = attendanceService.getTotalHalf(empId, start, end);
+        int halfPenalty = officeRuleService.getPenalty(RulesEnum.HALF);
+
+        if (half != 0 && halfPenalty != 0) {
+            halfDay = half / halfPenalty;
+        }
+
+
+        return earlyDay + lateDay + halfDay;
+
+    }
+
+    public double fine(Long employeeId, YearMonth period, Double basicSal) {
+        int fineDay = totalFineDay(employeeId, period);
+        int totalWorkingDay = totalWorkingDay(period);
+
+        return (basicSal / totalWorkingDay) * fineDay;
+    }
 
     private Double unpaidLeave(Long employeeId, YearMonth period, Double basicSal) {
 

@@ -2,9 +2,9 @@ package com.spring.office.payroll.domain;
 
 public enum AttendanceStatus {
 
-    ONTIME,
+    OK,
     LATE,
-    EARLYLEAVE
+    HALF, EARLY
 
 
 }

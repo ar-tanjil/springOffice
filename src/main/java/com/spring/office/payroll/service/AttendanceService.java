@@ -2,9 +2,7 @@ package com.spring.office.payroll.service;
 
 import com.spring.office.employee.Employee;
 import com.spring.office.employee.EmployeeRepo;
-import com.spring.office.payroll.domain.Attendance;
-import com.spring.office.payroll.domain.AttendanceStatus;
-import com.spring.office.payroll.domain.OfficeDays;
+import com.spring.office.payroll.domain.*;
 import com.spring.office.payroll.dto.AttendanceDto;
 import com.spring.office.payroll.dto.AttendanceSheet;
 import com.spring.office.payroll.repo.AttendanceRepository;
@@ -25,6 +23,7 @@ public class AttendanceService {
     private final AttendanceMapper attendanceMapper;
     private final HolidayService holidayService;
     private final OfficeDaysService officeDaysService;
+    private final OfficeRuleService officeRuleService;
 
 
 
@@ -66,24 +65,26 @@ public class AttendanceService {
 
     private AttendanceStatus getAttendanceStatus(LocalDateTime dateTime, String check){
 
-        OfficeDays weekDay = officeDaysService.getOfficeDay(dateTime.getDayOfWeek());
-        LocalTime time = LocalTime.now();
+        AttendanceStatus status = AttendanceStatus.OK;
+        LocalTime time = dateTime.toLocalTime();
+        OfficeRule grace = officeRuleService.getRuleByName(RulesEnum.GRACE);
+        OfficeRule early = officeRuleService.getRuleByName(RulesEnum.EARLY);
+        OfficeRule late = officeRuleService.getRuleByName(RulesEnum.LATE);
+        OfficeRule half = officeRuleService.getRuleByName(RulesEnum.HALF);
+
         if (check.equalsIgnoreCase("checkIn")){
-            time = weekDay.getStartTime();
+           if (time.isAfter(late.getInTime())){
+               status = AttendanceStatus.HALF;
+           } else if (time.isAfter(grace.getInTime())){
+               status = AttendanceStatus.LATE;
+           }
+
         } else {
-            time = weekDay.getEndTime();
-        }
-
-        AttendanceStatus status = AttendanceStatus.ONTIME;
-
-        if (time.isBefore(dateTime.toLocalTime())
-                && check.equalsIgnoreCase("checkIn")){
-            status = AttendanceStatus.LATE;
-        }
-
-        if (time.isAfter(dateTime.toLocalTime())
-       && check.equalsIgnoreCase("checkOut")){
-            status = AttendanceStatus.EARLYLEAVE;
+           if (time.isBefore(early.getOutTime())){
+               status = AttendanceStatus.HALF;
+           } else if(time.isBefore(grace.getOutTime())){
+               status = AttendanceStatus.EARLY;
+           }
         }
 
         return status;
@@ -100,27 +101,83 @@ public class AttendanceService {
         return attendanceMapper.attendanceToDtoList(listAtt);
     }
 
-    public List<AttendanceDto> getEmployeePresentDayByMonth(Long empId, LocalDate start, LocalDate end){
+    public List<AttendanceDto> getEmployeePresentDayByMonth(Long empId,
+                                                            LocalDate start,
+                                                            LocalDate end){
         Employee emp = new Employee();
         emp.setId(empId);
 
         List<Attendance> listAtt = attendanceRepository
-                .findByEmployeeAndDayIsBetween(emp, start, end);
+                .findByEmployeeAndDayIsBetween(emp,
+                        start,
+                        end);
 
         return attendanceMapper.attendanceToDtoList(listAtt);
     }
 
+    public int getTotalEarly(Long empId,
+                             LocalDate start,
+                             LocalDate end){
+        return countCheckInStatus(empId,
+                start,
+                end,
+                AttendanceStatus.EARLY);
+    }
+    public int getTotalLate(Long empId,
+                             LocalDate start,
+                             LocalDate end){
+        return countCheckInStatus(empId,
+                start,
+                end,
+                AttendanceStatus.LATE);
+    }
 
+    public int getTotalHalf(
+            Long empId,
+            LocalDate start,
+            LocalDate end
+    ){
+        int checkInLate = countCheckInStatus(empId,
+                start,
+                end,
+                AttendanceStatus.HALF);
+        int checkOutLate = countCheckOutStatus(empId,
+                start,
+                end,
+                AttendanceStatus.HALF);
+
+        return checkInLate + checkOutLate;
+    }
+
+    private int countCheckInStatus(Long empId,
+                                     LocalDate start,
+                                     LocalDate end,
+                                     AttendanceStatus status
+                                     ){
+        Employee employee = new Employee();
+        employee.setId(empId);
+        return attendanceRepository
+                .countByCheckInStatusAndEmployeeAndDayIsBetween(status,
+                employee, start, end);
+    }
+
+    private int countCheckOutStatus(Long empId,
+                                   LocalDate start,
+                                   LocalDate end,
+                                   AttendanceStatus status
+    ){
+        Employee employee = new Employee();
+        employee.setId(empId);
+        return attendanceRepository
+                .countByCheckOutStatusAndEmployeeAndDayIsBetween(status,
+                        employee, start, end);
+    }
 
 
     private boolean getPresentFromAttendance(Attendance attendance) {
-        boolean present = false;
-        if (attendance.getCheckInStatus() == AttendanceStatus.ONTIME ||
-        attendance.getCheckOutStatus() == AttendanceStatus.ONTIME){
-            present = true;
-        }
 
-        return  present;
+        return attendance.getCheckInStatus() == AttendanceStatus.OK ||
+                attendance.getCheckOutStatus() == AttendanceStatus.OK;
     }
 
 

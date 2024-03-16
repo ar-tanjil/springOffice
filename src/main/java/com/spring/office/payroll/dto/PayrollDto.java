@@ -38,5 +38,7 @@ public class PayrollDto {
     private String departmentName;
     private String jobTitle;
     private String status;
+    private Double fine;
+    private Integer fineDay;
 
 }

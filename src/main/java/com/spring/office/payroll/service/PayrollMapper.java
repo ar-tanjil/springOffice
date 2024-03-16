@@ -37,6 +37,8 @@ public class PayrollMapper {
                 .travelInformation(payroll.getTravelInformation())
                 .providentInformation(payroll.getProvidentInformation())
                 .status(payroll.getStatus().name())
+                .fine(payroll.getFine())
+                .fineDay(payroll.getFineDay())
                 .build();
     }
 

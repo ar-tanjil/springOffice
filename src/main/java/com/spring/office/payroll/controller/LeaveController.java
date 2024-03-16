@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class LeaveController {
             @RequestHeader("Name") String name,
             @RequestBody LeaveDto dto
     ){
+
         var save = leaveService.saveLeave(dto);
         NotificationEntity notify = new NotificationEntity();
         notify.setContent("Leave Request From " + name.toUpperCase());
@@ -60,5 +62,13 @@ public class LeaveController {
     public Iterable<LeaveDto> getAllLeave(){
         return leaveService.getAllLeave();
     }
+
+
+    @GetMapping("/on_leave")
+    public Integer getOnLeave(){
+        var date = LocalDate.now();
+        return leaveService.getTodayLeaveCount(date);
+    }
+
 
 }

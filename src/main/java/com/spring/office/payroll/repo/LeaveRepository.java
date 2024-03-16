@@ -13,4 +13,6 @@ public interface LeaveRepository extends JpaRepository<Leave,Long> {
     List<Leave> findByEmployeeAndDayIsBetween(Employee emp, LocalDate start, LocalDate end);
 
     List<Leave> findByEmployeeAndDayIsBetweenAndStatus(Employee emp, LocalDate start, LocalDate end, LeaveStatus status);
+
+    Integer countByDayAndStatus(LocalDate date, LeaveStatus leaveStatus);
 }

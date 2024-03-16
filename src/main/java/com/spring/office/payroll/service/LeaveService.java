@@ -111,4 +111,8 @@ public class LeaveService {
         return listLeave.stream().map(leaveMapper::leaveToDto)
                 .toList();
     }
+
+    public Integer getTodayLeaveCount(LocalDate date) {
+        return leaveRepository.countByDayAndStatus(date, LeaveStatus.APPROVED);
+    }
 }
