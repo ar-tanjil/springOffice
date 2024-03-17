@@ -6,6 +6,7 @@ import com.spring.office.payroll.domain.Payroll;
 import com.spring.office.payroll.domain.PayrollStatus;
 import com.spring.office.payroll.dto.PayrollTable;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -38,4 +39,11 @@ public interface PayrollRepository extends JpaRepository<Payroll, Long> {
     void changePayrollStatus(Long id, PayrollStatus payrollStatus);
 
 
+    Optional<Payroll> findByEmployeeAndPeriodAndStatus(Employee employee,
+                                                       YearMonth period,
+                                                       PayrollStatus payrollStatus);
+
+    List<Payroll> findByPeriodAndStatus(YearMonth period,
+                                            PayrollStatus payrollStatus,
+                                            Sort orders);
 }

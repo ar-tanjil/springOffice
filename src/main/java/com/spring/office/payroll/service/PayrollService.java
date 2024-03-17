@@ -13,6 +13,7 @@ import com.spring.office.payroll.repo.PayrollRepository;
 import jakarta.persistence.OneToMany;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -41,7 +42,7 @@ public class PayrollService {
     private final OfficeRuleService officeRuleService;
     //    Mapper
     private final PayrollMapper payrollMapper;
-    private double loan;
+
 
 
     public PayrollDto getPayrollByEmpAndPeriod(Long empId, Integer year, Integer month) {
@@ -78,6 +79,16 @@ public class PayrollService {
                 .toList();
     }
 
+    public void processPayrollByEmployee(Long id, Integer year, Integer month) {
+        YearMonth period = YearMonth.of(year, month);
+        Employee employee = new Employee();
+        employee.setId(id);
+        Optional<Payroll> findPayroll = payrollRepository.findByEmployeeAndPeriod(employee, period);
+        if (findPayroll.isEmpty()) {
+         generatePayroll(employee, period);
+        }
+
+    }
 
     public List<PayrollTable> processAllPayroll(Integer year, Integer month) {
 
@@ -391,5 +402,34 @@ public class PayrollService {
         claimService.updateClaimByPayroll(id, ClaimStatus.PYAMENT);
         payrollRepository.changePayrollStatus(id, PayrollStatus.PAYMENT);
     }
+
+    public List<PayrollTable> getPaymentPayrollByEmp(Long empId, Integer year, Integer month) {
+
+        Employee employee = new Employee();
+        employee.setId(empId);
+
+        YearMonth period = YearMonth.of(year, month);
+
+        return payrollRepository
+                .findByEmployeeAndPeriodAndStatus(employee,
+                        period,
+                        PayrollStatus.PAYMENT)
+                .map(payrollMapper::payrollToTable)
+                .stream().toList();
+
+    }
+
+    public List<PayrollTable> getAllPaymentPayroll(Integer year, Integer month) {
+        YearMonth period = YearMonth.of(year, month);
+
+        return payrollRepository
+                .findByPeriodAndStatus(period, PayrollStatus.PAYMENT ,
+                        Sort.by(Sort.Direction.ASC , "period"))
+                .stream()
+                .map(payrollMapper::payrollToTable)
+                .toList();
+
+    }
+
 
 }

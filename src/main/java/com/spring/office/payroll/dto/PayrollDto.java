@@ -30,9 +30,9 @@ public class PayrollDto {
     private Double bonusAmount;
     private Double reimbursement;
     private Double otherDeduction;
-    private Integer workingDays;
-    private Integer unpaidLeaveDays;
-    private Integer totalLeaveDays;
+    private Integer workingDay;
+    private Integer unpaidLeaveDay;
+    private Integer totalLeaveDay;
     private Long employeeId;
     private String employeeName;
     private String departmentName;

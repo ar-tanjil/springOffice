@@ -32,7 +32,7 @@ public class LeaveController {
 
         var save = leaveService.saveLeave(dto);
         NotificationEntity notify = new NotificationEntity();
-        notify.setContent("Leave Request From " + name.toUpperCase());
+        notify.setContent( name.toUpperCase() + " Send A Leave Request");
         notify.setType(Type.LEAVE);
         notify.setSenderId(name.toLowerCase());
         notify.setRecipientId("admin");

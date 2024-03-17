@@ -65,8 +65,17 @@ public class AuthService {
         HashMap<String, Object> role = new HashMap<>();
         role.put("role", user.getRole());
         if (user.getEmployee() != null){
-            role.put("id", user.getEmployee().getId());
+            Employee employee = user.getEmployee();
+            role.put("id", employee.getId());
+
+            String name = employee.getFirstName();
+            if (employee.getLastName() != null){
+                name += employee.getLastName();
+            }
+
+            role.put("name", name);
         }
+
 
         var jwtToken = jwtService.generateToken(role, user);
         return AuthResponse.builder()
