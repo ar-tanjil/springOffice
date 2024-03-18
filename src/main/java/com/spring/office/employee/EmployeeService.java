@@ -49,8 +49,6 @@ public class EmployeeService {
     public EmployeeDto saveEmployee(EmployeeDto dto) {
             boolean vacancy = jobService.checkVacancyByJobId(dto.getJobId());
             if (vacancy){
-
-                dto.setHireDate(LocalDate.now());
                 jobService.reduceVacancy(1,dto.getJobId());
                 Employee emp = empMapper.dtoToEmployee(dto);
                 Employee saveEmp = empRepo.save(emp);

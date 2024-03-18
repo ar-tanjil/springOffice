@@ -22,6 +22,7 @@ public class SalaryDto {
     private Double medical;
     private Double travel;
     private Double loan;
+    private Double epf;
     private Long employeeId;
     private EmployeeTable employeeTable;
 

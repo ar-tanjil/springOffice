@@ -36,6 +36,7 @@ public class Employee extends BaseModel {
     private LocalDate hireDate;
     private LocalDate separationDate;
     private LocalDate dob;
+    private String gender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")

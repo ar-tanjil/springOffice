@@ -45,6 +45,7 @@ public class SalaryMapper {
                 .medicalAllowance(salary.getMedicalAllowance())
                 .providentFund(salary.getProvidentFund())
                 .loan(salary.getLoan())
+                .epf(salary.getEpf())
                 .travelAllowance(salary.getTravelAllowance())
                 .travel(calculateTravel(salary.getBasic(), salary.getTravelAllowance()))
                 .medical(calculateMedical(salary.getBasic(), salary.getMedicalAllowance()))

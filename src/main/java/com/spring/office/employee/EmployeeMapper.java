@@ -47,6 +47,7 @@ public class EmployeeMapper {
         emp.setAddress(address);
         emp.setHireDate(dto.getHireDate());
         emp.setSeparationDate(dto.getSeparationDate());
+        emp.setGender(dto.getGender());
 
         if (dto.getApplicationId() != null){
             Application app = new Application();
@@ -122,6 +123,7 @@ public class EmployeeMapper {
         dto.setRoadNo(address.getRoadNo());
         dto.setCity(address.getCity());
         dto.setCountry(address.getCountry());
+        dto.setGender(emp.getGender());
 
         if(emp.getApplication() != null){
             dto.setApplicationId(emp.getApplication().getId());
@@ -184,6 +186,10 @@ public class EmployeeMapper {
 
         if (newEmp.getQualification() != null){
             oldEmp.setQualification(newEmp.getQualification());
+        }
+
+        if (newEmp.getAddress() != null){
+            oldEmp.setAddress(newEmp.getAddress());
         }
 
         return oldEmp;

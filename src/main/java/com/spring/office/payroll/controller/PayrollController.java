@@ -95,4 +95,10 @@ public class PayrollController {
         return payrollService.getAllPaymentPayroll(year, month);
     }
 
+//
+//    @GetMapping("epf/employee/{id}")
+//    public double getProvidentFundByEmployee(){
+//
+//    }
+
 }

@@ -1,7 +1,5 @@
 package com.spring.office.payroll.service;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.office.employee.Employee;
 import com.spring.office.employee.EmployeeService;
 import com.spring.office.payroll.domain.*;
@@ -10,7 +8,6 @@ import com.spring.office.payroll.dto.PayrollDto;
 import com.spring.office.payroll.dto.PayrollTable;
 import com.spring.office.payroll.dto.SalaryDto;
 import com.spring.office.payroll.repo.PayrollRepository;
-import jakarta.persistence.OneToMany;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -183,10 +180,12 @@ public class PayrollService {
 
         if (loan < netSalary) {
             netSalary -= loan;
-            salaryService.updateLoan(employee.getId(), loan);
+            salaryService.deductLoan(employee.getId(), loan);
         } else {
             loan = 0;
         }
+
+        salaryService.addEpf(employee.getId(), providentFund);
 
 
         Payroll payroll = Payroll.builder()
@@ -394,6 +393,14 @@ public class PayrollService {
 
     public void deletePayroll(Long id) {
         claimService.updateClaimByPayroll(id, ClaimStatus.APPROVED);
+        Payroll payroll = payrollRepository.findById(id).get();
+
+        if (payroll.getEmployee() == null){
+         return;
+        }
+        Long empId = payroll.getEmployee().getId();
+        salaryService.addLoan(empId, payroll.getLoanPayment());
+        salaryService.deductEpf(empId, payroll.getProvidentFund());
         payrollRepository.deleteById(id);
     }
 

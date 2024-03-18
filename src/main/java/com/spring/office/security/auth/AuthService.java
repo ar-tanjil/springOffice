@@ -70,7 +70,7 @@ public class AuthService {
 
             String name = employee.getFirstName();
             if (employee.getLastName() != null){
-                name += employee.getLastName();
+                name += " " + employee.getLastName();
             }
 
             role.put("name", name);

@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,13 +65,33 @@ public class SalaryService {
 
     }
 
-    public void updateLoan(Long empId, double payment){
+    public void deductLoan(Long empId, double payment){
         Employee emp = new Employee();
         emp.setId(empId);
-        salaryRepository.updateSalary(payment,emp);
+        salaryRepository.deductLoan(payment,emp);
     }
+
+    public void addLoan(Long empId, double payment){
+        Employee emp = new Employee();
+        emp.setId(empId);
+        salaryRepository.addLoan(payment,emp);
+    }
+
 
     public Integer sumAllSalary() {
         return salaryRepository.sumAllSalary();
     }
+
+    public void addEpf(Long empId, double providentFund) {
+        Employee emp = new Employee();
+        emp.setId(empId);
+        salaryRepository.addEpf(providentFund,emp);
+    }
+
+    public void deductEpf(Long empId, double providentFund) {
+        Employee emp = new Employee();
+        emp.setId(empId);
+        salaryRepository.deductEpf(providentFund,emp);
+    }
+
 }
