@@ -73,4 +73,15 @@ public class AttendanceController {
     }
 
 
+
+    @GetMapping("/give/employee/{id}")
+    public void giveAttendanceByEmployee(
+            @PathVariable("id") Long id
+    ){
+        attendanceService.giveAttendanceByEmployee(id);
+    }
+
+
+
+
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.util.*;
 
 @Service
@@ -251,5 +252,61 @@ public class AttendanceService {
         List<Attendance> listLog = attendanceRepository.findByDayIsBetween(start, end);
         return listLog.stream().map(attendanceMapper::attendanceToDto)
                 .toList();
+    }
+
+    public void giveAttendanceByEmployee(Long empId) {
+
+        Employee emp = new Employee();
+        emp.setId(empId);
+
+        LocalDateTime dayTime = LocalDateTime.now();
+
+        Month thisMonth = dayTime.getMonth();
+
+        for (int i = 1; i <= dayTime.getDayOfMonth(); i++){
+            var makeDayTime = LocalDateTime.of(2024, thisMonth, i, 10, 0,0);
+            LocalDate day = makeDayTime.toLocalDate();
+
+            if (holidayService.checkHoliday(day)){
+                break;
+            }
+
+            Optional<Attendance> optAtt = attendanceRepository.findByEmployeeAndDay(emp, day);
+
+            if (optAtt.isEmpty()){
+
+                Attendance att = new Attendance();
+
+                att.setDay(day);
+                att.setEmployee(emp);
+                att.setCheckInStatus(getAttendanceStatus(makeDayTime, "checkIn"));
+                att.setCheckIn(makeDayTime.toLocalTime());
+                attendanceRepository.save(att);
+            }
+
+
+
+
+        }
+
+        for (int i = 1; i <= dayTime.getDayOfMonth(); i++){
+           var makeDayTime = LocalDateTime.of(2024, thisMonth, i, 19, 0,0);
+            LocalDate day = makeDayTime.toLocalDate();
+
+            Optional<Attendance> optAtt = attendanceRepository.findByEmployeeAndDay(emp, day);
+
+            if (optAtt.isEmpty()){
+                break;
+            }
+
+            var updateAtt = optAtt.get();
+            updateAtt.setCheckOut(makeDayTime.toLocalTime());
+            updateAtt.setCheckOutStatus(getAttendanceStatus(makeDayTime, "checkOut"));
+            attendanceRepository.save(updateAtt);
+
+            attendanceMapper.attendanceToDto(updateAtt);
+        }
+
+
     }
 }

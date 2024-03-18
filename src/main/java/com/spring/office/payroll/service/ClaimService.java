@@ -1,9 +1,7 @@
 package com.spring.office.payroll.service;
 
 import com.spring.office.employee.Employee;
-import com.spring.office.payroll.domain.Claim;
-import com.spring.office.payroll.domain.ClaimStatus;
-import com.spring.office.payroll.domain.ClaimType;
+import com.spring.office.payroll.domain.*;
 import com.spring.office.payroll.dto.ClaimDto;
 import com.spring.office.payroll.repo.ClaimRepo;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +16,7 @@ public class ClaimService {
 
     private final ClaimMapper claimMapper;
     private final ClaimRepo claimRepo;
+    private final SalaryService salaryService;
 
     public void save(ClaimDto dto) {
         var save = claimRepo.save(claimMapper.dtoToClaim(dto));
@@ -151,12 +150,25 @@ public class ClaimService {
         if (claim.getClaimStatus() == ClaimStatus.PENDING ||
                 claim.getClaimStatus() == ClaimStatus.REJECTED) {
             claimRepo.changeClaimStatus(id, ClaimStatus.APPROVED);
+
+            if (claim.getClaimCategory().getClaimType() == ClaimType.LOAN){
+                return approveLoan(claim);
+            }
+
             return true;
         }
 
         return false;
     }
 
+    private boolean approveLoan(Claim claim){
+        if (claim.getEmployee() == null){
+            return false;
+        }
+        Employee employee = claim.getEmployee();
+        salaryService.addLoan(employee.getId(), claim.getAmount());
+        return true;
+    }
 
     public boolean rejectClaim(Long id) {
 
@@ -172,6 +184,21 @@ public class ClaimService {
         }
 
         claimRepo.changeClaimStatus(id, ClaimStatus.REJECTED);
+
+        if (claim.getClaimStatus() == ClaimStatus.APPROVED &&
+                claim.getClaimCategory().getClaimType() == ClaimType.LOAN){
+            return rejectLoan(claim);
+        }
+
+        return true;
+    }
+
+    private boolean rejectLoan(Claim claim){
+        if (claim.getEmployee() == null){
+            return false;
+        }
+        Employee employee = claim.getEmployee();
+        salaryService.deductLoan(employee.getId(), claim.getAmount());
         return true;
     }
 

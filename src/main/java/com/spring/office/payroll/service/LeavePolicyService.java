@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -104,5 +105,21 @@ public class LeavePolicyService {
                 .stream()
                 .map(leavePolicyMapper::leavePolicyToDto)
                 .toList();
+    }
+
+    public boolean checkMedicalByEmployee(Long id) {
+        Employee emp = new Employee();
+        emp.setId(id);
+        Optional<LeavePolicy> policy = leavePolicyRepo.findByEmployee(emp);
+        return policy.filter(leavePolicy -> checkMedicalLeave(leavePolicy, 1)).isPresent();
+
+    }
+
+    public boolean checkCasualByEmployee(Long id) {
+        Employee emp = new Employee();
+        emp.setId(id);
+        Optional<LeavePolicy> policy = leavePolicyRepo.findByEmployee(emp);
+        return policy.filter(leavePolicy -> checkCasualLeave(leavePolicy, 1)).isPresent();
+
     }
 }

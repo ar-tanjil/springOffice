@@ -43,7 +43,7 @@ public class ClaimController {
         return claimService.getAll();
     }
 
-    @GetMapping("/{emp_id}")
+    @GetMapping("/employee/{emp_id}")
     public Iterable<ClaimDto> getAllClaimByEmployee(
             @PathVariable("emp_id") Long empId
     ){

@@ -41,7 +41,7 @@ public class Job extends BaseModel {
     @JsonIgnore
     private Set<Application> applications;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     @JsonIgnore
     private Department department;

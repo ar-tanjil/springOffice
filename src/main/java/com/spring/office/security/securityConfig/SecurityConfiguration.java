@@ -43,6 +43,8 @@ public class SecurityConfiguration {
                                 .permitAll()
                                 .requestMatchers("/jasper/**")
                                 .permitAll()
+                                .requestMatchers("/attendances/give/employee/**")
+                                .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )

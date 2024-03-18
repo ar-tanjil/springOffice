@@ -88,7 +88,6 @@ public class ApplicationMapper {
         dto.setRoadNo(address.getRoadNo());
         dto.setCity(address.getCity());
         dto.setCountry(address.getCountry());
-        System.out.println(app.getJob());
         if (app.getJob() != null) {
             dto.setJobId(app.getJob().getId());
             if (app.getJob().getDepartment() != null){
@@ -101,7 +100,9 @@ public class ApplicationMapper {
 
     public ApplicationDto applicationToDto(Application app) {
 
-        Address address = app.getAddress();
+
+
+        Address address =   app.getAddress();
         if (address == null) {
             address = new Address();
         }
@@ -131,7 +132,6 @@ public class ApplicationMapper {
         dto.setRoadNo(address.getRoadNo());
         dto.setCity(address.getCity());
         dto.setCountry(address.getCountry());
-        System.out.println(app.getJob());
         if (app.getJob() != null) {
             dto.setJobId(app.getJob().getId());
             dto.setJobTitle(app.getJob().getJobTitle());
@@ -140,8 +140,6 @@ public class ApplicationMapper {
             }
 
         }
-
-
 
         dto.setReference(app.getReference());
 
@@ -156,7 +154,6 @@ public class ApplicationMapper {
         String dep = "";
         if (app.getJob() != null) {
             job = app.getJob().getJobTitle();
-            System.out.println(app.getJob());
             if (app.getJob().getDepartment() != null) {
                 dep = app.getJob().getDepartment().getDepartmentName();
             }

@@ -33,4 +33,18 @@ public class LeavePolicyController {
         return  leavePolicyService.getAllLeave();
     }
 
+    @GetMapping("check/medical/{id}")
+    public boolean checkMedical(
+            @PathVariable("id") Long id
+    ){
+        return leavePolicyService.checkMedicalByEmployee(id);
+    }
+
+    @GetMapping("check/casual/{id}")
+    public boolean checkCasual(
+            @PathVariable("id") Long id
+    ){
+        return leavePolicyService.checkCasualByEmployee(id);
+    }
+
 }
