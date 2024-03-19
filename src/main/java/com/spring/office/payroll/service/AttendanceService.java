@@ -268,7 +268,7 @@ public class AttendanceService {
             LocalDate day = makeDayTime.toLocalDate();
 
             if (holidayService.checkHoliday(day)){
-                break;
+                continue;
             }
 
             Optional<Attendance> optAtt = attendanceRepository.findByEmployeeAndDay(emp, day);
@@ -284,9 +284,6 @@ public class AttendanceService {
                 attendanceRepository.save(att);
             }
 
-
-
-
         }
 
         for (int i = 1; i <= dayTime.getDayOfMonth(); i++){
@@ -296,7 +293,7 @@ public class AttendanceService {
             Optional<Attendance> optAtt = attendanceRepository.findByEmployeeAndDay(emp, day);
 
             if (optAtt.isEmpty()){
-                break;
+                continue;
             }
 
             var updateAtt = optAtt.get();

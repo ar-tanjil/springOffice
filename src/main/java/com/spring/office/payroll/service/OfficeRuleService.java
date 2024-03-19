@@ -32,8 +32,8 @@ public class OfficeRuleService {
         for (RulesEnum rule: rules ){
             OfficeRule officeRule = OfficeRule.builder()
                     .name(rule)
-                    .inTime(LocalTime.of(0, 0))
-                    .outTime(LocalTime.of(0,0))
+                    .inTime(LocalTime.of(10, 0))
+                    .outTime(LocalTime.of(18,0))
                     .build();
             ruleRepo.save(officeRule);
         }

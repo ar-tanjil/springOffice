@@ -3,6 +3,7 @@ package com.spring.office.employee;
 import com.spring.office.dto.table.EmployeeTable;
 import com.spring.office.dto.Message;
 import com.spring.office.security.auth.EmployeeUserService;
+import com.spring.office.security.auth.dto.UserEmpDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -84,4 +85,18 @@ public class EmployeeController {
     ){
         return empService.getEmployeeByDepartment(id);
     }
+
+
+    @GetMapping("/all/user")
+    public Iterable<UserEmpDto> getAllUser(){
+        return userService.getAllUser();
+    }
+
+    @GetMapping("/change/user/role/{id}")
+    public void changeUserRole(
+            @PathVariable("id") Long id
+    ){
+        userService.changerUserRole(id);
+    }
+
 }
