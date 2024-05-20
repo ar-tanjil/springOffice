@@ -33,7 +33,9 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/office/auth/**")
+                        req.requestMatchers("/**")
+                                .permitAll()
+                                .requestMatchers("/office/auth/**")
                                 .permitAll()
                                 .requestMatchers("/myapp/**")
                                 .permitAll()
