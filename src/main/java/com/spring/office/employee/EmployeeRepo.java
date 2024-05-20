@@ -18,7 +18,7 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> {
 
     List<Employee> findAllByDeletedFalse();
 
-    @Query(value = "select * from employee where id = :val and deleted = 0", nativeQuery = true)
+    @Query(value = "select * from employee where id = :val and deleted = false", nativeQuery = true)
     Optional<Employee> findByCustomId(@Param("val") Long id);
 //    Iterable<Employee> findByIsDeleted(boolean value);
 
