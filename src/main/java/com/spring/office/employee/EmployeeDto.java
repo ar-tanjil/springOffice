@@ -43,4 +43,5 @@ public class EmployeeDto {
     private String jobTitle;
     private String departmentName;
     private Long salaryId;
+    private String gender;
 }

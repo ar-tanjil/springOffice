@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public abstract class BaseModel {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Boolean active = true;
     private Boolean deleted = false;

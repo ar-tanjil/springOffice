@@ -3,9 +3,9 @@ package com.spring.office.payroll.service;
 import com.spring.office.employee.Employee;
 import com.spring.office.payroll.domain.Salary;
 import com.spring.office.payroll.dto.SalaryDto;
-import com.spring.office.payroll.dto.SalaryTable;
 import com.spring.office.payroll.repo.SalaryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,21 +57,41 @@ public class SalaryService {
     }
 
 
-    public List<SalaryTable> getAllSalary() {
-        List<Salary> listSalary = salaryRepository.findAll();
+    public List<SalaryDto> getAllSalary() {
+        List<Salary> listSalary = salaryRepository.findAll(Sort.by(Sort.Direction.DESC, "basic"));
 
-        return listSalary.stream().map(salaryMapper::salaryToTable)
-                .collect(Collectors.toList());
+        return listSalary.stream().map(salaryMapper::salaryToDto)
+               .collect(Collectors.toList());
 
     }
 
-    public void updateLoan(Long empId, double payment){
+    public void deductLoan(Long empId, double payment){
         Employee emp = new Employee();
         emp.setId(empId);
-        salaryRepository.updateSalary(payment,emp);
+        salaryRepository.deductLoan(payment,emp);
     }
+
+    public void addLoan(Long empId, double payment){
+        Employee emp = new Employee();
+        emp.setId(empId);
+        salaryRepository.addLoan(payment,emp);
+    }
+
 
     public Integer sumAllSalary() {
         return salaryRepository.sumAllSalary();
     }
+
+    public void addEpf(Long empId, double providentFund) {
+        Employee emp = new Employee();
+        emp.setId(empId);
+        salaryRepository.addEpf(providentFund,emp);
+    }
+
+    public void deductEpf(Long empId, double providentFund) {
+        Employee emp = new Employee();
+        emp.setId(empId);
+        salaryRepository.deductEpf(providentFund,emp);
+    }
+
 }

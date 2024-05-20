@@ -1,10 +1,20 @@
 package com.spring.office.job;
 
 import com.spring.office.department.Department;
+import com.spring.office.department.DepartmentMapper;
+import com.spring.office.employee.EmployeeMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class JobMapper {
+
+    private final DepartmentMapper departmentMapper;
+    private final EmployeeMapper employeeMapper;
 
 //    This method accept a Job and return a JobDto
     public JobDto jobToDto(Job job) {
@@ -16,7 +26,8 @@ public class JobMapper {
 
         if (job.getDepartment() != null){
             dto.setDepartmentId(job.getDepartment().getId());
-            dto.setDepartmentName(job.getDepartment().getDepartmentName());
+            dto.setDepartmentDto(departmentMapper
+                    .departmentToDto(job.getDepartment()));
         }
 
         dto.setJobTitle(job.getJobTitle());
@@ -24,6 +35,13 @@ public class JobMapper {
         dto.setMaxSalary(job.getMaxSalary());
         dto.setTotalPost(job.getTotalPost());
         dto.setVacancy(job.getVacancy());
+
+        if (job.getRequirements() != null){
+            dto.setRequirements(job.getRequirements());
+        }
+
+
+
         return dto;
     }
 
@@ -46,6 +64,10 @@ public class JobMapper {
         job.setMinSalary(dto.getMinSalary());
         job.setTotalPost(dto.getTotalPost());
         job.setVacancy(dto.getVacancy());
+        if (dto.getRequirements() != null){
+            job.setRequirements(dto.getRequirements());
+        }
+
         return job;
     }
 
@@ -65,6 +87,10 @@ public class JobMapper {
         }
         if (newJob.getMinSalary() != oldJob.getMinSalary()){
             oldJob.setMinSalary(newJob.getMinSalary());
+        }
+
+        if (newJob.getRequirements() != null){
+            oldJob.setRequirements(newJob.getRequirements());
         }
 
         int totalPost = oldJob.getTotalPost() + newJob.getTotalPost();

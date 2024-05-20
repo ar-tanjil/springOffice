@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<NotificationEntity, String> {
     List<NotificationEntity> findByChatId(String chatId);
+
+    List<NotificationEntity> findByRecipientId(String admin);
 }

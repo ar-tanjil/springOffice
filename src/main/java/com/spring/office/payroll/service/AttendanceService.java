@@ -2,19 +2,18 @@ package com.spring.office.payroll.service;
 
 import com.spring.office.employee.Employee;
 import com.spring.office.employee.EmployeeRepo;
-import com.spring.office.payroll.domain.Attendance;
+import com.spring.office.payroll.domain.*;
 import com.spring.office.payroll.dto.AttendanceDto;
-import com.spring.office.payroll.dto.AttendanceTable;
+import com.spring.office.payroll.dto.AttendanceSheet;
 import com.spring.office.payroll.repo.AttendanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.time.YearMonth;
 import java.util.*;
-import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +23,8 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final AttendanceMapper attendanceMapper;
     private final HolidayService holidayService;
+    private final OfficeDaysService officeDaysService;
+    private final OfficeRuleService officeRuleService;
 
 
 
@@ -31,7 +32,8 @@ public class AttendanceService {
 
         Employee emp = new Employee();
         emp.setId(empId);
-        LocalDate day = LocalDate.now();
+        LocalDateTime dayTime = LocalDateTime.now();
+        LocalDate day = dayTime.toLocalDate();
 
 
         if (holidayService.checkHoliday(day)){
@@ -45,6 +47,7 @@ public class AttendanceService {
 
             att.setDay(day);
             att.setEmployee(emp);
+            att.setCheckInStatus(getAttendanceStatus(dayTime, "checkIn"));
             att.setCheckIn(LocalTime.now());
 
             var saveAtt = attendanceRepository.save(att);
@@ -54,10 +57,39 @@ public class AttendanceService {
 
         var updateAtt = optAtt.get();
         updateAtt.setCheckOut(LocalTime.now());
-        updateAtt.setPresent(true);
+        updateAtt.setCheckOutStatus(getAttendanceStatus(dayTime, "checkOut"));
         attendanceRepository.save(updateAtt);
 
         return attendanceMapper.attendanceToDto(updateAtt);
+    }
+
+
+    private AttendanceStatus getAttendanceStatus(LocalDateTime dateTime, String check){
+
+        AttendanceStatus status = AttendanceStatus.OK;
+        LocalTime time = dateTime.toLocalTime();
+        OfficeRule grace = officeRuleService.getRuleByName(RulesEnum.GRACE);
+        OfficeRule early = officeRuleService.getRuleByName(RulesEnum.EARLY);
+        OfficeRule late = officeRuleService.getRuleByName(RulesEnum.LATE);
+        OfficeRule half = officeRuleService.getRuleByName(RulesEnum.HALF);
+
+        if (check.equalsIgnoreCase("checkIn")){
+           if (time.isAfter(late.getInTime())){
+               status = AttendanceStatus.HALF;
+           } else if (time.isAfter(grace.getInTime())){
+               status = AttendanceStatus.LATE;
+           }
+
+        } else {
+           if (time.isBefore(early.getOutTime())){
+               status = AttendanceStatus.HALF;
+           } else if(time.isBefore(grace.getOutTime())){
+               status = AttendanceStatus.EARLY;
+           }
+        }
+
+        return status;
+
     }
 
     public List<AttendanceDto> getEmployeeAttendanceByMonth(Long empId, LocalDate start, LocalDate end) {
@@ -70,30 +102,95 @@ public class AttendanceService {
         return attendanceMapper.attendanceToDtoList(listAtt);
     }
 
-    public List<AttendanceDto> getEmployeePresentDayByMonth(Long empId, LocalDate start, LocalDate end){
+    public List<AttendanceDto> getEmployeePresentDayByMonth(Long empId,
+                                                            LocalDate start,
+                                                            LocalDate end){
         Employee emp = new Employee();
         emp.setId(empId);
 
         List<Attendance> listAtt = attendanceRepository
-                .findByEmployeeAndDayIsBetweenAndPresentTrue(emp, start, end);
+                .findByEmployeeAndDayIsBetween(emp,
+                        start,
+                        end);
 
         return attendanceMapper.attendanceToDtoList(listAtt);
     }
 
+    public int getTotalEarly(Long empId,
+                             LocalDate start,
+                             LocalDate end){
+        return countCheckInStatus(empId,
+                start,
+                end,
+                AttendanceStatus.EARLY);
+    }
+    public int getTotalLate(Long empId,
+                             LocalDate start,
+                             LocalDate end){
+        return countCheckInStatus(empId,
+                start,
+                end,
+                AttendanceStatus.LATE);
+    }
 
+    public int getTotalHalf(
+            Long empId,
+            LocalDate start,
+            LocalDate end
+    ){
+        int checkInLate = countCheckInStatus(empId,
+                start,
+                end,
+                AttendanceStatus.HALF);
+        int checkOutLate = countCheckOutStatus(empId,
+                start,
+                end,
+                AttendanceStatus.HALF);
 
+        return checkInLate + checkOutLate;
+    }
 
-    private boolean getPresentFromAttendance(Attendance attendance) {
-        return attendance.isPresent();
+    private int countCheckInStatus(Long empId,
+                                     LocalDate start,
+                                     LocalDate end,
+                                     AttendanceStatus status
+                                     ){
+        Employee employee = new Employee();
+        employee.setId(empId);
+        return attendanceRepository
+                .countByCheckInStatusAndEmployeeAndDayIsBetween(status,
+                employee, start, end);
+    }
+
+    private int countCheckOutStatus(Long empId,
+                                   LocalDate start,
+                                   LocalDate end,
+                                   AttendanceStatus status
+    ){
+        Employee employee = new Employee();
+        employee.setId(empId);
+        return attendanceRepository
+                .countByCheckOutStatusAndEmployeeAndDayIsBetween(status,
+                        employee, start, end);
     }
 
 
-    private AttendanceTable getAttendanceTable(List<Attendance> list, String firstName) {
+    private boolean getPresentFromAttendance(Attendance attendance) {
 
-        AttendanceTable table = new AttendanceTable();
+        return attendance.getCheckInStatus() == AttendanceStatus.OK ||
+                attendance.getCheckOutStatus() == AttendanceStatus.OK;
+    }
 
 
-        int size = LocalDate.now().getDayOfMonth();
+    private AttendanceSheet getAttendanceSheet(List<Attendance> list, String firstName,
+                                               LocalDate end) {
+
+        AttendanceSheet table = new AttendanceSheet();
+
+
+        boolean endDate = LocalDate.now().isAfter(end);
+
+        int size = endDate ? end.getDayOfMonth() : LocalDate.now().getDayOfMonth();
 
         boolean[] present = new boolean[size];
 
@@ -114,11 +211,11 @@ public class AttendanceService {
     }
 
 
-    public List<AttendanceTable> getAttendanceSheet(LocalDate start, LocalDate end) {
+    public List<AttendanceSheet> getAttendanceSheet(LocalDate start, LocalDate end) {
 
         List<Long> empId = employeeRepo.findAllEmployeeId();
 
-        List<AttendanceTable> table = new ArrayList<>();
+        List<AttendanceSheet> table = new ArrayList<>();
 
         for (Long id : empId) {
             Employee emp = new Employee();
@@ -128,7 +225,7 @@ public class AttendanceService {
 
             String firstName = employeeRepo.findFirstName(id);
 
-            table.add(getAttendanceTable(list, firstName));
+            table.add(getAttendanceSheet(list, firstName, end));
         }
 
         return table;
@@ -147,6 +244,66 @@ public class AttendanceService {
     public Integer todayPresentEmployee(LocalDate localDate) {
 
         return attendanceRepository.countByDayAndCheckInIsNotNull(localDate);
+
+    }
+
+
+    public List<AttendanceDto> getAttendanceLog(LocalDate start, LocalDate end){
+        List<Attendance> listLog = attendanceRepository.findByDayIsBetween(start, end);
+        return listLog.stream().map(attendanceMapper::attendanceToDto)
+                .toList();
+    }
+
+    public void giveAttendanceByEmployee(Long empId) {
+
+        Employee emp = new Employee();
+        emp.setId(empId);
+
+        LocalDateTime dayTime = LocalDateTime.now();
+
+        Month thisMonth = dayTime.getMonth();
+
+        for (int i = 1; i <= dayTime.getDayOfMonth(); i++){
+            var makeDayTime = LocalDateTime.of(2024, thisMonth, i, 10, 0,0);
+            LocalDate day = makeDayTime.toLocalDate();
+
+            if (holidayService.checkHoliday(day)){
+                continue;
+            }
+
+            Optional<Attendance> optAtt = attendanceRepository.findByEmployeeAndDay(emp, day);
+
+            if (optAtt.isEmpty()){
+
+                Attendance att = new Attendance();
+
+                att.setDay(day);
+                att.setEmployee(emp);
+                att.setCheckInStatus(getAttendanceStatus(makeDayTime, "checkIn"));
+                att.setCheckIn(makeDayTime.toLocalTime());
+                attendanceRepository.save(att);
+            }
+
+        }
+
+        for (int i = 1; i <= dayTime.getDayOfMonth(); i++){
+           var makeDayTime = LocalDateTime.of(2024, thisMonth, i, 19, 0,0);
+            LocalDate day = makeDayTime.toLocalDate();
+
+            Optional<Attendance> optAtt = attendanceRepository.findByEmployeeAndDay(emp, day);
+
+            if (optAtt.isEmpty()){
+                continue;
+            }
+
+            var updateAtt = optAtt.get();
+            updateAtt.setCheckOut(makeDayTime.toLocalTime());
+            updateAtt.setCheckOutStatus(getAttendanceStatus(makeDayTime, "checkOut"));
+            attendanceRepository.save(updateAtt);
+
+            attendanceMapper.attendanceToDto(updateAtt);
+        }
+
 
     }
 }

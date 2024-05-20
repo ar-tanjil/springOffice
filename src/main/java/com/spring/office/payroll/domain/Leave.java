@@ -23,12 +23,17 @@ import java.time.LocalDate;
 public class Leave extends BaseModel {
 
     private LocalDate day;
-    private String type;
-    private String reason;
-    private boolean status;
 
-    @JsonIgnore
+    @Enumerated(EnumType.STRING)
+    private LeaveType type;
+    private String reason;
+
+    @Enumerated(EnumType.STRING)
+    private LeaveStatus status;
+
+
     @ManyToOne
     @JoinColumn(name = "employee_id")
+    @JsonIgnore
     private Employee employee;
 }

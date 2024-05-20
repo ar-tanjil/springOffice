@@ -33,11 +33,17 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/**")
+                        req.requestMatchers("/office/auth/**")
+                                .permitAll()
+                                .requestMatchers("/myapp/**")
                                 .permitAll()
                                 .requestMatchers("/swagger-ui/**")
                                 .permitAll()
                                 .requestMatchers("/v3/api-docs/**")
+                                .permitAll()
+                                .requestMatchers("/jasper/**")
+                                .permitAll()
+                                .requestMatchers("/attendances/give/employee/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

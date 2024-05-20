@@ -1,5 +1,7 @@
 package com.spring.office.payroll.dto;
 
+import com.spring.office.dto.table.EmployeeTable;
+import com.spring.office.employee.Employee;
 import lombok.*;
 import org.hibernate.tool.schema.extract.spi.ExtractionContext;
 
@@ -16,12 +18,12 @@ public class SalaryDto {
     private Double medicalAllowance;
     private Double providentFund;
     private Double travelAllowance;
-    private Integer bonus;
-    private Double travel;
-    private Double bonusAmount;
     private Double provident;
     private Double medical;
+    private Double travel;
     private Double loan;
+    private Double epf;
     private Long employeeId;
+    private EmployeeTable employeeTable;
 
 }

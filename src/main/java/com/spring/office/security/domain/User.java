@@ -1,6 +1,7 @@
 package com.spring.office.security.domain;
 
 import com.spring.office.domain.BaseModel;
+import com.spring.office.employee.Employee;
 import com.spring.office.security.domain.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,6 +36,10 @@ public class User extends BaseModel implements UserDetails {
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
     private boolean enabled;
+
+    @OneToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
     @Enumerated(EnumType.STRING)
     private Role role;

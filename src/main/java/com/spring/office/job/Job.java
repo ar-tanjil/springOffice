@@ -12,6 +12,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -28,6 +30,9 @@ public class Job extends BaseModel {
     private int totalPost;
     private int vacancy;
 
+    @ElementCollection
+    private List<String> requirements;
+
     @OneToMany(mappedBy = "job")
     @JsonIgnore
     private Set<Employee> employees;
@@ -36,7 +41,7 @@ public class Job extends BaseModel {
     @JsonIgnore
     private Set<Application> applications;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     @JsonIgnore
     private Department department;

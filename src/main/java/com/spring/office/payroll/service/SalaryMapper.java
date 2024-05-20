@@ -1,19 +1,17 @@
 package com.spring.office.payroll.service;
 
-import com.spring.office.department.Department;
 import com.spring.office.employee.Employee;
-import com.spring.office.job.Job;
+import com.spring.office.employee.EmployeeMapper;
 import com.spring.office.payroll.domain.Salary;
 import com.spring.office.payroll.dto.SalaryDto;
-import com.spring.office.payroll.dto.SalaryTable;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.nio.DoubleBuffer;
-
 @Service
+@RequiredArgsConstructor
 public class SalaryMapper {
 
+    private final EmployeeMapper employeeMapper;
 
     public Salary dtoToSalary(SalaryDto dto){
 
@@ -30,8 +28,6 @@ public class SalaryMapper {
                 .medicalAllowance(dto.getMedicalAllowance())
                 .providentFund(dto.getProvidentFund())
                 .travelAllowance(dto.getTravelAllowance())
-                .bonus(dto.getBonus())
-                .loan(dto.getLoan())
                 .employee(emp)
                 .build();
     }
@@ -48,12 +44,13 @@ public class SalaryMapper {
                 .basic(salary.getBasic())
                 .medicalAllowance(salary.getMedicalAllowance())
                 .providentFund(salary.getProvidentFund())
-                .bonus(salary.getBonus())
                 .loan(salary.getLoan())
+                .epf(salary.getEpf())
                 .travelAllowance(salary.getTravelAllowance())
                 .travel(calculateTravel(salary.getBasic(), salary.getTravelAllowance()))
                 .medical(calculateMedical(salary.getBasic(), salary.getMedicalAllowance()))
                 .provident(calculateProvident(salary.getBasic(), salary.getProvidentFund()))
+                .employeeTable(employeeMapper.employeeToTable(salary.getEmployee()))
                 .build();
     }
 
@@ -72,38 +69,7 @@ public class SalaryMapper {
         return oldSal;
     }
 
-    public SalaryTable salaryToTable(Salary salary){
-        Employee employee = salary.getEmployee();
 
-        if (employee == null){
-            return null;
-        }
-        Job job = employee.getJob();
-        Department department = employee.getDepartment();
-
-        if (job == null){
-            job = new Job();
-        }
-
-        if (department == null){
-            department = new Department();
-        }
-
-
-        return new SalaryTable(
-                salary.getId(),
-                salary.getBasic(),
-                salary.getMedicalAllowance(),
-                salary.getProvidentFund(),
-                employee.getId(),
-                employee.getFirstName(),
-                job.getJobTitle(),
-                department.getDepartmentName()
-
-        );
-
-
-    }
 
 
     private Double calculateMedical(Double salary, Double ma){

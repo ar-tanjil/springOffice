@@ -28,15 +28,18 @@ public class Application extends BaseModel {
     private LocalDate dob;
     private String email;
     private String phoneNumber;
+
     @Embedded
     private Qualification qualifications;
+
     @Embedded
     private Address address;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
     @JsonIgnore
     private Job job;
+
     public String reference;
 
 }

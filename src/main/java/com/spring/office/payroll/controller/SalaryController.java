@@ -1,13 +1,9 @@
 package com.spring.office.payroll.controller;
 
 import com.spring.office.payroll.dto.SalaryDto;
-import com.spring.office.payroll.dto.SalaryTable;
 import com.spring.office.payroll.service.SalaryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.lang.invoke.SerializedLambda;
 
 @RestController
 @RequestMapping("/salaries")
@@ -44,7 +40,7 @@ public class SalaryController {
     }
 
     @GetMapping
-    public Iterable<SalaryTable> getAllSalary(){
+    public Iterable<SalaryDto> getAllSalary(){
         return salaryService.getAllSalary();
     }
 

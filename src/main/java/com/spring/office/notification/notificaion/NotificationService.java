@@ -28,5 +28,7 @@ public class NotificationService {
     }
 
 
-
+    public List<NotificationEntity> findAdminMessage() {
+        return repository.findByRecipientId("admin");
+    }
 }

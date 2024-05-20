@@ -80,7 +80,8 @@ public class JobService {
 
         if (optJob.isPresent()){
             Job oldJob = optJob.get();
-            Job mapJob = jobMapper.updateMapper(jobMapper.dtoToJob(dto),oldJob);
+            Job mapJob = jobMapper
+                    .updateMapper(jobMapper.dtoToJob(dto),oldJob);
             Job saveJob = jobRepo.save(mapJob);
             return jobMapper.jobToDto(saveJob);
         }

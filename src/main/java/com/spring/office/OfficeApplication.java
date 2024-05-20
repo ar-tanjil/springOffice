@@ -11,7 +11,11 @@ import com.spring.office.employee.EmployeeService;
 import com.spring.office.job.JobService;
 import com.spring.office.payroll.domain.Salary;
 import com.spring.office.payroll.dto.SalaryDto;
+import com.spring.office.payroll.service.OfficeDaysService;
+import com.spring.office.payroll.service.OfficeRuleService;
 import com.spring.office.payroll.service.SalaryService;
+import com.spring.office.security.auth.AuthService;
+import com.spring.office.security.auth.dto.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -39,6 +43,15 @@ public class OfficeApplication {
     @Autowired
     private SalaryService salaryService;
 
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private OfficeDaysService officeDaysService;
+
+    @Autowired
+    private OfficeRuleService officeRuleService;
+
     public static void main(String[] args) {
         SpringApplication.run(OfficeApplication.class, args);
 
@@ -46,10 +59,13 @@ public class OfficeApplication {
     }
 
 
-//    	@Bean
+    	@Bean
     public CommandLineRunner dataLoad() {
         return (a) -> {
 
+
+            officeDaysService.initialSave();
+            officeRuleService.initialSave();
             DepartmentDto dep = new DepartmentDto();
             dep.setDepartmentName("Administration");
             dep.setDepartmentDesc("Administration Department");
@@ -112,9 +128,18 @@ public class OfficeApplication {
                     .providentFund(5D)
                     .travelAllowance(5D)
                     .loan(500D)
-                    .bonus(2)
                     .build();
             var saveSal = salaryService.addSalary(salDto);
+
+            var register = RegisterRequest.builder()
+                    .username("ashiq")
+                    .password("ashiq")
+                    .role("ADMIN")
+                    .employeeId(saveEmp.getId())
+                    .build();
+
+
+        authService.register(register);
 
         };
     }

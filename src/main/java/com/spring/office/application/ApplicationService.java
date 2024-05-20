@@ -4,6 +4,7 @@ import com.spring.office.dto.table.ApplicantTableDto;
 import com.spring.office.employee.EmployeeDto;
 import com.spring.office.employee.EmployeeService;
 import com.spring.office.job.JobService;
+import com.spring.office.security.auth.EmployeeUserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class ApplicationService {
     private final EmployeeService empService;
     private final ApplicationMapper mapper;
     private final JobService jobService;
+    private final EmployeeUserService userService;
 
 
     public ApplicationDto save(ApplicationDto dto) {
@@ -29,15 +31,16 @@ public class ApplicationService {
     }
 
     public List<ApplicantTableDto> getAll() {
-        List<Application> allApp = repo.findAllByDeletedFalse();
-        List<ApplicantTableDto> allDto = new ArrayList<>();
-        allApp.forEach(app -> allDto.add(mapper.applicationToTable(app)));
-        return allDto;
+        return repo.findAllByDeletedFalse()
+                .stream()
+                .map(mapper::applicationToTable)
+                .toList();
     }
 
     public ApplicationDto getById(Long id) {
-        Optional<Application> optApp = repo.findById(id);
-        return optApp.map(mapper::applicationToDto).orElse(null);
+        return repo.findById(id)
+                .map(mapper::applicationToDto)
+                .orElse(null);
     }
 
     public boolean delete(Long id) {
@@ -78,7 +81,7 @@ public class ApplicationService {
         if (optApp.isPresent()){
             this.delete(optApp.get().getId());
             var empDto = mapper.applicationToEmployee(optApp.get());
-            return empService.saveEmployee(empDto);
+            return userService.createNewUser(empDto);
         }
         return null;
     }

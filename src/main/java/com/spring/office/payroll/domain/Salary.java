@@ -29,8 +29,8 @@ public class Salary extends BaseModel {
     private double medicalAllowance;
     private double providentFund;
     private double travelAllowance;
-    private int bonus;
     private double loan;
+    private double epf;
 
     @OneToOne
     @JoinColumn(name = "employee_id")

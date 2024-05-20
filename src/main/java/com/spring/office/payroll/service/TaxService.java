@@ -22,7 +22,7 @@ public class TaxService {
         return salary * per / 100;
     }
 
-    private Double getTaxPer(Double taxablePay) {
+    public Double getTaxPer(Double taxablePay) {
 
         double taxThrashHold = taxablePay * 12;
 

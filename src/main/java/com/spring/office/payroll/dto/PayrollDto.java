@@ -1,6 +1,5 @@
 package com.spring.office.payroll.dto;
 
-import com.spring.office.employee.Employee;
 import lombok.*;
 
 import java.time.YearMonth;
@@ -21,12 +20,25 @@ public class PayrollDto {
     private Double unpaidLeave;
     private Double loanPayment;
     private Double tax;
+    private Double taxInformation;
     private Double travelAllowance;
+    private Double travelInformation;
     private Double medicalAllowance;
+    private Double medicalInformation;
     private Double providentFund;
+    private Double providentInformation;
     private Double bonusAmount;
-    private Double otherEarning;
+    private Double reimbursement;
     private Double otherDeduction;
+    private Integer workingDay;
+    private Integer unpaidLeaveDay;
+    private Integer totalLeaveDay;
     private Long employeeId;
+    private String employeeName;
+    private String departmentName;
+    private String jobTitle;
+    private String status;
+    private Double fine;
+    private Integer fineDay;
 
 }

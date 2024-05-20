@@ -1,7 +1,9 @@
 package com.spring.office.employee;
 
+import com.spring.office.department.Department;
 import com.spring.office.department.DepartmentService;
 import com.spring.office.dto.table.EmployeeTable;
+import com.spring.office.job.Job;
 import com.spring.office.job.JobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,8 +49,6 @@ public class EmployeeService {
     public EmployeeDto saveEmployee(EmployeeDto dto) {
             boolean vacancy = jobService.checkVacancyByJobId(dto.getJobId());
             if (vacancy){
-
-                dto.setHireDate(LocalDate.now());
                 jobService.reduceVacancy(1,dto.getJobId());
                 Employee emp = empMapper.dtoToEmployee(dto);
                 Employee saveEmp = empRepo.save(emp);
@@ -97,13 +97,37 @@ public class EmployeeService {
     }
 
 
-    public List<EmployeeSalary> employeeWithoutSalary(){
+    public List<EmployeeShortDetails> employeeWithoutSalary(){
         List<Employee> listEmployee = empRepo.findAllByDeletedFalseAndSalaryIsNull();
-        return listEmployee.stream().map(empMapper::employeeToEmpSal)
+        return listEmployee.stream().map(empMapper::employeeToShortDetails)
                 .collect(Collectors.toList());
     }
 
     public Integer countAllEmployee() {
         return empRepo.countByDeletedFalse();
+    }
+
+    public List<Employee> getAllEmployeeOrg(){
+        return empRepo.findAllByDeletedFalse();
+    }
+
+    public Iterable<EmployeeShortDetails> employeeWithoutLeavePolicy() {
+        List<Employee> listEmployee = empRepo.findAllByDeletedFalseAndLeavePolicyIsNull();
+        return listEmployee.stream().map(empMapper::employeeToShortDetails)
+                .collect(Collectors.toList());
+    }
+
+    public List<EmployeeShortDetails> getEmployeeByJob(Long id) {
+        Job job = new Job();
+        job.setId(id);
+        return empRepo.findByJobAndDeletedFalse(job);
+
+    }
+
+    public List<EmployeeShortDetails> getEmployeeByDepartment(Long id) {
+        Department department = new Department();
+        department.setId(id);
+        return empRepo.findByDepartmentAndDeletedFalse(department);
+
     }
 }

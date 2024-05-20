@@ -13,10 +13,12 @@ public class PayrollTable implements Comparable<PayrollTable> {
     private Long id;
     private Long employeeId;
     private String jobTitle;
+    private String departmentName;
     private String firstName;
     private Double grossSalary;
     private Double netSalary;
     private YearMonth period;
+    private String status;
 
     @Override
     public int compareTo(PayrollTable o) {

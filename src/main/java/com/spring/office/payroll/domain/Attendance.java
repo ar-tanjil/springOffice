@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 
@@ -25,7 +26,10 @@ public class Attendance extends BaseModel {
     private LocalDate day;
     private LocalTime checkIn;
     private LocalTime checkOut;
-    private boolean present;
+    @Enumerated(EnumType.STRING)
+    private AttendanceStatus checkInStatus;
+    @Enumerated(EnumType.STRING)
+    private AttendanceStatus checkOutStatus;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")

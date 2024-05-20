@@ -3,6 +3,7 @@ package com.spring.office.payroll.dto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,6 +16,7 @@ public class LeaveDto {
     private LocalDate day;
     private String type;
     private String reason;
-    private boolean status;
+    private String status;
     private Long employeeId;
+    private String employeeName;
 }
