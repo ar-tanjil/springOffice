@@ -37,10 +37,10 @@ public interface ClaimRepo extends JpaRepository<Claim, Long> {
 //            " where c.employee = :employee " +
 //            " AND c.date BETWEEN :start AND :end AND c.claimStatus = :claimStatus  " +
 //            " AND c.claimCategory.claimType = :type ")
-    @Query(value = " update claim c   \n" +
-            " left join claim_category cc on c.category = cc.id  \n" +
+    @Query(value = " update c from claim c   \n" +
             " set c.payroll_id = :payrollId , \n" +
             " c.claim_status = :newStatus " +
+            " left join claim_category cc on c.category = cc.id  \n" +
             " where c.employee_id = :empId " +
             " AND c.date BETWEEN :start AND :end " +
             " AND c.claim_status = :claimStatus  " +
